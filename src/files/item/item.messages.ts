@@ -1,0 +1,16 @@
+export const itemMessages = {
+  ITEM_FAILURE: "unable to create item",
+  ITEM_SUCCESS: "item created successfully",
+  EXISTING_ITEM: "item already exists",
+  FETCH_ERROR: "item not found",
+  FETCH_SUCCESS: "fetch successful",
+  UPDATE_ERROR: "unable to update item",
+  UPDATE_SUCCESS: "item update successful",
+  INCORRECT_PASSWORD: "incorrect password",
+  PASSWORD_RESET_ERROR: "unable to reset password",
+  PASSWORD_RESET_SUCCESS: "password reset successful",
+  NOT_FOUND: "menu not found",
+  EMPTY_ITEM: "item Id cannot be empty",
+  ITEM_DELETE: "item data was successfully deleted",
+  DELETE_FAILURE: "item data was not deleted, please try again",
+}
