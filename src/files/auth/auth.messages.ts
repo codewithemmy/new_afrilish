@@ -2,7 +2,7 @@ export const authMessages = {
   LOGIN_ERROR: "One or more details is incorrect",
   ADMIN_NOT_FOUND: "Admin not found",
   ADMIN_EXISTS: "Admin already exist",
-  SUPERADMIN_ONLY: "Only superAdmin can create admins",
+  SUPER_ADMIN_ONLY: "Only superAdmin can create admins",
   ADMIN_FOUND: "Admin successfully fetched",
   ADMIN_CREATED:
     "Admin successfully created, check your email for verification code",
