@@ -24,11 +24,13 @@ export interface IVendor {
   name: string
   email: string
   phone: string
+  price: string
+  locationCoord: ILocation
   address: string
   image: string
   partnerId: any
   isAvailable: Boolean
-  vendorType: "restaurant" | "bulk" | "eventPlanner"
+  vendorType?: "restaurant" | "bulk" | "eventPlanner"
   rating?: Number
   createdAt?: Date
   updatedAt?: Date
@@ -47,21 +49,6 @@ interface IPaymentInfo {
   name: string
 }
 
-export interface IVendor {
-  _id?: any
-  name: string
-  email: string
-  phone: string
-  address: string
-  image: string
-  partnerId: any
-  isAvailable: Boolean
-  type?: "restaurant" | "bulk" | "eventPlanner"
-  rating?: Number
-  createdAt?: Date
-  updatedAt?: Date
-}
-
 interface IOperations {
   day:
     | "monday"
@@ -75,4 +62,13 @@ interface IOperations {
   closingTime: string
   orderAmount: Number
   tags: string
+}
+
+interface ILocation {
+  type: string
+  coordinates: []
+}
+export interface IVendorSearch {
+  search: string
+  isAvailable?: Boolean
 }

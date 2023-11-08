@@ -14,6 +14,7 @@ const {
   fetchUserController,
   updateUserController,
   fetchSingleUserController,
+  getVendorByCoordController,
 } = userController
 
 const UserRouter = express.Router()
@@ -34,5 +35,7 @@ UserRouter.post(
 UserRouter.get("/", fetchUserController)
 
 UserRouter.patch("/:userId", updateUserController)
+
+UserRouter.get("/search", getVendorByCoordController)
 
 export default UserRouter

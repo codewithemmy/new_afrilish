@@ -1,7 +1,9 @@
 import { FilterQuery, UpdateQuery } from "mongoose"
 import pagination, { IPagination } from "../../constants"
-import { IUser } from "./user.interface"
+import { ICoord, IUser } from "./user.interface"
 import User from "./user.model"
+import Vendor from "../partner/vendor/vendor.model"
+import { IVendorSearch } from "../partner/partner.interface"
 
 const { LIMIT, SKIP, SORT } = pagination
 
@@ -55,5 +57,62 @@ export default class UserRepository {
     )
 
     return updateUser
+  }
+
+  static async getVendorByCoord(
+    userPayload: Partial<IVendorSearch & IPagination & ICoord>,
+  ) {
+    const {
+      limit = LIMIT,
+      skip = SKIP,
+      sort = SORT,
+      ...restOfPayload
+    } = userPayload
+
+    let { lat, lng, search, ...extraParams } = restOfPayload
+    if (!search) search = ""
+
+    let latToString: any = lat?.toString()
+    let lngToString: any = lng?.toString()
+
+    let latString: string = latToString
+    let lngString: string = lngToString
+
+    const floatString = "3000"
+
+    const vendor = await Vendor.aggregate([
+        {
+          $geoNear: {
+            near: {
+              type: "Point",
+              coordinates: [parseFloat(lngString), parseFloat(latString)],
+            },
+            key: "locationCoord",
+            maxDistance: parseFloat(floatString) * 1609,
+            distanceField: "distance",
+            spherical: true,
+          },
+        },
+        {
+          $sort: {
+            createdAt: 1,
+          },
+        },
+        {
+          $match: {
+            $and: [
+              {
+                $or: [{ name: { $regex: search, $options: "i" } }, { price: { $regex: search, $options: "i" } }],
+                ...extraParams,
+              },
+            ],
+          },
+        },
+    ])
+      .sort(sort)
+      .skip(skip)
+      .limit(limit)
+
+    return vendor
   }
 }

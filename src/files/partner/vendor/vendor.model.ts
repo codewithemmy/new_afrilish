@@ -6,7 +6,12 @@ const VendorSchema = new Schema<IVendor>(
     name: String,
     email: String,
     address: String,
+    price: String,
     vendorType: String,
+    locationCoord: {
+      type: { type: String },
+      coordinates: [],
+    },
     phone: String,
     image: String,
     rating: Number,
@@ -15,6 +20,8 @@ const VendorSchema = new Schema<IVendor>(
   },
   { timestamps: true },
 )
+
+VendorSchema.index({ locationCoord: "2dsphere" })
 
 const vendor = model<IVendor>("Vendor", VendorSchema, "vendor")
 

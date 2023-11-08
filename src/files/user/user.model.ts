@@ -8,10 +8,13 @@ const UserSchema = new Schema<IUser>(
     phone: { type: String, required: true },
     email: { type: String, required: true },
     language: { type: String },
-    location: { type: String },
+    locationCoord: {
+      type: { type: String },
+      coordinates: [],
+    },
     referralCode: String,
     isDelete: { type: Boolean, default: false },
-    verificationOtp: String
+    verificationOtp: String,
   },
   { timestamps: true },
 )

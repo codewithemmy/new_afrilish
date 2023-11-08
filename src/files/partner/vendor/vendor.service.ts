@@ -5,6 +5,7 @@ import VendorRepository from "./vendor.repository"
 import { partnerMessages } from "../partner.messages"
 import mongoose from "mongoose"
 import PartnerRepository from "../partner.repository"
+import { ICoord } from "../../user/user.interface"
 
 export default class VendorService {
   static async createVendor(
@@ -88,18 +89,30 @@ export default class VendorService {
 
   static async updateVendor(data: {
     params: { vendorId: string }
-    vendorPayload: Partial<IVendor>
+    vendorPayload: Partial<IVendor & ICoord>
   }) {
     const { params, vendorPayload } = data
 
-    // ensure password is not updated here
-    const { ...restOfPayload } = vendorPayload
+    const { lng, lat, ...restOfPayload } = vendorPayload
+    let locationCoord
+
+    if (lng && lat) {
+      let latChange = lat.toString()
+      let lngChange = lng.toString()
+
+      locationCoord = {
+        type: "Point",
+        coordinates: [parseFloat(latChange), parseFloat(lngChange)],
+      }
+    }
+
 
     const vendor = await VendorRepository.updateVendorDetails(
       { _id: new mongoose.Types.ObjectId(params.vendorId) },
       {
         $set: {
           ...restOfPayload,
+          locationCoord,
         },
       },
     )

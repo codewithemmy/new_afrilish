@@ -9,7 +9,7 @@ export const userMessages = {
   INCORRECT_PASSWORD: "incorrect password",
   PASSWORD_RESET_ERROR: "unable to reset password",
   PASSWORD_RESET_SUCCESS: "password reset successful",
-  NOT_FOUND: "No user found",
+  NOT_FOUND: "Not found",
   USER_DELETE: "user data was successfully deleted",
   DELETE_FAILURE: "user data was not deleted, please try again",
 }
