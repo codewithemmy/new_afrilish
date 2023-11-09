@@ -13,7 +13,7 @@ import { IItem } from "./item.interface"
 import MenuRepository from "../menu/menu.repository"
 
 export default class ItemService {
-  static async createItem(itemPayload: IItem): Promise<IResponse> {
+  static async createItem(itemPayload: Partial<IItem>): Promise<IResponse> {
     const { menuId } = itemPayload
     if (!menuId) return { success: false, msg: itemMessages.EMPTY_ITEM }
 
@@ -42,31 +42,31 @@ export default class ItemService {
     }
   }
 
-  // static async fetchMenuService(itemPayload: Partial<IItem>) {
-  //   const { error, params, limit, skip, sort } = queryConstructor(
-  //     itemPayload,
-  //     "createdAt",
-  //     "Menu",
-  //   )
+  static async fetchItemService(itemPayload: Partial<IItem>) {
+    const { error, params, limit, skip, sort } = queryConstructor(
+      itemPayload,
+      "createdAt",
+      "Item",
+    )
 
-  //   if (error) return { success: false, msg: error }
+    if (error) return { success: false, msg: error }
 
-  //   const menu = await MenuRepository.fetchMenuByParams({
-  //     ...params,
-  //     limit,
-  //     skip,
-  //     sort,
-  //   })
+    const item = await ItemRepository.fetchItemByParams({
+      ...params,
+      limit,
+      skip,
+      sort,
+    })
 
-  //   if (menu.length < 1)
-  //     return { success: false, msg: itemMessages.MENU_FAILURE, data: [] }
+    if (item.length < 1)
+      return { success: false, msg: itemMessages.ITEM_FAILURE, data: [] }
 
-  //   return {
-  //     success: true,
-  //     msg: itemMessages.FETCH_SUCCESS,i
-  //     data: menu,
-  //   }
-  // }
+    return {
+      success: true,
+      msg: itemMessages.FETCH_SUCCESS,
+      data: item,
+    }
+  }
 
   // static async updateMenuService(menuId: any, data: Partial<IItem>) {
   //   // ensure password is not updated here
@@ -137,59 +137,6 @@ export default class ItemService {
   //       },
   //     },
   //   )
-  // }
-
-  // static async resetPassword(data: {
-  //   params: { partnerId: string }
-  //   payload: { oldPassword: string; newPassword: string }
-  // }) {
-  //   const { params, payload } = data
-
-  //   const partner = await MenuRepository.fetchPartner(
-  //     {
-  //       _id: new mongoose.Types.ObjectId(params.partnerId),
-  //     },
-  //     {
-  //       password: 1,
-  //     },
-  //   )
-
-  //   if (!partner) return { success: false, msg: itemMessages.FETCH_ERROR }
-
-  //   const passwordCheck = await verifyPassword(
-  //     payload.oldPassword,
-  //     partner.password!,
-  //   )
-
-  //   if (!passwordCheck)
-  //     return { success: false, msg: itemMessages.INCORRECT_PASSWORD }
-
-  //   const updatePassword = await this.updatePassword(
-  //     payload.newPassword,
-  //     params.partnerId,
-  //   )
-
-  //   if (!updatePassword)
-  //     return { success: false, msg: partnerMessages.PASSWORD_RESET_ERROR }
-
-  //   return { success: true, msg: partnerMessages.PASSWORD_RESET_SUCCESS }
-  // }
-
-  // static async deletePartnerService(data: { params: { partnerId: string } }) {
-  //   const { params } = data
-
-  //   const partner = await MenuRepository.updatePartnerDetails(
-  //     { _id: new mongoose.Types.ObjectId(params.partnerId) },
-  //     {
-  //       $set: {
-  //         isDelete: true,
-  //       },
-  //     },
-  //   )
-
-  //   if (!partner) return { success: false, msg: partnerMessages.DELETE_FAILURE }
-
-  //   return { success: true, msg: partnerMessages.PARTNER_DELETE }
   // }
 
   // static async fetchSinglePartnerService(data: any) {

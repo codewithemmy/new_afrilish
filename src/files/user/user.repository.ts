@@ -72,15 +72,16 @@ export default class UserRepository {
     let { lat, lng, search, ...extraParams } = restOfPayload
     if (!search) search = ""
 
-    let latToString: any = lat?.toString()
-    let lngToString: any = lng?.toString()
+    if (lat && lng) {
+      let latToString: any = lat?.toString()
+      let lngToString: any = lng?.toString()
 
-    let latString: string = latToString
-    let lngString: string = lngToString
+      let latString: string = latToString
+      let lngString: string = lngToString
 
-    const floatString = "3000"
+      const floatString = "3000"
 
-    const vendor = await Vendor.aggregate([
+      const vendor = await Vendor.aggregate([
         {
           $geoNear: {
             near: {
@@ -102,17 +103,48 @@ export default class UserRepository {
           $match: {
             $and: [
               {
-                $or: [{ name: { $regex: search, $options: "i" } }, { price: { $regex: search, $options: "i" } }],
+                $or: [
+                  { name: { $regex: search, $options: "i" } },
+                  { price: { $regex: search, $options: "i" } },
+                ],
                 ...extraParams,
               },
             ],
           },
         },
-    ])
-      .sort(sort)
-      .skip(skip)
-      .limit(limit)
+      ])
+        .sort(sort)
+        .skip(skip)
+        .limit(limit)
 
-    return vendor
+      return vendor
+    } else {
+      // lng and lat not provided, perform query without $geoNear
+      const vendor = await Vendor.aggregate([
+        {
+          $sort: {
+            createdAt: 1,
+          },
+        },
+        {
+          $match: {
+            $and: [
+              {
+                $or: [
+                  { name: { $regex: search, $options: "i" } },
+                  { price: { $regex: search, $options: "i" } },
+                ],
+                ...extraParams,
+              },
+            ],
+          },
+        },
+      ])
+        .sort(sort)
+        .skip(skip)
+        .limit(limit)
+
+      return vendor
+    }
   }
 }

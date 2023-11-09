@@ -9,7 +9,7 @@ import itemController from "./item.controller"
 
 const ItemRouter = express.Router()
 
-const { createItemController } = itemController
+const { createItemController, fetchItemController } = itemController
 
 ItemRouter.use(isAuthenticated)
 
@@ -19,6 +19,8 @@ ItemRouter.post(
   uploadManager("itemImage").single("image"),
   createItemController,
 )
+
+ItemRouter.route("/").get(fetchItemController)
 
 // ItemRouter.patch(
 //   "/:menuId",

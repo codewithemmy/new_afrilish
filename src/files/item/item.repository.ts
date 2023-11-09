@@ -6,7 +6,7 @@ import Item from "./item.model"
 const { LIMIT, SKIP, SORT } = pagination
 
 export default class ItemRepository {
-  static async createItem(itemPayload: IItem): Promise<IItem> {
+  static async createItem(itemPayload: Partial<IItem>): Promise<IItem> {
     return Item.create(itemPayload)
   }
 

@@ -14,11 +14,11 @@ const ItemSchema = new Schema<IItem>(
     leastOrder: { type: String },
     mostOrder: { type: String },
     healthStat: { type: String },
-    bulkEventPrice: {
-      price: Number,
-      guestSize: Number,
-      priceDescription: String,
-    },
+    bulkEventPrice: [{
+      price: { type: Number },
+      guestSize: { type: Number },
+      description: { type: String },
+    }],
     tag: { type: String },
     menuId: {
       type: mongoose.Types.ObjectId,

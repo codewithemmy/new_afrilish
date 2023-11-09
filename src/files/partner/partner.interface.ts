@@ -25,6 +25,7 @@ export interface IVendor {
   email: string
   phone: string
   price: string
+  location: string
   locationCoord: ILocation
   address: string
   image: string

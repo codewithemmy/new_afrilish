@@ -21,6 +21,6 @@ export interface IItem {
 
 interface IBulkEventPrice {
   price: Number
-  guestSize?: Number
-  priceDescription?: string
+  guestSize: Number
+  description: string
 }

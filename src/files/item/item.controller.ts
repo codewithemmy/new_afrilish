@@ -21,15 +21,17 @@ class ItemController {
     return responseHandler(res, statusCode.CREATED, data!)
   }
 
-  // async fetchMenuController(req: Request, res: Response, next: NextFunction) {
-  //   const [error, data] = await manageAsyncOps(
-  //     ItemService.fetchMenuService(req.query),
-  //   )
-  //   if (error) return next(error)
-  //   if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
+  async fetchItemController(req: Request, res: Response, next: NextFunction) {
+    const [error, data] = await manageAsyncOps(
+      ItemService.fetchItemService(req.query),
+    )
 
-  //   return responseHandler(res, statusCode.CREATED, data!)
-  // }
+    console.log("error", error)
+    if (error) return next(error)
+    if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
+
+    return responseHandler(res, statusCode.CREATED, data!)
+  }
 
   // async updateMenuController(req: Request, res: Response, next: NextFunction) {
   //   const { image, body } = fileModifier(req)

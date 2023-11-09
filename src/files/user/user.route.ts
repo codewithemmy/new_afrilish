@@ -36,6 +36,6 @@ UserRouter.get("/", fetchUserController)
 
 UserRouter.patch("/:userId", updateUserController)
 
-UserRouter.get("/search", getVendorByCoordController)
+UserRouter.get("/vendor", getVendorByCoordController)
 
 export default UserRouter

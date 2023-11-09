@@ -7,6 +7,7 @@ const VendorSchema = new Schema<IVendor>(
     email: String,
     address: String,
     price: String,
+    location: String,
     vendorType: String,
     locationCoord: {
       type: { type: String },
