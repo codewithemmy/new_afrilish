@@ -12,16 +12,15 @@ export interface IUser {
   isDelete: Boolean
   isVerified: Boolean
   verificationOtp: string
+  dateOfBirth: Date
 }
 
 interface ILocation {
-      type: string
-      coordinates: [lat: Number, lng: Number]
-    }
+  type: string
+  coordinates: [lat: Number, lng: Number]
+}
 
 export interface ICoord {
   lat: Number
   lng: Number
 }
-
-   
