@@ -5,7 +5,12 @@ const OrderSchema = new Schema<IOrder>(
   {
     pickUpCode: { type: Number },
     orderCode: { type: Number },
-    item: [{ type: mongoose.Types.ObjectId, ref: "Item" }],
+    item: [
+      {
+        item: { type: mongoose.Types.ObjectId, ref: "Item" },
+        quantity: { type: Number },
+      },
+    ],
     transactionId: [{ type: mongoose.Types.ObjectId, ref: "Transaction" }],
     orderedBy: [{ type: mongoose.Types.ObjectId, ref: "User" }],
     vendorId: [{ type: mongoose.Types.ObjectId, ref: "Vendor" }],

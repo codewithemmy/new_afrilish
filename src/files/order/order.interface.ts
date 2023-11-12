@@ -2,7 +2,7 @@ export interface IOrder {
   _id?: any
   pickUpCode: Number
   orderCode: Number
-  item: [any]
+  item: [ICartItems]
   orderedBy: any
   vendorId: any
   totalAmount: Number
@@ -41,4 +41,9 @@ export interface IOrder {
 interface ILocation {
   type: string
   coordinates: [Number, Number]
+}
+
+interface ICartItems {
+  item: any
+  quantity: Number
 }

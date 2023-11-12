@@ -9,7 +9,6 @@ import { partnerMessages } from "../partner/partner.messages"
 import UserRepository from "../user/user.repository"
 import Item from "../item/item.model"
 import ItemRepository from "../item/item.repository"
-import { profile } from "console"
 
 export default class OrderService {
   static async createOrder(
@@ -23,8 +22,6 @@ export default class OrderService {
     locals: any,
   ): Promise<IResponse> {
     const { vendorId, lng, lat, item, note } = orderPayload
-
-    console.log("item", item)
 
     const vendor = await VendorRepository.fetchVendor(
       {
@@ -74,7 +71,7 @@ export default class OrderService {
       {},
     )
 
-    let cartItems
+    let cartItems: [any]
     let netAmount: any = 0
 
     //confirm item
@@ -94,7 +91,6 @@ export default class OrderService {
         }
       })
     })
-
     const deliveryFee: Number = 2
     const marketPlace: Number = 3
 
@@ -108,15 +104,10 @@ export default class OrderService {
     let orderCode = genRandomNumber()
     let parseOrderCode = Number(orderCode)
 
-    console.log("cart items", cartItems)
-
-    if (cartItems === undefined)
-      return { success: false, msg: `your cart is empty` }
-
     const currentOrder = await OrderRepository.createOrder({
       pickUpCode: parsePickUpNumber,
       orderCode: parseOrderCode,
-      item: item,
+      // item: cartItems,
       orderedBy: new mongoose.Types.ObjectId(locals._id),
       vendorId: new mongoose.Types.ObjectId(vendor._id),
       locationCoord: {
