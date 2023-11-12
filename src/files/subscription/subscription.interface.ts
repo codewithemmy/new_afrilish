@@ -6,6 +6,7 @@ export interface ISubscription {
   lunch: IDays
   dinner: IDays
   userId: any
+  status: "paused" | "active" | "pending"
   isDelete: boolean
   createdAt?: Date
   updatedAt?: Date

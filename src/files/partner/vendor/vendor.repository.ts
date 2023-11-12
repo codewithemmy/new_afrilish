@@ -6,9 +6,7 @@ import Vendor from "./vendor.model"
 const { LIMIT, SKIP, SORT } = pagination
 
 export default class VendorRepository {
-  static async createVendor(
-    vendorPayload: Partial<IVendor>,
-  ): Promise<IVendor> {
+  static async createVendor(vendorPayload: Partial<IVendor>): Promise<IVendor> {
     return Vendor.create(vendorPayload)
   }
 

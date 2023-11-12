@@ -4,6 +4,8 @@ export interface IUser {
   phone: string
   email: string
   language: string
+  home: string
+  office: string
   locationCoord: ILocation
   referralCode?: string
   orders: [string]

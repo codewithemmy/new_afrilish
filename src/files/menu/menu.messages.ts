@@ -10,7 +10,7 @@ export const menuMessages = {
   INCORRECT_PASSWORD: "incorrect password",
   PASSWORD_RESET_ERROR: "unable to reset password",
   PASSWORD_RESET_SUCCESS: "password reset successful",
-  EMPTY_RESTAURANT: "restaurant Id cannot be empty",
+  EMPTY_VENDOR: "Vendor Id cannot be empty",
   MENU_DELETE: "menu data was successfully deleted",
   DELETE_FAILURE: "menu data was not deleted, please try again",
 }

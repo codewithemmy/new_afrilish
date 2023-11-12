@@ -245,6 +245,17 @@ const verifyWhoAmI = (user: IToken, query: { [key: string]: any }): boolean => {
   return true
 }
 
+// Helper function to convert degrees to radians
+const deg2rad = (deg: any) => {
+  const result = deg * (Math.PI / 180)
+  return result
+}
+
+const genRandomNumber = () => {
+  const random = `${Math.floor(Math.random() * 89999) + 1000}`
+  return random
+}
+
 export {
   tokenHandler,
   isAuthenticated,
@@ -260,4 +271,6 @@ export {
   manageAsyncOps,
   trimObjectSpaces,
   verifyWhoAmI,
+  deg2rad,
+  genRandomNumber,
 }

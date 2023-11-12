@@ -6,7 +6,7 @@ export interface IPartner {
   language: string
   business?: IBusiness
   payment?: IPaymentInfo
-  restaurantId?: [any]
+  vendorId?: [any]
   operations?: [IOperations]
   location?: string
   password: string
@@ -26,7 +26,7 @@ export interface IVendor {
   phone: string
   price: string
   location: string
-  locationCoord: ILocation
+  locationCoord?: ILocation
   address: string
   image: string
   partnerId: any
@@ -66,8 +66,8 @@ interface IOperations {
 }
 
 interface ILocation {
-  type: string
-  coordinates: []
+  type?: string
+  coordinates?: [Number, Number]
 }
 export interface IVendorSearch {
   search: string

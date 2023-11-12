@@ -1,6 +1,6 @@
 export const subscriptionMessages = {
   SUBSCRIPTION_FAILURE: "unable to create subscription",
-  NOT_FOUND: "menu not found",
+  NOT_FOUND: "subscription not found",
   SUBSCRIPTION_SUCCESS: "subscription created successfully",
   EXISTING_SUBSCRIPTION: "subscription already exists",
   FETCH_ERROR: "subscription not found",

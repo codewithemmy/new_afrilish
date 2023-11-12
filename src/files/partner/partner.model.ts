@@ -9,7 +9,7 @@ const PartnerSchema = new Schema<IPartner>(
     email: { type: String, required: true },
     password: { type: String, required: true },
     business: { name: String, phone: String, email: String, address: String },
-    restaurantId: [{ type: mongoose.Types.ObjectId, ref: "Restaurant" }],
+    vendorId: [{ type: mongoose.Types.ObjectId, ref: "Restaurant" }],
     operations: [
       {
         day: String,

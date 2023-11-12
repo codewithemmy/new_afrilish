@@ -33,6 +33,11 @@ const SubscriptionSchema = new Schema<ISubscription>(
       daySeven: [{ type: mongoose.Types.ObjectId, ref: "Item" }],
     },
     isDelete: { type: Boolean, default: false },
+    status: {
+      type: String,
+      enum: ["active", "paused", "pending"],
+      default: "pending",
+    },
     userId: { type: mongoose.Types.ObjectId, ref: "User" },
   },
   { timestamps: true },

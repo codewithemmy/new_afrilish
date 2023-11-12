@@ -18,14 +18,14 @@ export default class SubRepository {
       | FilterQuery<Partial<ISubscription>>,
     select: Partial<Record<keyof ISubscription, number | Boolean | object>>,
   ): Promise<Partial<ISubscription> | null> {
-    const menu: Awaited<ISubscription | null> = await Subscription.findOne(
+    const subscription: Awaited<ISubscription | null> = await Subscription.findOne(
       {
         ...subscriptionPayload,
       },
       select,
     ).lean()
 
-    return menu
+    return subscription
   }
 
   static async fetchSubscriptionByParams(
@@ -42,6 +42,33 @@ export default class SubRepository {
       await Subscription.find({
         ...restOfPayload,
       })
+        .populate({
+          path: "userId",
+          select: "fullName phone email home office",
+        })
+        .populate([
+          "breakfast.dayOne",
+          "breakfast.dayTwo",
+          "breakfast.dayThree",
+          "breakfast.dayFour",
+          "breakfast.dayFive",
+          "breakfast.daySix",
+          "breakfast.daySeven",
+          "lunch.dayOne",
+          "lunch.dayTwo",
+          "lunch.dayThree",
+          "lunch.dayFour",
+          "lunch.dayFive",
+          "lunch.daySix",
+          "lunch.daySeven",
+          "dinner.dayOne",
+          "dinner.dayTwo",
+          "dinner.dayThree",
+          "dinner.dayFour",
+          "dinner.dayFive",
+          "dinner.daySix",
+          "dinner.daySeven",
+        ])
         .sort(sort)
         .skip(skip)
         .limit(limit)

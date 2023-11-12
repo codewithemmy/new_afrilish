@@ -17,7 +17,7 @@ export default class MenuService {
   static async createMenu(menuPayload: Partial<IMenu>): Promise<IResponse> {
     const { title, vendorId } = menuPayload
 
-    if (!vendorId) return { success: false, msg: menuMessages.EMPTY_RESTAURANT }
+    if (!vendorId) return { success: false, msg: menuMessages.EMPTY_VENDOR }
 
     const menuExist = await MenuRepository.fetchMenu(
       { title, vendorId: new mongoose.Types.ObjectId(vendorId) },
