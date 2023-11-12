@@ -9,4 +9,5 @@ export const orderMessages = {
   UPDATE_SUCCESS: "order update successful",
   ORDER_DELETE: "order data was successfully deleted",
   DELETE_FAILURE: "order data was not deleted, please try again",
+  NOT_AVAILABLE: "this order is not available at the moment",
 }

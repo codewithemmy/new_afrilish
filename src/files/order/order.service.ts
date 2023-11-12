@@ -7,6 +7,7 @@ import VendorRepository from "../partner/vendor/vendor.repository"
 import { partnerMessages } from "../partner/partner.messages"
 import UserRepository from "../user/user.repository"
 import ItemRepository from "../item/item.repository"
+import { IOrder } from "./order.interface"
 
 export default class OrderService {
   static async createOrder(
@@ -85,6 +86,8 @@ export default class OrderService {
       return matchingItem
     })
 
+    if (!result) return { success: false, msg: orderMessages.NOT_AVAILABLE }
+
     // Calculate the total price based on the item array
     const netAmount = item.reduce((total, currentItem: any) => {
       return total + currentItem.price * currentItem.quantity
@@ -106,7 +109,7 @@ export default class OrderService {
 
     let totalPrice: any = parseAmount + deliveryFee + marketPlace + ridersFee
     let roundTotalPrice = Math.ceil(totalPrice)
-    let serviceCharge = (10 * roundTotalPrice) / 100
+    let serviceCharge: Number = (10 * roundTotalPrice) / 100
 
     let pickUpNumber = genRandomNumber()
     let parsePickUpNumber = Number(pickUpNumber)
@@ -141,6 +144,32 @@ export default class OrderService {
       success: true,
       msg: orderMessages.ORDER_SUCCESS,
       data: currentOrder,
+    }
+  }
+
+  static async fetchOrderService(subscriptionPayload: Partial<IOrder>) {
+    const { error, params, limit, skip, sort } = queryConstructor(
+      subscriptionPayload,
+      "createdAt",
+      "Order",
+    )
+
+    if (error) return { success: false, msg: error }
+
+    const order = await OrderRepository.fetchOrderByParams({
+      ...params,
+      limit,
+      skip,
+      sort,
+    })
+
+    if (order.length < 1)
+      return { success: false, msg: orderMessages.NOT_FOUND, data: [] }
+
+    return {
+      success: true,
+      msg: orderMessages.FETCH_SUCCESS,
+      data: order,
     }
   }
 }
