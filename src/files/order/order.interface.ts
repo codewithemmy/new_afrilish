@@ -2,7 +2,13 @@ export interface IOrder {
   _id?: any
   pickUpCode: Number
   orderCode: Number
-  item: [ICartItems]
+  itemId: [
+    {
+      _id: any
+      quantity: Number
+      price: Number
+    },
+  ]
   orderedBy: any
   vendorId: any
   totalAmount: Number
@@ -30,6 +36,7 @@ export interface IOrder {
 
   isDelete: boolean
   transactionId: any
+  scheduleId: any
   readyTime: string
   paymentIntentId: string
   status: "accepted" | "rejected" | "pending"
@@ -41,9 +48,4 @@ export interface IOrder {
 interface ILocation {
   type: string
   coordinates: [Number, Number]
-}
-
-interface ICartItems {
-  item: any
-  quantity: Number
 }

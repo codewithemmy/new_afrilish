@@ -5,13 +5,15 @@ const OrderSchema = new Schema<IOrder>(
   {
     pickUpCode: { type: Number },
     orderCode: { type: Number },
-    item: [
+    itemId: [
       {
-        item: { type: mongoose.Types.ObjectId, ref: "Item" },
+        _id: { type: mongoose.Types.ObjectId, ref: "Item" },
         quantity: { type: Number },
+        price: { type: Number },
       },
     ],
     transactionId: [{ type: mongoose.Types.ObjectId, ref: "Transaction" }],
+    scheduleId: { type: mongoose.Types.ObjectId, ref: "Subscription" },
     orderedBy: [{ type: mongoose.Types.ObjectId, ref: "User" }],
     vendorId: [{ type: mongoose.Types.ObjectId, ref: "Vendor" }],
     userEmail: { type: String },
@@ -58,7 +60,7 @@ const OrderSchema = new Schema<IOrder>(
     paymentIntentId: { type: String },
     locationCoord: {
       type: { type: String },
-      coordinates: [],
+      coordinates: [Number],
     },
   },
   { timestamps: true },

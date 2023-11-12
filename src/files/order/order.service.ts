@@ -3,11 +3,9 @@ import { IResponse } from "../../constants"
 import { deg2rad, genRandomNumber, queryConstructor } from "../../utils"
 import OrderRepository from "./order.repository"
 import { orderMessages } from "./order.messages"
-import { IOrder } from "./order.interface"
 import VendorRepository from "../partner/vendor/vendor.repository"
 import { partnerMessages } from "../partner/partner.messages"
 import UserRepository from "../user/user.repository"
-import Item from "../item/item.model"
 import ItemRepository from "../item/item.repository"
 
 export default class OrderService {
@@ -16,12 +14,13 @@ export default class OrderService {
       vendorId: string
       lng: any
       lat: any
-      item: [any]
+      item: [{ _id: any; quantity: Number; price: Number }]
       note: string
+      scheduleId: any
     },
     locals: any,
   ): Promise<IResponse> {
-    const { vendorId, lng, lat, item, note } = orderPayload
+    const { vendorId, lng, lat, item, note, scheduleId } = orderPayload
 
     const vendor = await VendorRepository.fetchVendor(
       {
@@ -36,8 +35,8 @@ export default class OrderService {
 
     // Check if vendor.locationCoord is defined before accessing its properties
     if (vendor.locationCoord && vendor.locationCoord.coordinates) {
-      vendorLng = vendor.locationCoord.coordinates[0]
-      vendorLat = vendor.locationCoord.coordinates[1]
+      vendorLat = vendor.locationCoord.coordinates[0]
+      vendorLng = vendor.locationCoord.coordinates[1]
     } else {
       // Handle the case where locationCoord or coordinates is undefined
       return {
@@ -46,21 +45,25 @@ export default class OrderService {
       }
     }
 
-    let dLng: any = lng - vendorLng
-    let dLat: any = lat - vendorLat
-    const R = 6371 // Earth's radius in kilometers
-    const lngResult = deg2rad(dLng)
-    const latResult = deg2rad(dLat)
+    // Radius of the Earth in kilometers
+    const R = 6371.0
+    // Convert latitude and longitude from degrees to radians
+    const lat1Rad: any = deg2rad(vendorLat)
+    const lon1Rad: any = deg2rad(vendorLng)
+    const lat2Rad: any = deg2rad(lat)
+    const lon2Rad: any = deg2rad(lng)
 
+    // Haversine formula
+    const dLat = lat2Rad - lat1Rad
+    const dLon = lon2Rad - lon1Rad
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(deg2rad(vendorLat)) *
-        Math.cos(deg2rad(lat)) *
-        Math.sin(lngResult / 2) *
-        Math.sin(latResult / 2)
-
-    const c: any = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-    const distance: Number = R * c
+      Math.cos(lat1Rad) *
+        Math.cos(lat2Rad) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2)
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+    const distance = R * c
 
     let kilometers: any = distance.toFixed(2)
 
@@ -71,33 +74,39 @@ export default class OrderService {
       {},
     )
 
-    let cartItems: [any]
-    let netAmount: any = 0
+    const allItems = await ItemRepository.findAllItems({})
 
-    //confirm item
-    let confirmItem = await Item.find()
-      .where("_id")
-      .in(item.map((result) => result._id))
-      .exec()
+    const result = item.map((payloadItem) => {
+      // Check if the payload item's _id exists in the database
+      const matchingItem = allItems.find(
+        (item) => item._id.toString() === payloadItem._id,
+      )
 
-    //map food and compare with id from req.body array
-    confirmItem.map((result) => {
-      item.map(({ _id, quantity }) => {
-        if (result._id == new mongoose.Types.ObjectId(_id)) {
-          let price: any = result.price
-          netAmount += price * quantity
+      return matchingItem
+    })
 
-          cartItems.push({ result, quantity })
-        }
+    // Calculate the total price based on the item array
+    const netAmount = item.reduce((total, currentItem: any) => {
+      return total + currentItem.price * currentItem.quantity
+    }, 0)
+
+    let orderItems: { _id: any; quantity: Number; price: Number }[] = []
+
+    item.forEach((payloadItem) => {
+      orderItems.push({
+        _id: payloadItem._id,
+        quantity: payloadItem.quantity,
+        price: payloadItem.price,
       })
     })
+
+    const parseAmount: any = Number(netAmount)
     const deliveryFee: Number = 2
     const marketPlace: Number = 3
 
-    let totalPrice: any = netAmount + deliveryFee + marketPlace + ridersFee
-    let roundTotalPrice: Number = Math.ceil(totalPrice)
-
-    let serviceCharge: Number = (10 * totalPrice) / 100
+    let totalPrice: any = parseAmount + deliveryFee + marketPlace + ridersFee
+    let roundTotalPrice = Math.ceil(totalPrice)
+    let serviceCharge = (10 * roundTotalPrice) / 100
 
     let pickUpNumber = genRandomNumber()
     let parsePickUpNumber = Number(pickUpNumber)
@@ -107,7 +116,7 @@ export default class OrderService {
     const currentOrder = await OrderRepository.createOrder({
       pickUpCode: parsePickUpNumber,
       orderCode: parseOrderCode,
-      // item: cartItems,
+      itemId: item,
       orderedBy: new mongoose.Types.ObjectId(locals._id),
       vendorId: new mongoose.Types.ObjectId(vendor._id),
       locationCoord: {
@@ -122,6 +131,7 @@ export default class OrderService {
       orderDate: new Date(),
       totalAmount: roundTotalPrice,
       netAmount,
+      scheduleId: new mongoose.Types.ObjectId(scheduleId),
     })
 
     if (!currentOrder)
