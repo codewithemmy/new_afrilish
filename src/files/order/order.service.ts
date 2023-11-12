@@ -10,7 +10,7 @@ import ItemRepository from "../item/item.repository"
 import { IOrder } from "./order.interface"
 
 export default class OrderService {
-  static async createOrder(
+  static async evaluateOrderService(
     orderPayload: {
       vendorId: string
       lng: any

@@ -6,9 +6,9 @@ import { statusCode } from "../../constants/statusCode"
 import OrderService from "./order.service"
 
 class OrderController {
-  async createOrderController(req: Request, res: Response, next: NextFunction) {
+  async evaluateOrderController(req: Request, res: Response, next: NextFunction) {
     const [error, data] = await manageAsyncOps(
-      OrderService.createOrder(req.body, res.locals.jwt),
+      OrderService.evaluateOrderService(req.body, res.locals.jwt),
     )
 
     console.log("error", error)
@@ -19,11 +19,7 @@ class OrderController {
     return responseHandler(res, statusCode.CREATED, data!)
   }
 
-  async fetchOrderController(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) {
+  async fetchOrderController(req: Request, res: Response, next: NextFunction) {
     const [error, data] = await manageAsyncOps(
       OrderService.fetchOrderService(req.query),
     )
