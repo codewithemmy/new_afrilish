@@ -13,9 +13,8 @@ export interface IItem {
   healthStat?: string
   leastOrder?: string
   mostOrder?: string
-  bulkEventPrice: [{price: Number, guestSize: Number, description: string}]
+  bulkEventPrice: [{ price: Number; guestSize: Number; description: string }]
   isDelete: boolean
   createdAt?: Date
   updatedAt?: Date
-}
 }
