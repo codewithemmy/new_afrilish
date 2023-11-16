@@ -10,6 +10,7 @@ export interface IConfig {
   PAYSTACK_URL: string
   PAYSTACK_KEY: string
   ENV: string
+  STRIPE: string
 }
 
 const config = {
@@ -21,6 +22,7 @@ const config = {
   PAYSTACK_URL: process.env.PAYSTACK_BASE_URL,
   PAYSTACK_KEY: process.env.PAYSTACK_SK_KEY,
   ENV: process.env.ENVIRONMENT,
+  STRIPE: process.env.STRIPE_KEY,
 }
 
 export default config
