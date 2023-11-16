@@ -64,9 +64,4 @@ export default class ItemRepository {
 
     return item
   }
-
-  // static async findItem(itemPayload: Partial<IItem>) {
-  //   const item = await Item.find(itemPayload)
-  //   return item
-  // }
 }

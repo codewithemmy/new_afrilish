@@ -75,6 +75,8 @@ export default class OrderService {
       {},
     )
 
+    if(!customer) return {success: false, msg: `unable to identify customer`}
+
     const allItems = await ItemRepository.findAllItems({})
 
     const result = item.map((payloadItem) => {
@@ -108,7 +110,7 @@ export default class OrderService {
     const marketPlace: Number = 3
 
     let totalPrice: any = parseAmount + deliveryFee + marketPlace + ridersFee
-    let roundTotalPrice = Math.ceil(totalPrice)
+    let roundTotalPrice: number = Math.ceil(totalPrice)
     let serviceCharge: Number = (10 * roundTotalPrice) / 100
 
     let pickUpNumber = genRandomNumber()
