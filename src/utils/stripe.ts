@@ -5,7 +5,7 @@ if (!stripeKey) {
   throw new Error("Stripe key is not defined")
 }
 
-const stripe = new Stripe(stripeKey)
+const stripeProvider = new Stripe(stripeKey)
 
 const stripePaymentIntent = async (payload: {
   amount: number
@@ -16,7 +16,10 @@ const stripePaymentIntent = async (payload: {
   if (!amount && !currency)
     return { success: false, msg: `amount and currency cannot be empty` }
 
-  const paymentIntent = await stripe.paymentIntents.create({ amount, currency })
+  const paymentIntent = await stripeProvider.paymentIntents.create({
+    amount,
+    currency,
+  })
 
   return {
     success: true,
