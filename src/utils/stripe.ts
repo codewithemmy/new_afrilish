@@ -1,4 +1,6 @@
 import Stripe from "stripe"
+import transaction from "../files/transactions/transaction.model"
+import { transactionMessages } from "../files/transactions/transaction.messages"
 const stripeKey = process.env.STRIPE_KEY
 
 if (!stripeKey) {
@@ -14,13 +16,13 @@ const stripePaymentIntent = async (payload: {
   const { amount, currency } = payload
 
   if (!amount && !currency)
-    return { success: false, msg: `amount and currency cannot be empty` }
+    return { success: false, msg: transactionMessages.AMOUNT_CURRENCY }
 
   const paymentIntent = await stripe.paymentIntents.create({ amount, currency })
 
   return {
     success: true,
-    msg: `stripe payment Intent Successful`,
+    msg: transactionMessages.PAYMENT_SUCCESS,
     data: {
       clientSecret: paymentIntent.client_secret,
       transactionId: paymentIntent.id,
