@@ -51,6 +51,7 @@ const OrderSchema = new Schema<IOrder>(
     paymentResponse: { type: String },
     ridersFee: { type: Number },
     netAmount: { type: Number },
+    totalAmount: { type: Number },
     marketPlace: { type: Number },
     serviceCharge: { type: Number },
     confirmDelivery: { type: Boolean },

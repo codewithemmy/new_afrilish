@@ -20,6 +20,24 @@ class TransactionController {
 
     return responseHandler(res, statusCode.CREATED, data!)
   }
+
+   async verifyPaymentController(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    const [error, data] = await manageAsyncOps(
+      TransactionService.verifyPayment(req.body, res.locals.jwt._id),
+    )
+
+    console.log("error", error)
+
+    if (error) return next(error)
+    if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
+
+    return responseHandler(res, statusCode.CREATED, data!)
+  }
 }
+
 
 export default new TransactionController()

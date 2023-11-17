@@ -7,7 +7,7 @@ export interface IPaymentResponse {
 export interface ITransaction {
   _id?: any
   userId: any
-  amount: number
+  amount: Number
   currency: string
   transactionId: string
   paymentFor: string

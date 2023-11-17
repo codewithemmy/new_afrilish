@@ -4,7 +4,7 @@ import Transaction from "./transaction.model"
 const { LIMIT, SKIP, SORT } = pagination
 
 export default class TransactionRepository {
-  static async create(transactionPayload: ITransaction) {
+  static async create(transactionPayload: Partial<ITransaction>) {
     return Transaction.create(transactionPayload)
   }
 
