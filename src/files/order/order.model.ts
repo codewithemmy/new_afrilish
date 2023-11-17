@@ -25,7 +25,7 @@ const OrderSchema = new Schema<IOrder>(
     },
     orderStatus: {
       type: String,
-      enum: ["pending", "on-going", "delivered", "cancelled"],
+      enum: ["pending", "on-going", "delivered", "cancelled", "completed"],
       default: "pending",
     },
     orderDate: { type: Date },
