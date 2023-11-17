@@ -50,6 +50,7 @@ export default class TransactionService {
 
     const transaction = await TransactionRepository.create({
       userId: new mongoose.Types.ObjectId(locals),
+      vendorId: new mongoose.Types.ObjectId(order.vendorId),
       ...payload,
     })
 

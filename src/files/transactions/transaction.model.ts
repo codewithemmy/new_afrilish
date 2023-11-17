@@ -7,6 +7,10 @@ const TransactionSchema = new mongoose.Schema<ITransaction>(
       type: mongoose.Types.ObjectId,
       ref: "User",
     },
+    vendorId: {
+      type: mongoose.Types.ObjectId,
+      ref: "Vendor",
+    },
     amount: {
       type: Number,
       required: true,
