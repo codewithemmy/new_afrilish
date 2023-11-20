@@ -53,7 +53,13 @@ export default class PartnerService {
       await sendMailNotification(
         email,
         "Registration",
-        { fullName, email },
+        {
+          fullName,
+          email,
+          otp,
+          imageUrl:
+            "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
+        },
         "REGISTRATION",
       )
     } catch (error) {
