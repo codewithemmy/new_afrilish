@@ -76,9 +76,9 @@ class PartnerController {
     next: NextFunction,
   ) {
     const [error, data] = await manageAsyncOps(
-      PartnerService.operationUpdateService({
-        params: req.params as { partnerId: string },
-        partnerPayload: req.body,
+      VendorService.operationUpdateService({
+        params: req.params as { vendorId: string },
+        vendorPayload: req.body,
       }),
     )
 

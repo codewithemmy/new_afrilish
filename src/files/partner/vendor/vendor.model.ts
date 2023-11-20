@@ -13,6 +13,15 @@ const VendorSchema = new Schema<IVendor>(
       type: { type: String },
       coordinates: [],
     },
+    operations: [
+      {
+        day: String,
+        openingTime: String,
+        closingTime: String,
+        orderAmount: Number,
+        tags: String,
+      },
+    ],
     phone: String,
     image: String,
     rating: Number,

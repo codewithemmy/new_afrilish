@@ -7,7 +7,6 @@ export interface IPartner {
   business?: IBusiness
   payment?: IPaymentInfo
   vendorId?: [any]
-  operations?: [IOperations]
   location?: string
   password: string
   referralCode?: string
@@ -25,6 +24,7 @@ export interface IVendor {
   email: string
   phone: string
   price: string
+  operations: [IOperations]
   location: string
   locationCoord?: ILocation
   address: string

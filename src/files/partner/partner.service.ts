@@ -145,26 +145,6 @@ export default class PartnerService {
     return { success: true, msg: partnerMessages.UPDATE_SUCCESS }
   }
 
-  static async operationUpdateService(data: {
-    params: { partnerId: string }
-    partnerPayload: Partial<IPartner>
-  }) {
-    const { params, partnerPayload } = data
-    // ensure password is not updated here
-    const { password, ...restOfPayload } = partnerPayload
-
-    const partner = await PartnerRepository.updatePartnerDetails(
-      { _id: new mongoose.Types.ObjectId(params.partnerId) },
-      {
-        $push: { operations: { ...restOfPayload } },
-      },
-    )
-
-    if (!partner) return { success: false, msg: partnerMessages.UPDATE_ERROR }
-
-    return { success: true, msg: partnerMessages.UPDATE_SUCCESS }
-  }
-
   private static async updatePassword(password: string, id: string) {
     const hashedPassword = await hashPassword(password)
 

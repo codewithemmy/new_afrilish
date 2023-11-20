@@ -6,6 +6,7 @@ import { partnerMessages } from "../partner.messages"
 import mongoose from "mongoose"
 import PartnerRepository from "../partner.repository"
 import { ICoord } from "../../user/user.interface"
+import partner from "../partner.model"
 
 export default class VendorService {
   static async createVendor(
@@ -106,7 +107,6 @@ export default class VendorService {
       }
     }
 
-
     const vendor = await VendorRepository.updateVendorDetails(
       { _id: new mongoose.Types.ObjectId(params.vendorId) },
       {
@@ -114,6 +114,26 @@ export default class VendorService {
           ...restOfPayload,
           locationCoord,
         },
+      },
+    )
+
+    if (!vendor) return { success: false, msg: partnerMessages.UPDATE_ERROR }
+
+    return { success: true, msg: partnerMessages.UPDATE_SUCCESS }
+  }
+
+  static async operationUpdateService(data: {
+    params: { vendorId: string }
+    vendorPayload: Partial<IVendor>
+  }) {
+    const { params, vendorPayload } = data
+    // ensure password is not updated here
+    const { ...restOfPayload } = vendorPayload
+
+    const vendor = await VendorRepository.updateVendorDetails(
+      { _id: new mongoose.Types.ObjectId(params.vendorId) },
+      {
+        $push: { operations: { ...restOfPayload } },
       },
     )
 
