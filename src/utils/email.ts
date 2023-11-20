@@ -1,14 +1,33 @@
-// import sgMail, { MailDataRequired } from "@sendgrid/mail"
 import handlebars from "handlebars"
 import fs from "fs"
 import path from "path"
-import mailer from "nodemailer"
-
-// sgMail.setApiKey(process.env.SENDGRID_API_KEY!)
+import mailer, { TransportOptions } from "nodemailer"
 
 handlebars.registerHelper("eq", (a, b) => a == b)
 
-export const sendMailNotification = (
+const mailTransport = mailer.createTransport({
+  host: process.env.SMS_HOST,
+  port: Number(process.env.SMS_PORT), // Assuming port is a number
+  secure: true, // use TLS
+  auth: {
+    user: process.env.SMS_USER,
+    pass: process.env.SMS_PASS,
+  },
+  tls: {
+    // do not fail on invalid certs
+    rejectUnauthorized: false,
+  },
+} as TransportOptions)
+
+mailTransport.verify(function (error, success) {
+  if (error) {
+    console.log(error)
+  } else {
+    console.log("Server is ready to take our messages")
+  }
+})
+
+export const sendMailNotification = async (
   to_email: string,
   subject: string,
   substitutional_parameters: { [key: string]: string | number },
@@ -16,83 +35,16 @@ export const sendMailNotification = (
   is_save?: any,
 ) => {
   const source = fs.readFileSync(
-    path.join(__dirname, "..", "templates", `${Template_Name}.hbs`),
+    path.join(__dirname, `../templates/${Template_Name}.hbs`),
     "utf8",
   )
 
   const compiledTemplate = handlebars.compile(source)
-  // sendgrid
-  // return new Promise((resolve, reject) => {
-  //   const msg = {
-  //     from: {
-  //       name: "SUA DSEP",
-  //       email: process.env.COMPANY_EMAIL,
-  //     },
-  //     to: to_email,
-  //     subject: subject,
-  //     html: compiledTemplate(substitutional_parameters),
-  //   } as MailDataRequired
 
-  //   return sgMail
-  //     .send(msg)
-  //     .then(() => {
-  //       return resolve(true)
-  //     })
-  //     .catch((error: any) => {
-  //       if (error) {
-  //         return reject(error)
-  //       }
-  //     })
-  // })
-
-  // Gmail smtp
-  return new Promise((resolve, reject) => {
-    let smtpProtocol = mailer.createTransport({
-      service: "Gmail",
-      auth: {
-        user: process.env.GMAIL_APP,
-        pass: process.env.GMAIL_APP_KEY,
-      },
-    })
-
-    var mailoption = {
-      from: process.env.COMPANY_EMAIL,
-      to: to_email,
-      subject: subject,
-      html: compiledTemplate(substitutional_parameters),
-    }
-
-    return smtpProtocol.sendMail(
-      mailoption,
-      function (err: Error | null, response: any) {
-        if (err) {
-          return reject(err)
-        }
-        console.log("Message Sent" + response)
-        smtpProtocol.close()
-        return resolve(true)
-      },
-    )
+  await mailTransport.sendMail({
+    from: '"Afrilish" <afrlish_admin@gmail.com>', // sender address
+    to: to_email, // list of receivers
+    subject: subject, // Subject line
+    html: compiledTemplate(substitutional_parameters),
   })
-}
-
-export const sendMultiEmailNotification = (
-  to_emails: string[],
-  subject: string,
-  substitutional_parameters: { [key: string]: string | number },
-  Template_Names: string[],
-  is_save: any,
-  whoIAm: string = "User",
-) => {
-  for (let index = 0; index < to_emails.length; index++) {
-    const to_email = to_emails[index]
-    const template_name = Template_Names[index]
-    sendMailNotification(
-      to_email,
-      subject,
-      substitutional_parameters,
-      template_name,
-      is_save ? index : 0,
-    )
-  }
 }
