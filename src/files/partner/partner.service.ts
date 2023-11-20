@@ -68,10 +68,12 @@ export default class PartnerService {
 
     partner.password = ""
 
+    const partnerToken = await tokenHandler({ _id: partner._id })
+
     return {
       success: true,
       msg: partnerMessages.PARTNER_SUCCESS,
-      data: partner,
+      data: { ...partner, partnerToken },
     }
   }
 

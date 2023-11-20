@@ -10,7 +10,7 @@ import { adminVerifier, isAuthenticated } from "../../utils"
 // import loginPartnerValidation from "../../validations/partner/loginPartner.validation"
 
 const PartnerRouter = express.Router()
-
+W
 const {
   createPartnerController,
   loginPartnerController,
