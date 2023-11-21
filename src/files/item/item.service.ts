@@ -26,7 +26,10 @@ export default class ItemService {
 
     if (!menuExist) return { success: false, msg: itemMessages.NOT_FOUND }
 
-    const item = await ItemRepository.createItem(itemPayload)
+    const item = await ItemRepository.createItem({
+      vendorId: new mongoose.Types.ObjectId(menuExist.vendorId),
+      ...itemPayload,
+    })
 
     if (!item._id) return { success: false, msg: itemMessages.ITEM_FAILURE }
 
