@@ -35,7 +35,7 @@ export default class PartnerService {
     )
 
     if (validatePartner)
-      return { success: true, msg: partnerMessages.EXISTING_PARTNER }
+      return { success: false, msg: partnerMessages.EXISTING_PARTNER }
 
     const otp = AlphaNumeric(4)
 
