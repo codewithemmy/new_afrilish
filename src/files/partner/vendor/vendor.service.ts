@@ -39,7 +39,7 @@ export default class VendorService {
     )
 
     if (validateVendor)
-      return { success: true, msg: partnerMessages.EXISTING_PARTNER }
+      return { success: false, msg: partnerMessages.EXISTING_PARTNER }
 
     const vendor = await VendorRepository.createVendor({
       partnerId: partnerId,
