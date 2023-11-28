@@ -60,7 +60,7 @@ export default class PartnerService {
           imageUrl:
             "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
         },
-        "REGISTRATION",
+        "PARTNER_REG",
       )
     } catch (error) {
       console.log("error", error)
