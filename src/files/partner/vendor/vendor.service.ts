@@ -62,14 +62,16 @@ export default class VendorService {
     }
   }
 
-  static async fetchVendorService(vendorPayload: Partial<IVendor>) {
-    const { error, params, limit, skip, sort } = queryConstructor(
+  static async fetchVendorService(vendorPayload: Partial<IVendor>, jwtId: any) {
+    let { error, params, limit, skip, sort } = queryConstructor(
       vendorPayload,
       "createdAt",
       "Vendor",
     )
 
     if (error) return { success: false, msg: error }
+
+    params.partnerId = new mongoose.Types.ObjectId(jwtId)
 
     const vendor = await VendorRepository.fetchVendorByParams({
       ...params,

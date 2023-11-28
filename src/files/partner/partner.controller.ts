@@ -151,7 +151,7 @@ class PartnerController {
 
   async fetchVendorController(req: Request, res: Response, next: NextFunction) {
     const [error, data] = await manageAsyncOps(
-      VendorService.fetchVendorService(req.query),
+      VendorService.fetchVendorService(req.query, res.locals.jwt._id),
     )
 
     if (error) return next(error)
