@@ -34,7 +34,7 @@ export const sendMailNotification = async (
   Template_Name: string,
 ) => {
   const source = fs.readFileSync(
-    path.join(__dirname, `../templates/${Template_Name}.hbs`),
+    path.join(__dirname, `../../templates/${Template_Name}.hbs`),
     "utf8",
   )
 
