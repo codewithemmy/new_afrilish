@@ -73,7 +73,7 @@ export default class PartnerService {
     return {
       success: true,
       msg: partnerMessages.PARTNER_SUCCESS,
-      data: { partnerToken },
+      data: { otp, partnerToken },
     }
   }
 
