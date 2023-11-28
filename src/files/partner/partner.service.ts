@@ -65,7 +65,6 @@ export default class PartnerService {
     } catch (error) {
       console.log("error", error)
     }
-
     partner.password = ""
 
     const partnerToken = await tokenHandler({ _id: partner._id })
