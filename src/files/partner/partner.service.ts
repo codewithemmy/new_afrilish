@@ -37,7 +37,7 @@ export default class PartnerService {
     if (validatePartner)
       return { success: false, msg: partnerMessages.EXISTING_PARTNER }
 
-    const otp = AlphaNumeric(4)
+    const otp = AlphaNumeric(4, "numbers")
 
     const partner = await PartnerRepository.createPartner({
       ...partnerPayload,
