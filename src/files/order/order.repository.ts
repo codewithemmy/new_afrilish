@@ -24,9 +24,7 @@ export default class OrderRepository {
     return order
   }
 
-  static async fetchOrderByParams(
-    orderPayload: Partial<IOrder & IPagination>,
-  ) {
+  static async fetchOrderByParams(orderPayload: Partial<IOrder & IPagination>) {
     const {
       limit = LIMIT,
       skip = SKIP,

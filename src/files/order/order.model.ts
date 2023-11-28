@@ -67,6 +67,6 @@ const OrderSchema = new Schema<IOrder>(
   { timestamps: true },
 )
 
-const subscription = model<IOrder>("Order", OrderSchema, "order")
+const order = model<IOrder>("Order", OrderSchema, "order")
 
-export default subscription
+export default order

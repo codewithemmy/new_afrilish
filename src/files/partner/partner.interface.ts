@@ -24,7 +24,7 @@ export interface IVendor {
   email: string
   phone: string
   price: string
-  operations: [IOperations]
+  vendorOperations: IOperations
   location: string
   locationCoord?: ILocation
   address: string
@@ -51,16 +51,21 @@ interface IPaymentInfo {
 }
 
 interface IOperations {
-  day:
-    | "monday"
-    | "tuesday"
-    | "wednesday"
-    | "thursday"
-    | "friday"
-    | "saturday"
-    | "sunday"
-  openingTime: string
-  closingTime: string
+  operation: [
+    {
+      day:
+        | "monday"
+        | "tuesday"
+        | "wednesday"
+        | "thursday"
+        | "friday"
+        | "saturday"
+        | "sunday"
+      openingTime: string
+      closingTime: string
+    },
+  ]
+
   orderAmount: Number
   tags: string
 }

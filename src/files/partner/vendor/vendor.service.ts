@@ -135,7 +135,7 @@ export default class VendorService {
     const vendor = await VendorRepository.updateVendorDetails(
       { _id: new mongoose.Types.ObjectId(params.vendorId) },
       {
-        $push: { operations: { ...restOfPayload } },
+        $set: { vendorOperations: { ...restOfPayload } },
       },
     )
 

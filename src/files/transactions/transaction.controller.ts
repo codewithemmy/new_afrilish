@@ -30,8 +30,6 @@ class TransactionController {
       TransactionService.verifyPayment(req.body, res.locals.jwt._id),
     )
 
-    console.log("error", error)
-
     if (error) return next(error)
     if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
 
