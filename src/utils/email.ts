@@ -32,7 +32,6 @@ export const sendMailNotification = async (
   subject: string,
   substitutional_parameters: { [key: string]: string | number },
   Template_Name: string,
-  is_save?: any,
 ) => {
   const source = fs.readFileSync(
     path.join(__dirname, `../templates/${Template_Name}.hbs`),

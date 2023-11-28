@@ -50,16 +50,18 @@ export default class PartnerService {
 
     // send mail login details to partner
     try {
+      const substitutional_parameters = {
+        name: fullName,
+        email: email,
+        otp,
+        imageUrl:
+          "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
+      }
+
       await sendMailNotification(
         email,
-        "Registration",
-        {
-          fullName,
-          email,
-          otp,
-          imageUrl:
-            "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
-        },
+        "Sign-Up",
+        substitutional_parameters,
         "PARTNER_REG",
       )
     } catch (error) {
