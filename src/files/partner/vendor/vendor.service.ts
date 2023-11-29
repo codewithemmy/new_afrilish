@@ -44,6 +44,7 @@ export default class VendorService {
     const vendor = await VendorRepository.createVendor({
       partnerId: partnerId,
       ...vendorPayload,
+      updated: true,
     })
 
     if (!vendor) return { success: false, msg: partnerMessages.PARTNER_FAILURE }
@@ -135,7 +136,7 @@ export default class VendorService {
     const vendor = await VendorRepository.updateVendorDetails(
       { _id: new mongoose.Types.ObjectId(params.vendorId) },
       {
-        $set: { vendorOperations: { ...restOfPayload } },
+        $set: { vendorOperations: { ...restOfPayload, updated: true } },
       },
     )
 

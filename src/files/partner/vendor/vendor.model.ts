@@ -9,6 +9,7 @@ const VendorSchema = new Schema<IVendor>(
     price: String,
     location: String,
     vendorType: String,
+    updated: { type: Boolean, default: false },
     locationCoord: {
       type: { type: String },
       coordinates: [],
@@ -17,6 +18,7 @@ const VendorSchema = new Schema<IVendor>(
       operation: [{ day: String, openingTime: String, closingTime: String }],
       orderAmount: Number,
       tags: String,
+      updated: { type: Boolean, default: false },
     },
     phone: String,
     image: String,

@@ -22,6 +22,7 @@ export interface IVendor {
   _id?: any
   name: string
   email: string
+  updated: Boolean
   phone: string
   price: string
   vendorOperations: IOperations
@@ -65,9 +66,9 @@ interface IOperations {
       closingTime: string
     },
   ]
-
   orderAmount: Number
   tags: string
+  updated: Boolean
 }
 
 interface ILocation {
