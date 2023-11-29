@@ -5,6 +5,7 @@ const OrderSchema = new Schema<IOrder>(
   {
     pickUpCode: { type: Number },
     orderCode: { type: Number },
+    orderId: { type: String },
     itemId: [
       {
         _id: { type: mongoose.Types.ObjectId, ref: "Item" },

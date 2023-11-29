@@ -1,6 +1,11 @@
 import mongoose, { mongo } from "mongoose"
 import { IResponse } from "../../constants"
-import { deg2rad, genRandomNumber, queryConstructor } from "../../utils"
+import {
+  AlphaNumeric,
+  deg2rad,
+  genRandomNumber,
+  queryConstructor,
+} from "../../utils"
 import OrderRepository from "./order.repository"
 import { orderMessages } from "./order.messages"
 import VendorRepository from "../partner/vendor/vendor.repository"
@@ -75,7 +80,7 @@ export default class OrderService {
       {},
     )
 
-    if(!customer) return {success: false, msg: `unable to identify customer`}
+    if (!customer) return { success: false, msg: `unable to identify customer` }
 
     const allItems = await ItemRepository.findAllItems({})
 
@@ -118,8 +123,11 @@ export default class OrderService {
     let orderCode = genRandomNumber()
     let parseOrderCode = Number(orderCode)
 
+    let orderId = `#${AlphaNumeric(3, "number")}`
+
     const currentOrder = await OrderRepository.createOrder({
       pickUpCode: parsePickUpNumber,
+      orderId,
       orderCode: parseOrderCode,
       itemId: item,
       orderedBy: new mongoose.Types.ObjectId(locals._id),

@@ -2,6 +2,7 @@ export interface IOrder {
   _id?: any
   pickUpCode: Number
   orderCode: Number
+  orderId: string
   itemId: [
     {
       _id: any
