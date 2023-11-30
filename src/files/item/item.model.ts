@@ -6,6 +6,7 @@ const ItemSchema = new Schema<IItem>(
     name: { type: String },
     description: { type: String },
     price: { type: Number },
+    priceDescription: { type: String },
     image: { type: String },
     deliveryOption: { type: String },
     preparationTime: { type: String },

@@ -6,6 +6,7 @@ export interface IItem {
   image: string
   price: Number
   deliveryOption: string
+  priceDescription: string
   vendorId: any
   preparationTime: string
   selectPack: string
