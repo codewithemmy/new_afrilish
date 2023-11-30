@@ -109,12 +109,20 @@ export default class TransactionService {
         { _id: new mongoose.Types.ObjectId(order?.orderedBy) },
         { $inc: { wallet: payload.amount } },
       )
+      await OrderRepository.updateOrderDetails(
+        {
+          _id: new mongoose.Types.ObjectId(payload.orderId),
+        },
+        {
+          $set: { transactionId: transaction._id, paymentStatus: "Succeeded" },
+        },
+      )
     } else {
       await OrderRepository.updateOrderDetails(
         {
           _id: new mongoose.Types.ObjectId(payload.orderId),
         },
-        { $set: { transactionId: transaction._id, paymentStatus: "failed" } },
+        { $set: { transactionId: transaction._id, paymentStatus: "Failed" } },
       )
     }
     return { success: true, msg: transactionMessages.PAYMENT_SUCCESS }
