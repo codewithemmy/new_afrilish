@@ -10,4 +10,5 @@ export const transactionMessages = {
   PAYMENT_SUCCESS: "Payment successfully verified",
   PAYMENT_FAILURE: "Payment not verified",
   AMOUNT_CURRENCY: "amount or currency cannot be empty",
+  INSUFFICIENT: "insufficient balance",
 }

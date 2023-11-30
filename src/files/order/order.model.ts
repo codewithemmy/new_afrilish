@@ -15,7 +15,7 @@ const OrderSchema = new Schema<IOrder>(
     ],
     transactionId: [{ type: mongoose.Types.ObjectId, ref: "Transaction" }],
     scheduleId: { type: mongoose.Types.ObjectId, ref: "Subscription" },
-    orderedBy: [{ type: mongoose.Types.ObjectId, ref: "User" }],
+    orderedBy: { type: mongoose.Types.ObjectId, ref: "User" },
     vendorId: { type: mongoose.Types.ObjectId, ref: "Vendor" },
     userEmail: { type: String },
     userName: { type: String },

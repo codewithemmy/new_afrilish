@@ -4,6 +4,7 @@ export interface IUser {
   phone: string
   email: string
   language: string
+  wallet: Number
   home: string
   office: string
   locationCoord: ILocation

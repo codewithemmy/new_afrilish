@@ -6,6 +6,8 @@ import { IPaymentProvider } from "./transaction.provider"
 import { ITransaction } from "./transaction.interface"
 import OrderRepository from "../order/order.repository"
 import TransactionRepository from "./transaction.repository"
+import UserRepository from "../user/user.repository"
+import { IUser } from "../user/user.interface"
 
 export default class TransactionService {
   private static paymentProvider: IPaymentProvider
@@ -34,6 +36,54 @@ export default class TransactionService {
     return initializePayment
   }
 
+  static async chargeWalletService(
+    payload: Partial<ITransaction>,
+    locals: any,
+  ): Promise<IResponse> {
+    const confirmWallet = await UserRepository.fetchUser(
+      {
+        _id: new mongoose.Types.ObjectId(locals),
+      },
+      {},
+    )
+    const walletBalance: any = confirmWallet?.wallet
+
+    const amount: any = payload.amount
+
+    if (walletBalance < amount)
+      return { success: false, msg: transactionMessages.INSUFFICIENT }
+
+    const order = await OrderRepository.fetchOrder(
+      { _id: new mongoose.Types.ObjectId(payload.orderId) },
+      {},
+    )
+
+    if (!order)
+      return { success: false, msg: transactionMessages.PAYMENT_FAILURE }
+
+    if (order.totalAmount !== payload.amount)
+      return { success: false, msg: transactionMessages.PAYMENT_FAILURE }
+
+    const transaction =
+      await TransactionRepository.findSingleTransactionByParams({
+        userId: new mongoose.Types.ObjectId(locals),
+      })
+
+    await OrderRepository.updateOrderDetails(
+      {
+        _id: new mongoose.Types.ObjectId(payload.orderId),
+      },
+      { $set: { transactionId: transaction?._id, paymentStatus: "paid" } },
+    )
+
+    await UserRepository.updateUsersProfile(
+      { _id: new mongoose.Types.ObjectId(order?.orderedBy) },
+      { $inc: { wallet: -amount } },
+    )
+
+    return { success: true, msg: transactionMessages.PAYMENT_SUCCESS }
+  }
+
   static async verifyPayment(
     payload: Partial<ITransaction>,
     locals: any,
@@ -55,11 +105,9 @@ export default class TransactionService {
     })
 
     if (payload.status === "Succeeded") {
-      await OrderRepository.updateOrderDetails(
-        {
-          _id: new mongoose.Types.ObjectId(payload.orderId),
-        },
-        { $set: { transactionId: transaction._id, paymentStatus: "paid" } },
+      await UserRepository.updateUsersProfile(
+        { _id: new mongoose.Types.ObjectId(order?.orderedBy) },
+        { $inc: { wallet: payload.amount } },
       )
     } else {
       await OrderRepository.updateOrderDetails(

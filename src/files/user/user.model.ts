@@ -1,6 +1,5 @@
 import mongoose, { Schema, model } from "mongoose"
 import { IUser } from "./user.interface"
-// import { IRestaurant } from "./partner.interface"
 
 const UserSchema = new Schema<IUser>(
   {
@@ -8,6 +7,7 @@ const UserSchema = new Schema<IUser>(
     phone: { type: String, required: true },
     email: { type: String, required: true },
     language: { type: String },
+    wallet: { type: Number },
     home: { type: String },
     office: { type: String },
     dateOfBirth: { type: Date },

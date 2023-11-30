@@ -21,7 +21,7 @@ class TransactionController {
     return responseHandler(res, statusCode.CREATED, data!)
   }
 
-   async verifyPaymentController(
+  async verifyPaymentController(
     req: Request,
     res: Response,
     next: NextFunction,
@@ -35,7 +35,20 @@ class TransactionController {
 
     return responseHandler(res, statusCode.CREATED, data!)
   }
-}
+  async chargeWalletController(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    const [error, data] = await manageAsyncOps(
+      TransactionService.chargeWalletService(req.body, res.locals.jwt._id),
+    )
 
+    if (error) return next(error)
+    if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
+
+    return responseHandler(res, statusCode.CREATED, data!)
+  }
+}
 
 export default new TransactionController()

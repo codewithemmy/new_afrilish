@@ -13,7 +13,7 @@ const ItemSchema = new Schema<IItem>(
     selectPack: { type: String },
     leastOrder: { type: String },
     mostOrder: { type: String },
-    healthStat: { type: String },
+    healthStat: [{ type: String }],
     bulkEventPrice: [
       {
         price: { type: Number },
