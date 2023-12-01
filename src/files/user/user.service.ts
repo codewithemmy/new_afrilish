@@ -66,7 +66,7 @@ export default class UserService {
     const { phone } = userPayload
     const user = await UserRepository.fetchUser({ phone }, {})
 
-    if (!user) return { success: false, msg: generalMessages.INCORRECT_DETAILS }
+    if (!user) return { success: false, msg: generalMessages.INCORRECT }
 
     const token = tokenHandler({ ...user })
 

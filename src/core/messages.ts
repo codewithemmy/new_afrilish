@@ -4,6 +4,7 @@ export const generalMessages = {
   SEARCH_ERROR: "Invalid search term",
   INVALID_ID: "Invalid id",
   INCORRECT_DETAILS: "One or more details are incorrect",
+  INCORRECT: "email or password incorrect",
   SUCCESSFUL_LOGIN: "Successful login",
   NOT_VERIFIED: "Unverified user",
 }
