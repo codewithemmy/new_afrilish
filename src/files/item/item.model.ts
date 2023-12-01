@@ -14,7 +14,7 @@ const ItemSchema = new Schema<IItem>(
     selectPack: { type: String },
     leastOrder: { type: String },
     mostOrder: { type: String },
-    healthStat: [{ type: String }],
+    healthStat: { calorie: Number, carb: Number, fat: Number, protein: Number },
     bulkEventPrice: [
       {
         price: { type: Number },

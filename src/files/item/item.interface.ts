@@ -12,7 +12,7 @@ export interface IItem {
   selectPack: string
   status: string
   tag: string
-  healthStat?: [string]
+  healthStat?: { calorie: Number, carb: Number, fat: Number, protein: Number}
   leastOrder?: string
   mostOrder?: string
   bulkEventPrice: [{ price: Number; guestSize: Number; description: string }]
