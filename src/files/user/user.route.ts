@@ -13,6 +13,8 @@ const {
   updateUserController,
   getVendorByCoordController,
   loginCodeController,
+  verifyUserController,
+  resendVerificationOtp,
 } = userController
 
 const UserRouter = express.Router()
@@ -25,6 +27,8 @@ UserRouter.post(
 )
 
 UserRouter.post("/login", loginUserController)
+UserRouter.post("/verify", verifyUserController)
+UserRouter.post("/resend-otp", resendVerificationOtp)
 
 UserRouter.post("/login-code", loginCodeController)
 

@@ -7,6 +7,7 @@ import { userMessages } from "./user.messages"
 import { sendMailNotification } from "../../utils/email"
 import { generalMessages } from "../../core/messages"
 import { IVendor } from "../partner/partner.interface"
+import { partnerMessages } from "../partner/partner.messages"
 
 export default class UserService {
   static async createUser(userPayload: IUser): Promise<IResponse> {
@@ -31,11 +32,14 @@ export default class UserService {
 
     if (validateUser) return { success: true, msg: userMessages.DETAILS }
 
+    const otp = AlphaNumeric(4, "numbers")
+
     const user = await UserRepository.createUser({
       ...userPayload,
+      verificationOtp: otp,
     })
 
-    if (!user) return { success: false, msg: userMessages.NOT_FOUND }
+    if (!user) return { success: false, msg: userMessages.USER_FAILURE }
 
     // send mail login details to user
     try {
@@ -43,7 +47,8 @@ export default class UserService {
         email,
         "Registration",
         {
-          fullName,
+          name: fullName,
+          otp,
           email,
           imageUrl:
             "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
@@ -60,7 +65,114 @@ export default class UserService {
     }
   }
 
+  static async verifyUserService(payload: { otp: string; email: string }) {
+    const { otp, email } = payload
+
+    const confirmOtp = await UserRepository.fetchUser(
+      { verificationOtp: otp, email },
+      {},
+    )
+
+    if (!confirmOtp)
+      return { success: false, msg: partnerMessages.INCORRECT_INFO }
+
+    await UserRepository.updateUsersProfile(
+      { _id: new mongoose.Types.ObjectId(confirmOtp._id) },
+      { verificationOtp: "", isVerified: true },
+    )
+
+    return {
+      success: true,
+      msg: partnerMessages.VERIFIED,
+    }
+  }
+
+  static async resendVerificationService(
+    userPayload: IUser,
+  ): Promise<IResponse> {
+    let { email } = userPayload
+
+    const findPartner = await UserRepository.fetchUser({ email }, {})
+
+    const otp = AlphaNumeric(4, "numbers")
+
+    const fullName: any = findPartner?.fullName
+
+    const user = await UserRepository.updateUsersProfile(
+      { email },
+      { verificationOtp: otp },
+    )
+
+    if (!user) return { success: false, msg: userMessages.FETCH_ERROR }
+
+    // send mail login details to partner
+    try {
+      const substitutional_parameters = {
+        name: fullName,
+        email: email,
+        otp,
+        imageUrl:
+          "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
+      }
+
+      await sendMailNotification(
+        email,
+        "Sign-Up",
+        substitutional_parameters,
+        "USER_REG",
+      )
+    } catch (error) {
+      console.log("error", error)
+    }
+
+    return {
+      success: true,
+      msg: partnerMessages.OTP,
+    }
+  }
+
   static async loginCodeService(userPayload: Pick<IUser, "email">) {
+    const { email } = userPayload
+    const user = await UserRepository.fetchUser({ email }, {})
+
+    if (!user) return { success: false, msg: generalMessages.EMAIL_INCORRECT }
+
+    const randomNumber = AlphaNumeric(4, "number")
+
+    const updateUser = await UserRepository.updateUsersProfile(
+      { email },
+      { loginCode: randomNumber },
+    )
+
+    if (!updateUser) return { success: false, msg: userMessages.OTP_FAILURE }
+
+    let fullName: any = user.fullName
+
+    // send mail login details to user
+    try {
+      await sendMailNotification(
+        email,
+        "Login Code",
+        {
+          name: fullName,
+          email,
+          otp: randomNumber,
+          imageUrl:
+            "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
+        },
+        "USER_CODE",
+      )
+    } catch (error) {
+      console.log("error", error)
+    }
+
+    return {
+      success: true,
+      msg: userMessages.OTP_SENT,
+    }
+  }
+
+  static async resendLoginCodeService(userPayload: Pick<IUser, "email">) {
     const { email } = userPayload
     const user = await UserRepository.fetchUser({ email }, {})
 
