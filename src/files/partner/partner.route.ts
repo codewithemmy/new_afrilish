@@ -23,13 +23,14 @@ const {
   verifyPartnerController,
   forgotPasswordController,
   resetPasswordController,
+  resendVerificationOtpController,
 } = partnerController
 
 //routes
-
 PartnerRouter.post("/verify", verifyPartnerController)
 PartnerRouter.post("/forgot-password", forgotPasswordController)
 PartnerRouter.post("/reset-password", resetPasswordController)
+PartnerRouter.post("/resend-otp", resendVerificationOtpController)
 
 PartnerRouter.post(
   "/",

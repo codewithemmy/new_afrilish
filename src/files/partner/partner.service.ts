@@ -240,6 +240,51 @@ export default class PartnerService {
     }
   }
 
+  static async resendVerificationService(
+    partnerPayload: IPartner,
+  ): Promise<IResponse> {
+    let { email } = partnerPayload
+
+    const findPartner = await PartnerRepository.fetchPartner({ email }, {})
+
+    const otp = AlphaNumeric(4, "numbers")
+
+    const fullName: any = findPartner?.fullName
+
+    const partner = await PartnerRepository.updatePartnerDetails(
+      { email },
+      { verificationOtp: otp },
+    )
+
+    if (!partner)
+      return { success: false, msg: partnerMessages.PARTNER_FAILURE }
+
+    // send mail login details to partner
+    try {
+      const substitutional_parameters = {
+        name: fullName,
+        email: email,
+        otp,
+        imageUrl:
+          "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
+      }
+
+      await sendMailNotification(
+        email,
+        "Sign-Up",
+        substitutional_parameters,
+        "PARTNER_REG",
+      )
+    } catch (error) {
+      console.log("error", error)
+    }
+
+    return {
+      success: true,
+      msg: partnerMessages.OTP,
+    }
+  }
+
   static async verifyPartnerService(payload: { otp: string; email: string }) {
     const { otp, email } = payload
 
