@@ -20,6 +20,12 @@ const createUserValidation = {
     errorMessage: "Email cannot be empty",
     trim: true,
   },
+  dataOfBirth: {
+    notEmpty: true,
+    isEmail: true,
+    errorMessage: "dataOfBirth cannot be empty",
+    trim: true,
+  },
 }
 
 export default createUserValidation

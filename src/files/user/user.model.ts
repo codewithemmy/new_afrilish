@@ -7,7 +7,7 @@ const UserSchema = new Schema<IUser>(
     phone: { type: String, required: true },
     email: { type: String, required: true },
     language: { type: String },
-    wallet: { type: Number },
+    wallet: { type: Number, default: 0 },
     home: { type: String },
     office: { type: String },
     dateOfBirth: { type: Date },

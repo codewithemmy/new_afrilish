@@ -35,7 +35,7 @@ export default class UserService {
       },
     )
 
-    if (validateUser) return { success: true, msg: userMessages.EXISTING_USER }
+    if (validateUser) return { success: true, msg: userMessages.DETAILS }
 
     const user = await UserRepository.createUser({
       ...userPayload,

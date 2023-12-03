@@ -13,7 +13,6 @@ const {
   loginUserController,
   fetchUserController,
   updateUserController,
-  fetchSingleUserController,
   getVendorByCoordController,
 } = userController
 

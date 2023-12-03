@@ -2,6 +2,7 @@ export const userMessages = {
   USER_FAILURE: "unable to create user",
   USER_SUCCESS: "user created successfully",
   EXISTING_USER: "user already exists",
+  DETAILS: `either phone number or email already used`,
   FETCH_ERROR: "user not found",
   FETCH_SUCCESS: "fetch successful",
   UPDATE_ERROR: "unable to update user",
