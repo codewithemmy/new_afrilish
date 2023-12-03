@@ -172,47 +172,6 @@ export default class UserService {
     }
   }
 
-  static async resendLoginCodeService(userPayload: Pick<IUser, "email">) {
-    const { email } = userPayload
-    const user = await UserRepository.fetchUser({ email }, {})
-
-    if (!user) return { success: false, msg: generalMessages.EMAIL_INCORRECT }
-
-    const randomNumber = AlphaNumeric(4, "number")
-
-    const updateUser = await UserRepository.updateUsersProfile(
-      { email },
-      { loginCode: randomNumber },
-    )
-
-    if (!updateUser) return { success: false, msg: userMessages.OTP_FAILURE }
-
-    let fullName: any = user.fullName
-
-    // send mail login details to user
-    try {
-      await sendMailNotification(
-        email,
-        "Login Code",
-        {
-          name: fullName,
-          email,
-          otp: randomNumber,
-          imageUrl:
-            "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
-        },
-        "USER_CODE",
-      )
-    } catch (error) {
-      console.log("error", error)
-    }
-
-    return {
-      success: true,
-      msg: userMessages.OTP_SENT,
-    }
-  }
-
   static async loginUser(userPayload: Partial<IUser>) {
     const { loginCode, email } = userPayload
     const user = await UserRepository.fetchUser({ loginCode, email }, {})
