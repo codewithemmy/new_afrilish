@@ -16,6 +16,7 @@ const UserSchema = new Schema<IUser>(
       coordinates: [],
     },
     referralCode: String,
+    loginCode: Number,
     isDelete: { type: Boolean, default: false },
     verificationOtp: String,
   },

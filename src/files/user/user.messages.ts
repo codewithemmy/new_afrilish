@@ -13,4 +13,7 @@ export const userMessages = {
   NOT_FOUND: "Not found",
   USER_DELETE: "user data was successfully deleted",
   DELETE_FAILURE: "user data was not deleted, please try again",
+  OTP_FAILURE: "unable to send otp",
+  OTP_SENT: "otp sent successfully",
+  INCORRECT_CODE: "otp is incorrect, use a valid otp",
 }

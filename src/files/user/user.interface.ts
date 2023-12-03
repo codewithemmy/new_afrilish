@@ -5,6 +5,7 @@ export interface IUser {
   email: string
   language: string
   wallet: Number
+  loginCode: Number
   home: string
   office: string
   locationCoord: ILocation

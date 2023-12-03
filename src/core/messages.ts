@@ -7,4 +7,5 @@ export const generalMessages = {
   INCORRECT: "email or password incorrect",
   SUCCESSFUL_LOGIN: "Successful login",
   NOT_VERIFIED: "Unverified user",
+  EMAIL_INCORRECT: `email not identified`,
 }

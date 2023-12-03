@@ -1,10 +1,8 @@
 import express from "express"
 import validate from "../../validations/validate"
 import { checkSchema } from "express-validator"
-import loginUserValidation from "../../validations/user/loginPartner.validation"
 import createUserValidation from "../../validations/user/createPartner.validation"
 import userController from "./user.controller"
-import uploadManager from "../../utils/multer"
 
 import { adminVerifier, isAuthenticated } from "../../utils"
 
@@ -14,6 +12,7 @@ const {
   fetchUserController,
   updateUserController,
   getVendorByCoordController,
+  loginCodeController,
 } = userController
 
 const UserRouter = express.Router()
@@ -25,11 +24,9 @@ UserRouter.post(
   createUserController,
 )
 
-UserRouter.post(
-  "/login",
-  validate(checkSchema(loginUserValidation)),
-  loginUserController,
-)
+UserRouter.post("/login", loginUserController)
+
+UserRouter.post("/login-code", loginCodeController)
 
 UserRouter.get("/", fetchUserController)
 

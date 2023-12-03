@@ -15,6 +15,17 @@ class UserController {
     return responseHandler(res, statusCode.CREATED, data!)
   }
 
+  async loginCodeController(req: Request, res: Response, next: NextFunction) {
+    const [error, data] = await manageAsyncOps(
+      UserService.loginCodeService(req.body),
+    )
+
+    if (error) return next(error)
+    if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
+
+    return responseHandler(res, statusCode.SUCCESS, data!)
+  }
+
   async loginUserController(req: Request, res: Response, next: NextFunction) {
     const [error, data] = await manageAsyncOps(UserService.loginUser(req.body))
 

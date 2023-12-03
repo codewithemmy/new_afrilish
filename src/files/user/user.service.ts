@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
 import { IResponse } from "../../constants"
-import { queryConstructor, tokenHandler } from "../../utils"
+import { AlphaNumeric, queryConstructor, tokenHandler } from "../../utils"
 import { ICoord, IUser } from "./user.interface"
 import UserRepository from "./user.repository"
 import { userMessages } from "./user.messages"
@@ -43,7 +43,7 @@ export default class UserService {
         email,
         "Registration",
         { fullName, email },
-        "REGISTRATION",
+        "USER_REG",
       )
     } catch (error) {
       console.log("error", error)
@@ -52,22 +52,64 @@ export default class UserService {
     return {
       success: true,
       msg: userMessages.USER_SUCCESS,
-      data: user,
     }
   }
 
-  static async loginUser(userPayload: Pick<IUser, "phone">) {
-    const { phone } = userPayload
-    const user = await UserRepository.fetchUser({ phone }, {})
+  static async loginCodeService(userPayload: Pick<IUser, "email">) {
+    const { email } = userPayload
+    const user = await UserRepository.fetchUser({ email }, {})
 
-    if (!user) return { success: false, msg: generalMessages.INCORRECT }
+    if (!user) return { success: false, msg: generalMessages.EMAIL_INCORRECT }
 
-    const token = tokenHandler({ ...user })
+    const randomNumber = AlphaNumeric(4, "number")
+
+    const updateUser = await UserRepository.updateUsersProfile(
+      { email },
+      { loginCode: randomNumber },
+    )
+
+    if (!updateUser) return { success: false, msg: userMessages.OTP_FAILURE }
+
+    let fullName: any = user.fullName
+
+    // send mail login details to user
+    try {
+      await sendMailNotification(
+        email,
+        "Login Code",
+        { fullName, email, otp: randomNumber },
+        "USER_REG",
+      )
+    } catch (error) {
+      console.log("error", error)
+    }
+
+    return {
+      success: true,
+      msg: userMessages.OTP_SENT,
+    }
+  }
+
+  static async loginUser(userPayload: Partial<IUser>) {
+    const { loginCode, email } = userPayload
+    const user = await UserRepository.fetchUser({ loginCode, email }, {})
+
+    if (!user) return { success: false, msg: userMessages.INCORRECT_CODE }
+
+    const token = tokenHandler({
+      ...user,
+    })
 
     return {
       success: true,
       msg: generalMessages.SUCCESSFUL_LOGIN,
-      data: { ...user, token },
+      data: {
+        _id: user._id,
+        fullName: user.fullName,
+        phone: user.phone,
+        email: user.email,
+        token,
+      },
     }
   }
 
