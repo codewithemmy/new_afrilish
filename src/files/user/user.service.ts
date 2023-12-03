@@ -42,7 +42,12 @@ export default class UserService {
       await sendMailNotification(
         email,
         "Registration",
-        { fullName, email },
+        {
+          fullName,
+          email,
+          imageUrl:
+            "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
+        },
         "USER_REG",
       )
     } catch (error) {
@@ -77,8 +82,14 @@ export default class UserService {
       await sendMailNotification(
         email,
         "Login Code",
-        { fullName, email, otp: randomNumber },
-        "USER_REG",
+        {
+          name: fullName,
+          email,
+          otp: randomNumber,
+          imageUrl:
+            "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
+        },
+        "USER_CODE",
       )
     } catch (error) {
       console.log("error", error)
@@ -95,6 +106,11 @@ export default class UserService {
     const user = await UserRepository.fetchUser({ loginCode, email }, {})
 
     if (!user) return { success: false, msg: userMessages.INCORRECT_CODE }
+
+    await UserRepository.updateUsersProfile(
+      { email, loginCode },
+      { loginCode: "" },
+    )
 
     const token = tokenHandler({
       ...user,
