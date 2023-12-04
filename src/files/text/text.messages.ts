@@ -1,0 +1,16 @@
+export const menuMessages = {
+  MENU_FAILURE: "unable to create menu",
+  NOT_FOUND: "menu not found",
+  MENU_SUCCESS: "menu created successfully",
+  EXISTING_MENU: "menu already exists",
+  FETCH_ERROR: "menu not found",
+  FETCH_SUCCESS: "fetch successful",
+  UPDATE_ERROR: "unable to update menu",
+  UPDATE_SUCCESS: "menu update successful",
+  INCORRECT_PASSWORD: "incorrect password",
+  PASSWORD_RESET_ERROR: "unable to reset password",
+  PASSWORD_RESET_SUCCESS: "password reset successful",
+  EMPTY_VENDOR: "Vendor Id cannot be empty",
+  MENU_DELETE: "menu data was successfully deleted",
+  DELETE_FAILURE: "menu data was not deleted, please try again",
+}

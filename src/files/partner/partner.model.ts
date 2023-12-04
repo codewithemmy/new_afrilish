@@ -10,7 +10,6 @@ const PartnerSchema = new Schema<IPartner>(
     password: { type: String, required: true },
     business: { name: String, phone: String, email: String, address: String },
     vendorId: [{ type: mongoose.Types.ObjectId, ref: "Vendor" }],
-    payment: { bank: String, account: Number, name: String },
     language: { type: String },
     location: { type: String },
     partnerType: String,

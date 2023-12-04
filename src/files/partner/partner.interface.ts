@@ -5,7 +5,6 @@ export interface IPartner {
   email: string
   language: string
   business?: IBusiness
-  payment?: IPaymentInfo
   vendorId?: [any]
   location?: string
   password: string
@@ -24,6 +23,7 @@ export interface IVendor {
   email: string
   updated: Boolean
   phone: string
+  payment?: IPaymentInfo
   price: string
   vendorOperations: IOperations
   location: string

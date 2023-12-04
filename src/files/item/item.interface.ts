@@ -4,6 +4,7 @@ export interface IItem {
   name: string
   description: string
   image: string
+  outOfStock: Boolean
   price: Number
   deliveryOption: string
   priceDescription: string

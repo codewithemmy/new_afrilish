@@ -12,6 +12,7 @@ const ItemSchema = new Schema<IItem>(
     preparationTime: { type: String },
     status: { type: String, default: "pending" },
     selectPack: { type: String },
+    outOfStock: { type: Boolean, default: false },
     leastOrder: { type: String },
     mostOrder: { type: String },
     healthStat: { calorie: Number, carb: Number, fat: Number, protein: Number },

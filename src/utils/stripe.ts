@@ -1,5 +1,4 @@
 import Stripe from "stripe"
-import transaction from "../files/transactions/transaction.model"
 import { transactionMessages } from "../files/transactions/transaction.messages"
 const stripeKey = process.env.STRIPE_KEY
 

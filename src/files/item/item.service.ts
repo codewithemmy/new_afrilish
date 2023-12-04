@@ -16,7 +16,7 @@ export default class ItemService {
   static async createItem(itemPayload: Partial<IItem>): Promise<IResponse> {
     const { menuId, image } = itemPayload
 
-    if(!image) return {success: false, msg: `image cannot be null` }
+    if (!image) return { success: false, msg: `image cannot be null` }
 
     if (!menuId) return { success: false, msg: itemMessages.EMPTY_ITEM }
 
@@ -30,7 +30,8 @@ export default class ItemService {
     if (!menuExist) return { success: false, msg: itemMessages.NOT_FOUND }
 
     const item = await ItemRepository.createItem({
-      vendorId: new mongoose.Types.ObjectId(menuExist.vendorId), image,
+      vendorId: new mongoose.Types.ObjectId(menuExist.vendorId),
+      image,
       ...itemPayload,
     })
 
@@ -74,87 +75,19 @@ export default class ItemService {
     }
   }
 
-  // static async updateMenuService(menuId: any, data: Partial<IItem>) {
-  //   // ensure password is not updated here
-  //   const partner = await MenuRepository.updateMenuDetails(
-  //     { _id: new mongoose.Types.ObjectId(menuId) },
-  //     {
-  //       $set: {
-  //         ...data,
-  //       },
-  //     },
-  //   )
+  static async updateItemService(itemId: any, data: Partial<IItem>) {
+    // ensure password is not updated here
+    const item = await ItemRepository.updateItemDetails(
+      { _id: new mongoose.Types.ObjectId(itemId) },
+      {
+        $set: {
+          ...data,
+        },
+      },
+    )
 
-  //   if (!partner) return { success: false, msg: itemMessages.UPDATE_ERROR }
+    if (!item) return { success: false, msg: itemMessages.UPDATE_ERROR }
 
-  //   return { success: true, msg: itemMessages.UPDATE_SUCCESS }
-  // }
-
-  // static async restaurantUpdateService(data: {
-  //   params: { partnerId: string }
-  //   itemPayload: Partial<IItem>
-  // }) {
-  //   const { params, itemPayload } = data
-  //   // ensure password is not updated here
-  //   const { password, ...restOfPayload } = itemPayload
-
-  //   const partner = await MenuRepository.updatePartnerDetails(
-  //     { _id: new mongoose.Types.ObjectId(params.partnerId) },
-  //     {
-  //       $push: { restaurant: { ...restOfPayload } },
-  //     },
-  //   )
-
-  //   if (!partner) return { success: false, msg: itemMessages.UPDATE_ERROR }
-
-  //   return { success: true, msg: itemMessages.UPDATE_SUCCESS }
-  // }
-
-  // static async operationUpdateService(data: {
-  //   params: { partnerId: string }
-  //   itemPayload: Partial<IItem>
-  // }) {
-  //   const { params, itemPayload } = data
-  //   // ensure password is not updated here
-  //   const { password, ...restOfPayload } = itemPayload
-
-  //   const partner = await MenuRepository.updatePartnerDetails(
-  //     { _id: new mongoose.Types.ObjectId(params.partnerId) },
-  //     {
-  //       $push: { operations: { ...restOfPayload } },
-  //     },
-  //   )
-
-  //   if (!partner) return { success: false, msg: itemMessages.UPDATE_ERROR }
-
-  //   return { success: true, msg: itemMessages.UPDATE_SUCCESS }
-  // }
-
-  // private static async updatePassword(password: string, id: string) {
-  //   const hashedPassword = await hashPassword(password)
-
-  //   return MenuRepository.updatePartnerDetails(
-  //     {
-  //       _id: new mongoose.Types.ObjectId(id),
-  //     },
-  //     {
-  //       $set: {
-  //         password: hashedPassword,
-  //       },
-  //     },
-  //   )
-  // }
-
-  // static async fetchSinglePartnerService(data: any) {
-  //   const partner = await MenuRepository.fetchPartner(
-  //     {
-  //       _id: new mongoose.Types.ObjectId(data),
-  //     },
-  //     {},
-  //   )
-
-  //   if (!partner) return { success: false, msg: partnerMessages.FETCH_ERROR }
-
-  //   return { success: true, msg: partnerMessages.FETCH_SUCCESS, partner }
-  // }
+    return { success: true, msg: itemMessages.UPDATE_SUCCESS }
+  }
 }

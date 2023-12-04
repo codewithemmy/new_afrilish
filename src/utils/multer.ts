@@ -14,7 +14,7 @@ const uploadManager = (destination: string) => {
     storage: new CloudinaryStorage({
       cloudinary: cloudinary,
       params: {
-        folder: `Zillight/${destination}`,
+        folder: `afrilish/${destination}`,
       },
     }),
     fileFilter,

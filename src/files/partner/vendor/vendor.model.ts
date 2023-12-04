@@ -9,6 +9,7 @@ const VendorSchema = new Schema<IVendor>(
     price: String,
     location: String,
     vendorType: String,
+    payment: { bank: String, account: Number, name: String },
     updated: { type: Boolean, default: false },
     locationCoord: {
       type: { type: String },

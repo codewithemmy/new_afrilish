@@ -7,7 +7,8 @@ import itemController from "./item.controller"
 
 const ItemRouter = express.Router()
 
-const { createItemController, fetchItemController } = itemController
+const { createItemController, fetchItemController, updateItemController } =
+  itemController
 
 ItemRouter.use(isAuthenticated)
 
@@ -19,6 +20,7 @@ ItemRouter.post(
 )
 
 ItemRouter.route("/").get(fetchItemController)
+ItemRouter.route("/:itemId").patch(updateItemController)
 
 // ItemRouter.patch(
 //   "/:menuId",
