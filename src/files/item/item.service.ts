@@ -14,7 +14,10 @@ import MenuRepository from "../menu/menu.repository"
 
 export default class ItemService {
   static async createItem(itemPayload: Partial<IItem>): Promise<IResponse> {
-    const { menuId } = itemPayload
+    const { menuId, image } = itemPayload
+
+    if(!image) return {success: false, msg: `image cannot be null` }
+
     if (!menuId) return { success: false, msg: itemMessages.EMPTY_ITEM }
 
     const menuExist = await MenuRepository.fetchMenu(
@@ -27,7 +30,7 @@ export default class ItemService {
     if (!menuExist) return { success: false, msg: itemMessages.NOT_FOUND }
 
     const item = await ItemRepository.createItem({
-      vendorId: new mongoose.Types.ObjectId(menuExist.vendorId),
+      vendorId: new mongoose.Types.ObjectId(menuExist.vendorId), image,
       ...itemPayload,
     })
 

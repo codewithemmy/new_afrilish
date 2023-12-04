@@ -1,6 +1,4 @@
 import express from "express"
-import validate from "../../validations/validate"
-import { checkSchema } from "express-validator"
 import uploadManager from "../../utils/multer"
 
 import { adminVerifier, isAuthenticated } from "../../utils"
