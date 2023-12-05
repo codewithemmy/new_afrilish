@@ -35,6 +35,7 @@ export default class MenuRepository {
     const menu: Awaited<IMenu[] | null> = await Menu.find({
       ...restOfPayload,
     })
+      .populate({ path: "item" })
       .sort(sort)
       .skip(skip)
       .limit(limit)

@@ -6,6 +6,8 @@ const OrderSchema = new Schema<IOrder>(
     pickUpCode: { type: Number },
     orderCode: { type: Number },
     orderId: { type: String },
+    deliveryAddress: { type: String },
+    note: { type: String },
     itemId: [
       {
         _id: { type: mongoose.Types.ObjectId, ref: "Item" },
@@ -57,6 +59,7 @@ const OrderSchema = new Schema<IOrder>(
     serviceCharge: { type: Number },
     confirmDelivery: { type: Boolean },
     remarks: { type: String },
+    delivery: { type: Boolean },
     addNote: { type: String },
     readyTime: { type: String },
     paymentIntentId: { type: String },

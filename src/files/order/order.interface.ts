@@ -3,6 +3,9 @@ export interface IOrder {
   pickUpCode: Number
   orderCode: Number
   orderId: string
+  delivery: Boolean
+  note: string
+  deliveryAddress: string
   itemId: [
     {
       _id: any
