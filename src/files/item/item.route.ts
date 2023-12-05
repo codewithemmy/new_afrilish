@@ -22,11 +22,4 @@ ItemRouter.post(
 ItemRouter.route("/").get(fetchItemController)
 ItemRouter.route("/:itemId").patch(updateItemController)
 
-// ItemRouter.patch(
-//   "/:menuId",
-//   uploadManager("menuImage").single("image"),
-//   updateMenuController,
-// )
-// ItemRouter.get("/", fetchMenuController)
-
 export default ItemRouter
