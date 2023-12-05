@@ -9,7 +9,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 })
 
-const uploadManager = (destination: string) => {
+const uploadManager = (destination: any) => {
   return multer({
     storage: new CloudinaryStorage({
       cloudinary: cloudinary,
