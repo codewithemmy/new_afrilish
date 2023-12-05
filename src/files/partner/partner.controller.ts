@@ -165,10 +165,11 @@ class PartnerController {
     res: Response,
     next: NextFunction,
   ) {
+    const { image, body } = fileModifier(req)
     const [error, data] = await manageAsyncOps(
       VendorService.updateVendor({
-        params: req.params as { vendorId: string },
-        vendorPayload: req.body,
+        params: { vendorId: req.params.vendorId },
+        vendorPayload: { ...body, image },
       }),
     )
 
