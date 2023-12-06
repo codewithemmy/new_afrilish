@@ -6,7 +6,6 @@ import { partnerMessages } from "../partner.messages"
 import mongoose from "mongoose"
 import PartnerRepository from "../partner.repository"
 import { ICoord } from "../../user/user.interface"
-import partner from "../partner.model"
 
 export default class VendorService {
   static async createVendor(
@@ -39,7 +38,7 @@ export default class VendorService {
     )
 
     if (validateVendor)
-      return { success: false, msg: partnerMessages.EXISTING_PARTNER }
+      return { success: false, msg: partnerMessages.VENDOR_PHONE }
 
     const vendor = await VendorRepository.createVendor({
       partnerId: partnerId,

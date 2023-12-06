@@ -15,4 +15,5 @@ export const partnerMessages = {
   VERIFIED: "verification successful",
   INCORRECT_INFO: "incorrect info",
   OTP: "otp sent",
+  VENDOR_PHONE: "phone details already exist"
 }
