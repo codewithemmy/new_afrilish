@@ -32,7 +32,7 @@ export interface IVendor {
   image: string
   partnerId: any
   isAvailable: Boolean
-  vendorType?: "restaurantVendor" | "bulkVendor" | "eventPlannerPlanner"
+  vendorType?: "restaurantVendor" | "bulkFoodVendor" | "eventPlannerVendor"
   rating?: Number
   createdAt?: Date
   updatedAt?: Date
