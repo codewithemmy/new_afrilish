@@ -9,11 +9,12 @@ export interface IItem {
   deliveryOption: string
   priceDescription: string
   vendorId: any
+  leastGuestSize: Number
   preparationTime: string
   selectPack: string
   status: string
   tag: string
-  healthStat?: { calorie: Number, carb: Number, fat: Number, protein: Number}
+  healthStat?: { calorie: Number; carb: Number; fat: Number; protein: Number }
   leastOrder?: string
   mostOrder?: string
   bulkEventPrice: [{ price: Number; guestSize: Number; description: string }]

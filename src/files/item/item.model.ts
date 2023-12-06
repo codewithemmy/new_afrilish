@@ -24,6 +24,7 @@ const ItemSchema = new Schema<IItem>(
       },
     ],
     tag: { type: String },
+    leastGuestSize: { type: Number },
     menuId: {
       type: mongoose.Types.ObjectId,
       ref: "Menu",
