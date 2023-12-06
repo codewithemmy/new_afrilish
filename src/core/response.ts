@@ -8,7 +8,7 @@ export const handleApplicationErrors: ErrorRequestHandler = (
   err,
   req,
   res,
-  _next
+  _next,
 ) => {
   if (err instanceof CustomError) {
     const { errors = {}, message, statusCode } = err
@@ -22,7 +22,9 @@ export const handleApplicationErrors: ErrorRequestHandler = (
     return res.status(statusCode).json(payload)
   }
 
-  res.status(400).json({ message: generalMessages.UNEXPECTED_FAILURE })
+  res
+    .status(400)
+    .json({ message: generalMessages.UNEXPECTED_FAILURE, error: err })
 }
 
 export const notFound = (_: any, res: Response) => {
@@ -32,7 +34,7 @@ export const notFound = (_: any, res: Response) => {
 export const responseHandler = (
   res: Response,
   statusCode = 200,
-  data: IResponse
+  data: IResponse,
 ) => {
   res.status(statusCode).json(data)
 }
