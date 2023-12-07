@@ -24,7 +24,7 @@ export const handleApplicationErrors: ErrorRequestHandler = (
 
   res
     .status(400)
-    .json({ message: generalMessages.UNEXPECTED_FAILURE, error: err })
+    .json({ message: generalMessages.UNEXPECTED_FAILURE, error: err.message })
 }
 
 export const notFound = (_: any, res: Response) => {
