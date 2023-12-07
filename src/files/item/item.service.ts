@@ -1,4 +1,4 @@
-import mongoose from "mongoose"
+import mongoose, { mongo } from "mongoose"
 import { IResponse } from "../../constants"
 import {
   AlphaNumeric,
@@ -14,7 +14,7 @@ import MenuRepository from "../menu/menu.repository"
 
 export default class ItemService {
   static async createItem(itemPayload: Partial<IItem>): Promise<IResponse> {
-    const { menuId, image } = itemPayload
+    const { menuId, image, partnerId } = itemPayload
 
     if (!image) return { success: false, msg: `image cannot be null` }
 
@@ -31,6 +31,7 @@ export default class ItemService {
 
     const item = await ItemRepository.createItem({
       vendorId: new mongoose.Types.ObjectId(menuExist.vendorId),
+      partnerId: new mongoose.Types.ObjectId(partnerId),
       image,
       ...itemPayload,
     })
@@ -49,7 +50,7 @@ export default class ItemService {
     }
   }
 
-  static async fetchItemService(itemPayload: Partial<IItem>) {
+  static async fetchItemService(itemPayload: Partial<IItem>, payload: any) {
     const { error, params, limit, skip, sort } = queryConstructor(
       itemPayload,
       "createdAt",
@@ -58,11 +59,14 @@ export default class ItemService {
 
     if (error) return { success: false, msg: error }
 
+    let extra = { partnerId: new mongoose.Types.ObjectId(payload) }
+
     const item = await ItemRepository.fetchItemByParams({
       ...params,
       limit,
       skip,
       sort,
+      ...extra,
     })
 
     if (item.length < 1)

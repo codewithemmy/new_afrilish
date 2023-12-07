@@ -1,6 +1,7 @@
 export interface IItem {
   _id?: any
   menuId: any
+  partnerId: any
   name: string
   description: string
   image: string

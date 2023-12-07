@@ -32,6 +32,10 @@ const ItemSchema = new Schema<IItem>(
       type: mongoose.Types.ObjectId,
       ref: "Vendor",
     },
+    partnerId: {
+      type: mongoose.Types.ObjectId,
+      ref: "Partner",
+    },
     isDelete: { type: Boolean, default: false },
   },
   { timestamps: true },

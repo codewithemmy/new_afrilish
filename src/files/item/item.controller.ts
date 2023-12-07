@@ -11,6 +11,7 @@ class ItemController {
     const [error, data] = await manageAsyncOps(
       ItemService.createItem({
         image,
+        partnerId: res.locals.jwt._id,
         ...body,
       }),
     )
@@ -23,7 +24,7 @@ class ItemController {
 
   async fetchItemController(req: Request, res: Response, next: NextFunction) {
     const [error, data] = await manageAsyncOps(
-      ItemService.fetchItemService(req.query),
+      ItemService.fetchItemService(req.query, res.locals.jwt._id),
     )
 
     if (error) return next(error)
