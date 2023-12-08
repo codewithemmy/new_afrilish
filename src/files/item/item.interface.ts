@@ -7,10 +7,12 @@ export interface IItem {
   image: string
   outOfStock: Boolean
   price: Number
+  dateAvailability: Date
   deliveryOption: string
   priceDescription: string
   vendorId: any
   leastGuestSize: Number
+  decorationTime: string
   preparationTime: string
   selectPack: string
   status: string
