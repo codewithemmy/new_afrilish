@@ -60,7 +60,6 @@ const OrderSchema = new Schema<IOrder>(
     confirmDelivery: { type: Boolean },
     remarks: { type: String },
     delivery: { type: Boolean },
-    addNote: { type: String },
     readyTime: { type: String },
     paymentIntentId: { type: String },
     locationCoord: {

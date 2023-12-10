@@ -23,10 +23,12 @@ export default class OrderService {
       item: [{ _id: any; quantity: Number; price: Number }]
       note: string
       scheduleId: any
+      deliveryAddress: string
     },
     locals: any,
   ): Promise<IResponse> {
-    const { vendorId, lng, lat, item, note, scheduleId } = orderPayload
+    const { vendorId, lng, lat, item, note, scheduleId, deliveryAddress } =
+      orderPayload
 
     const vendor = await VendorRepository.fetchVendor(
       {
@@ -34,7 +36,7 @@ export default class OrderService {
       },
       {},
     )
-    if (!vendor) return { success: false, msg: partnerMessages.FETCH_ERROR }
+    if (!vendor) return { success: false, msg: partnerMessages.VENDOR_ERROR }
 
     let vendorLng: any
     let vendorLat: any
@@ -128,6 +130,7 @@ export default class OrderService {
     const currentOrder = await OrderRepository.createOrder({
       pickUpCode: parsePickUpNumber,
       orderId,
+      deliveryAddress,
       orderCode: parseOrderCode,
       itemId: item,
       orderedBy: new mongoose.Types.ObjectId(locals._id),
@@ -139,7 +142,7 @@ export default class OrderService {
       userEmail: locals.email,
       ridersFee,
       userName: locals.fullName,
-      addNote: note,
+      note,
       serviceCharge,
       orderDate: new Date(),
       totalAmount: roundTotalPrice,

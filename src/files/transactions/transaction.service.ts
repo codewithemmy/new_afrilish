@@ -88,41 +88,35 @@ export default class TransactionService {
     payload: Partial<ITransaction>,
     locals: any,
   ): Promise<IResponse> {
-    const order = await OrderRepository.fetchOrder(
-      { _id: new mongoose.Types.ObjectId(payload.orderId) },
-      {},
-    )
-    if (!order)
-      return { success: false, msg: transactionMessages.PAYMENT_FAILURE }
-
-    if (order.totalAmount !== payload.amount)
-      return { success: false, msg: transactionMessages.PAYMENT_FAILURE }
+    const { transactionId, status, amount } = payload
 
     const transaction = await TransactionRepository.create({
       userId: new mongoose.Types.ObjectId(locals),
-      vendorId: new mongoose.Types.ObjectId(order.vendorId),
-      ...payload,
+      transactionId,
+      amount,
     })
 
-    if (payload.status === "Succeeded") {
+    if (status === "Succeeded") {
       await UserRepository.updateUsersProfile(
-        { _id: new mongoose.Types.ObjectId(order?.orderedBy) },
-        { $inc: { wallet: payload.amount } },
+        { _id: new mongoose.Types.ObjectId(locals) },
+        { $inc: { wallet: amount } },
       )
-      await OrderRepository.updateOrderDetails(
+      await TransactionRepository.updateTransactionDetails(
         {
-          _id: new mongoose.Types.ObjectId(payload.orderId),
+          userId: new mongoose.Types.ObjectId(locals),
         },
         {
-          $set: { transactionId: transaction._id, paymentStatus: "Succeeded" },
+          $set: { status: "Succeeded" },
         },
       )
     } else {
-      await OrderRepository.updateOrderDetails(
+      await TransactionRepository.updateTransactionDetails(
         {
-          _id: new mongoose.Types.ObjectId(payload.orderId),
+          userId: new mongoose.Types.ObjectId(locals),
         },
-        { $set: { transactionId: transaction._id, paymentStatus: "Failed" } },
+        {
+          $set: { status: "Failed" },
+        },
       )
     }
     return { success: true, msg: transactionMessages.PAYMENT_SUCCESS }

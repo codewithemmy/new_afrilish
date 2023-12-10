@@ -28,7 +28,6 @@ export interface IOrder {
   orderStatus: "pending" | "on-going" | "completed" | "delivered" | "cancelled"
   confirmDelivery: Boolean
   remarks: string
-  addNote: string
   riderStatus:
     | "pending"
     | "rejected"
