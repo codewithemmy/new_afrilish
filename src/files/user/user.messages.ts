@@ -1,6 +1,6 @@
 export const userMessages = {
   USER_FAILURE: "unable to create user",
-  USER_SUCCESS: "user created successfully",
+  USER_SUCCESS: "user created successfully, otp sent for account verification",
   EXISTING_USER: "user already exists",
   DETAILS: `either phone number or email already used`,
   FETCH_ERROR: "user not found",

@@ -47,13 +47,13 @@ class UserController {
   }
 
   async updateUserController(req: Request, res: Response, next: NextFunction) {
+    const { image, body } = fileModifier(req)
     const [error, data] = await manageAsyncOps(
       UserService.updateUserProfile({
-        params: req.params as { userId: string },
-        userPayload: req.body,
+        params: { userId: req.params.userId },
+        userPayload: { ...body, image },
       }),
     )
-
     if (error) return next(error)
     if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
 
@@ -82,7 +82,7 @@ class UserController {
     const [error, data] = await manageAsyncOps(
       UserService.getVendorByCoordService(req.query),
     )
-    
+
     if (error) return next(error)
     if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
 

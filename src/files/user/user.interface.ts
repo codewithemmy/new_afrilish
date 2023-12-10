@@ -4,6 +4,7 @@ export interface IUser {
   phone: string
   email: string
   language: string
+  image: string
   wallet: Number
   loginCode: Number
   home: string

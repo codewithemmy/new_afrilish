@@ -59,9 +59,11 @@ export default class UserService {
       console.log("error", error)
     }
 
+    const userEmail: any = user.email
     return {
       success: true,
       msg: userMessages.USER_SUCCESS,
+      data: userEmail,
     }
   }
 

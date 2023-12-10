@@ -3,8 +3,8 @@ import validate from "../../validations/validate"
 import { checkSchema } from "express-validator"
 import createUserValidation from "../../validations/user/createPartner.validation"
 import userController from "./user.controller"
-
-import { adminVerifier, isAuthenticated } from "../../utils"
+import uploadManager from "../../utils/multer"
+import { profile } from "console"
 
 const {
   createUserController,
@@ -34,7 +34,11 @@ UserRouter.post("/login-code", loginCodeController)
 
 UserRouter.get("/", fetchUserController)
 
-UserRouter.patch("/:userId", updateUserController)
+UserRouter.patch(
+  "/:userId",
+  uploadManager("userImage").single("image"),
+  updateUserController,
+)
 
 UserRouter.get("/vendor", getVendorByCoordController)
 
