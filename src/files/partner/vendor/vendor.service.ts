@@ -46,7 +46,7 @@ export default class VendorService {
       updated: true,
     })
 
-    if (!vendor) return { success: false, msg: partnerMessages.PARTNER_FAILURE }
+    if (!vendor) return { success: false, msg: partnerMessages.VENDOR_FAILURE }
 
     await PartnerRepository.updatePartnerDetails(
       { _id: new mongoose.Types.ObjectId(verifyPartner._id) },
@@ -57,7 +57,7 @@ export default class VendorService {
 
     return {
       success: true,
-      msg: partnerMessages.PARTNER_SUCCESS,
+      msg: partnerMessages.VENDOR_SUCCESS,
       data: vendor,
     }
   }
@@ -81,7 +81,7 @@ export default class VendorService {
     })
 
     if (vendor.length < 1)
-      return { success: false, msg: partnerMessages.FETCH_ERROR, data: [] }
+      return { success: false, msg: partnerMessages.VENDOR_ERROR, data: [] }
 
     return {
       success: true,
@@ -129,7 +129,7 @@ export default class VendorService {
     vendorPayload: Partial<IVendor>
   }) {
     const { params, vendorPayload } = data
-    // ensure password is not updated here
+
     const { ...restOfPayload } = vendorPayload
 
     const vendor = await VendorRepository.updateVendorDetails(

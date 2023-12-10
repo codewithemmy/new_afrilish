@@ -57,9 +57,13 @@ export default class ItemService {
       "Item",
     )
 
+    let extra
+
     if (error) return { success: false, msg: error }
 
-    let extra = { partnerId: new mongoose.Types.ObjectId(payload) }
+    extra = { partnerId: new mongoose.Types.ObjectId(payload._id) }
+
+    if (!payload?.isPartner) extra = {}
 
     const item = await ItemRepository.fetchItemByParams({
       ...params,
@@ -70,7 +74,7 @@ export default class ItemService {
     })
 
     if (item.length < 1)
-      return { success: false, msg: itemMessages.ITEM_FAILURE, data: [] }
+      return { success: true, msg: itemMessages.ITEM_FAILURE, data: [] }
 
     return {
       success: true,

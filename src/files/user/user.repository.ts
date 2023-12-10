@@ -106,6 +106,8 @@ export default class UserRepository {
                 $or: [
                   { name: { $regex: search, $options: "i" } },
                   { price: { $regex: search, $options: "i" } },
+                  { address: { $regex: search, $options: "i" } },
+                  { email: { $regex: search, $options: "i" } },
                 ],
                 ...extraParams,
               },
@@ -133,6 +135,8 @@ export default class UserRepository {
                 $or: [
                   { name: { $regex: search, $options: "i" } },
                   { price: { $regex: search, $options: "i" } },
+                  { address: { $regex: search, $options: "i" } },
+                  { email: { $regex: search, $options: "i" } },
                 ],
                 ...extraParams,
               },

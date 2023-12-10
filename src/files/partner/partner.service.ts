@@ -85,8 +85,7 @@ export default class PartnerService {
 
     const partner = await PartnerRepository.fetchPartner({ email }, {})
 
-    if (!partner)
-      return { success: false, msg: generalMessages.INCORRECT }
+    if (!partner) return { success: false, msg: generalMessages.INCORRECT }
 
     if (!partner.isVerified)
       return { success: false, msg: generalMessages.NOT_VERIFIED }
@@ -97,7 +96,11 @@ export default class PartnerService {
 
     partner.password = undefined
 
-    const token = tokenHandler({ ...partner, userType: "partner" })
+    const token = tokenHandler({
+      ...partner,
+      userType: "partner",
+      isPartner: true,
+    })
 
     return {
       success: true,

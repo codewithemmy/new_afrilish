@@ -24,7 +24,7 @@ class ItemController {
 
   async fetchItemController(req: Request, res: Response, next: NextFunction) {
     const [error, data] = await manageAsyncOps(
-      ItemService.fetchItemService(req.query, res.locals.jwt._id),
+      ItemService.fetchItemService(req.query, res.locals.jwt),
     )
 
     if (error) return next(error)

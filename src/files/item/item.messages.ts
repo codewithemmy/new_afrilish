@@ -1,5 +1,5 @@
 export const itemMessages = {
-  ITEM_FAILURE: "unable to create item",
+  ITEM_FAILURE: "unable to fetch item",
   ITEM_SUCCESS: "item created successfully",
   EXISTING_ITEM: "item already exists",
   FETCH_ERROR: "item not found",

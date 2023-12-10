@@ -4,8 +4,8 @@ export const partnerMessages = {
   EXISTING_PARTNER: "partner already exists",
   FETCH_ERROR: "partner not found",
   FETCH_SUCCESS: "fetch successful",
-  UPDATE_ERROR: "unable to update partner",
-  UPDATE_SUCCESS: "vendor update successful",
+  UPDATE_ERROR: "unable to update",
+  UPDATE_SUCCESS: "update successful",
   INCORRECT_PASSWORD: "incorrect password",
   PASSWORD_RESET_ERROR: "unable to reset password",
   PASSWORD_RESET_SUCCESS: "password reset successful",
@@ -15,5 +15,10 @@ export const partnerMessages = {
   VERIFIED: "verification successful",
   INCORRECT_INFO: "incorrect info",
   OTP: "otp sent",
-  VENDOR_PHONE: "phone or email details already exist"
+  VENDOR_PHONE: "phone or email details already exist",
+  VENDOR_SUCCESS: "vendor successfully created",
+  VENDOR_FAILURE: "unable to create vendor",
+  VENDOR_EXIST: "vendor already exist",
+  VENDOR_ERROR: "vendor not found",
+  vendor: "vendor not found",
 }

@@ -187,6 +187,7 @@ export default class UserService {
 
     const token = tokenHandler({
       ...user,
+      isPartner: false,
     })
 
     return {
