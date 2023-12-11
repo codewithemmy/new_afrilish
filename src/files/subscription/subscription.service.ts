@@ -37,7 +37,7 @@ export default class SubscriptionService {
 
     return {
       success: true,
-      msg: subscriptionMessages.SUBSCRIPTION_SUCCESS,
+      msg: subscriptionMessages.SUBSCRIPTION_DATE,
       data: subscription,
     }
   }

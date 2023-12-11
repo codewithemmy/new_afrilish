@@ -2,6 +2,7 @@ export const subscriptionMessages = {
   SUBSCRIPTION_FAILURE: "unable to create subscription",
   NOT_FOUND: "subscription not found",
   SUBSCRIPTION_SUCCESS: "subscription created successfully",
+  SUBSCRIPTION_DATE: "subscription date created",
   EXISTING_SUBSCRIPTION: "subscription already exists",
   FETCH_ERROR: "subscription not found",
   FETCH_SUCCESS: "fetch successful",
