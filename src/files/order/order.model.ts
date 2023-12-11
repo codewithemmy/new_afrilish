@@ -6,6 +6,7 @@ const OrderSchema = new Schema<IOrder>(
     pickUpCode: { type: Number },
     orderCode: { type: Number },
     orderId: { type: String },
+    pickUp: { type: Boolean, default: false },
     deliveryAddress: { type: String },
     note: { type: String },
     itemId: [

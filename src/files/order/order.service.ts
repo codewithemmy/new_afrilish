@@ -22,13 +22,22 @@ export default class OrderService {
       lat: any
       item: [{ _id: any; quantity: Number; price: Number }]
       note: string
+      pickUp: Boolean
       scheduleId: any
       deliveryAddress: string
     },
     locals: any,
   ): Promise<IResponse> {
-    const { vendorId, lng, lat, item, note, scheduleId, deliveryAddress } =
-      orderPayload
+    const {
+      vendorId,
+      lng,
+      lat,
+      item,
+      note,
+      scheduleId,
+      deliveryAddress,
+      pickUp,
+    } = orderPayload
 
     const vendor = await VendorRepository.fetchVendor(
       {
@@ -75,7 +84,7 @@ export default class OrderService {
 
     let kilometers: any = distance.toFixed(2)
 
-    let ridersFee: Number = kilometers * 2
+    let ridersFee
 
     const customer = await UserRepository.fetchUser(
       { _id: new mongoose.Types.ObjectId(locals._id) },
@@ -112,24 +121,55 @@ export default class OrderService {
       })
     })
 
-    const parseAmount: any = Number(netAmount)
-    const deliveryFee: Number = 2
-    const marketPlace: Number = 3
+    let serviceCharge
+    let parsePickUpNumber
+    let parseOrderCode
+    let roundTotalPrice
+    let pickUpNumber
 
-    let totalPrice: any = parseAmount + deliveryFee + marketPlace + ridersFee
-    let roundTotalPrice: number = Math.ceil(totalPrice)
-    let serviceCharge: Number = (10 * roundTotalPrice) / 100
+    if (deliveryAddress) {
+      ridersFee = kilometers * 2
+      const parseAmount: any = Number(netAmount)
+      const deliveryFee: Number = 2
+      const marketPlace: Number = 3
 
-    let pickUpNumber = genRandomNumber()
-    let parsePickUpNumber = Number(pickUpNumber)
-    let orderCode = genRandomNumber()
-    let parseOrderCode = Number(orderCode)
+      let totalPrice: any = parseAmount + deliveryFee + marketPlace + ridersFee
+      roundTotalPrice = Math.ceil(totalPrice)
+      serviceCharge = (10 * roundTotalPrice) / 100
+
+      pickUpNumber = genRandomNumber()
+      parsePickUpNumber = Number(pickUpNumber)
+      let orderCode = genRandomNumber()
+      parseOrderCode = Number(orderCode)
+    }
+
+    if (pickUp) {
+      ridersFee = kilometers * 2
+      const parseAmount: any = Number(netAmount)
+      const marketPlace: Number = 3
+
+      let totalPrice: any = parseAmount + marketPlace
+      roundTotalPrice = Math.ceil(totalPrice)
+      serviceCharge = (10 * roundTotalPrice) / 100
+
+      pickUpNumber = genRandomNumber()
+      parsePickUpNumber = Number(pickUpNumber)
+      let orderCode = genRandomNumber()
+      parseOrderCode = Number(orderCode)
+    }
 
     let orderId = `#${AlphaNumeric(3, "number")}`
 
+    let schedule
+    if (scheduleId) {
+      schedule = true
+    }
+
+    console.log("riders", ridersFee)
     const currentOrder = await OrderRepository.createOrder({
       pickUpCode: parsePickUpNumber,
       orderId,
+      pickUp,
       deliveryAddress,
       orderCode: parseOrderCode,
       itemId: item,
@@ -146,6 +186,7 @@ export default class OrderService {
       serviceCharge,
       orderDate: new Date(),
       totalAmount: roundTotalPrice,
+      schedule,
       netAmount,
       scheduleId: new mongoose.Types.ObjectId(scheduleId),
     })

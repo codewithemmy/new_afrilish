@@ -35,6 +35,32 @@ export default class OrderRepository {
     const order: Awaited<IOrder[] | null> = await Order.find({
       ...restOfPayload,
     })
+      .populate({
+        path: "scheduleId",
+        populate: [
+          "breakfast.dayOne",
+          "breakfast.dayTwo",
+          "breakfast.dayThree",
+          "breakfast.dayFour",
+          "breakfast.dayFive",
+          "breakfast.daySix",
+          "breakfast.daySeven",
+          "lunch.dayOne",
+          "lunch.dayTwo",
+          "lunch.dayThree",
+          "lunch.dayFour",
+          "lunch.dayFive",
+          "lunch.daySix",
+          "lunch.daySeven",
+          "dinner.dayOne",
+          "dinner.dayTwo",
+          "dinner.dayThree",
+          "dinner.dayFour",
+          "dinner.dayFive",
+          "dinner.daySix",
+          "dinner.daySeven",
+        ],
+      })
       .sort(sort)
       .skip(skip)
       .limit(limit)

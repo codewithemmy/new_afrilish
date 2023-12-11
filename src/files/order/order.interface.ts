@@ -3,6 +3,7 @@ export interface IOrder {
   pickUpCode: Number
   orderCode: Number
   orderId: string
+  pickUp: Boolean
   delivery: Boolean
   schedule: Boolean
   note: string
