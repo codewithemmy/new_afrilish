@@ -77,7 +77,7 @@ export default class OrderRepository {
         ...orderPayload,
       },
       { ...update },
-      { new: true, runValidators: true }, //returns details about the update
+      { new: true, runValidators: true },
     )
 
     return updateOrder

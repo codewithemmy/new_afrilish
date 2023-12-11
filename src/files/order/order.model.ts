@@ -36,6 +36,7 @@ const OrderSchema = new Schema<IOrder>(
         "cancelled",
         "completed",
         "rejected",
+        "accepted",
       ],
       default: "pending",
     },

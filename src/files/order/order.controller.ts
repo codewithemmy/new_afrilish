@@ -6,7 +6,11 @@ import { statusCode } from "../../constants/statusCode"
 import OrderService from "./order.service"
 
 class OrderController {
-  async evaluateOrderController(req: Request, res: Response, next: NextFunction) {
+  async evaluateOrderController(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
     const [error, data] = await manageAsyncOps(
       OrderService.evaluateOrderService(req.body, res.locals.jwt),
     )
@@ -27,23 +31,16 @@ class OrderController {
     return responseHandler(res, statusCode.SUCCESS, data!)
   }
 
-  // async updateSubscriptionController(
-  //   req: Request,
-  //   res: Response,
-  //   next: NextFunction,
-  // ) {
-  //   const [error, data] = await manageAsyncOps(
-  //     OrderService.updateOrderService(
-  //       req.params.subscriptionId,
-  //       req.body,
-  //     ),
-  //   )
+  async updateOrderController(req: Request, res: Response, next: NextFunction) {
+    const [error, data] = await manageAsyncOps(
+      OrderService.updateOrderService(req.params.orderId, req.body),
+    )
 
-  //   if (error) return next(error)
-  //   if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
+    if (error) return next(error)
+    if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
 
-  //   return responseHandler(res, statusCode.SUCCESS, data!)
-  // }
+    return responseHandler(res, statusCode.SUCCESS, data!)
+  }
 }
 
 export default new OrderController()

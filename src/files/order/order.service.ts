@@ -226,4 +226,23 @@ export default class OrderService {
       data: order,
     }
   }
+
+  static async updateOrderService(orderId: any, data: Partial<IOrder>) {
+    const findOrder = await OrderRepository.fetchOrder(
+      { _id: new mongoose.Types.ObjectId(orderId) },
+      {},
+    )
+    if (!findOrder)
+      return { success: false, msg: orderMessages.NOT_FOUND, data: [] }
+
+    const order = OrderRepository.updateOrderDetails(
+      { _id: new mongoose.Types.ObjectId(orderId) },
+      { ...data },
+    )
+
+    return {
+      success: true,
+      msg: orderMessages.UPDATE_SUCCESS,
+    }
+  }
 }
