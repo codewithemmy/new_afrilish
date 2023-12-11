@@ -30,7 +30,7 @@ export default class UserService {
       },
     )
 
-    if (validateUser) return { success: true, msg: userMessages.DETAILS }
+    if (validateUser) return { success: false, msg: userMessages.DETAILS }
 
     const otp = AlphaNumeric(4, "numbers")
 
