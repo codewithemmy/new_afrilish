@@ -28,10 +28,18 @@ const OrderSchema = new Schema<IOrder>(
     },
     orderStatus: {
       type: String,
-      enum: ["pending", "on-going", "delivered", "cancelled", "completed"],
+      enum: [
+        "pending",
+        "on-going",
+        "delivered",
+        "cancelled",
+        "completed",
+        "rejected",
+      ],
       default: "pending",
     },
     orderDate: { type: Date },
+    schedule: { type: Boolean, default: false },
     riderStatus: {
       type: String,
       enum: [

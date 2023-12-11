@@ -4,6 +4,7 @@ export interface IOrder {
   orderCode: Number
   orderId: string
   delivery: Boolean
+  schedule: Boolean
   note: string
   deliveryAddress: string
   itemId: [
