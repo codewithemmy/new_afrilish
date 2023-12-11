@@ -35,6 +35,7 @@ class TransactionController {
 
     return responseHandler(res, statusCode.CREATED, data!)
   }
+
   async chargeWalletController(
     req: Request,
     res: Response,

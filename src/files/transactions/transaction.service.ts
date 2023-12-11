@@ -48,26 +48,28 @@ export default class TransactionService {
     )
     const walletBalance: any = confirmWallet?.wallet
 
-    const amount: any = payload.amount
-
-    if (walletBalance < amount)
-      return { success: false, msg: transactionMessages.INSUFFICIENT }
-
     const order = await OrderRepository.fetchOrder(
-      { _id: new mongoose.Types.ObjectId(payload.orderId) },
+      {
+        _id: new mongoose.Types.ObjectId(payload.orderId),
+        orderedBy: new mongoose.Types.ObjectId(locals),
+      },
       {},
     )
 
-    if (!order)
-      return { success: false, msg: transactionMessages.PAYMENT_FAILURE }
+    if (!order) return { success: false, msg: transactionMessages.NO_ORDER }
 
-    if (order.totalAmount !== payload.amount)
-      return { success: false, msg: transactionMessages.PAYMENT_FAILURE }
+    const orderAmount: any = order.totalAmount
+
+    if (orderAmount > walletBalance)
+      return { success: false, msg: transactionMessages.EQUAL_AMOUNT }
 
     const transaction =
       await TransactionRepository.findSingleTransactionByParams({
         userId: new mongoose.Types.ObjectId(locals),
       })
+
+    if (!transaction)
+      return { success: false, msg: transactionMessages.TRANSACTION_NOT_FOUND }
 
     await OrderRepository.updateOrderDetails(
       {
@@ -78,7 +80,7 @@ export default class TransactionService {
 
     await UserRepository.updateUsersProfile(
       { _id: new mongoose.Types.ObjectId(order?.orderedBy) },
-      { $inc: { wallet: -amount } },
+      { $inc: { wallet: -orderAmount } },
     )
 
     return { success: true, msg: transactionMessages.PAYMENT_SUCCESS }

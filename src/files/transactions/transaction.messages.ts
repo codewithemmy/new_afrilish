@@ -10,5 +10,7 @@ export const transactionMessages = {
   PAYMENT_SUCCESS: "Payment successfully verified",
   PAYMENT_FAILURE: "Payment not verified",
   AMOUNT_CURRENCY: "amount or currency cannot be empty",
-  INSUFFICIENT: "insufficient balance",
+  INSUFFICIENT: "insufficient wallet balance to purchase item",
+  NO_ORDER: "order does not exist",
+  EQUAL_AMOUNT: "order total amount must be equal to or lesser than wallet amount "
 }
