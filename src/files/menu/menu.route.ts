@@ -12,6 +12,8 @@ const MenuRouter = express.Router()
 const { createMenuController, fetchMenuController, updateMenuController } =
   menuController
 
+MenuRouter.get("/", fetchMenuController)
+
 MenuRouter.use(isAuthenticated)
 
 //routes
@@ -26,6 +28,5 @@ MenuRouter.patch(
   uploadManager("menuImage").single("image"),
   updateMenuController,
 )
-MenuRouter.get("/", fetchMenuController)
 
 export default MenuRouter
