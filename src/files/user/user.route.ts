@@ -3,8 +3,8 @@ import validate from "../../validations/validate"
 import { checkSchema } from "express-validator"
 import createUserValidation from "../../validations/user/createPartner.validation"
 import userController from "./user.controller"
+import itemController from "../item/item.controller"
 import uploadManager from "../../utils/multer"
-import { profile } from "console"
 
 const {
   createUserController,
@@ -16,6 +16,8 @@ const {
   verifyUserController,
   resendVerificationOtp,
 } = userController
+
+const { fetchItemController } = itemController
 
 const UserRouter = express.Router()
 
@@ -29,7 +31,7 @@ UserRouter.post(
 UserRouter.post("/login", loginUserController)
 UserRouter.post("/verify", verifyUserController)
 UserRouter.post("/resend-otp", resendVerificationOtp)
-
+UserRouter.get("/item", fetchItemController)
 UserRouter.post("/login-code", loginCodeController)
 
 UserRouter.get("/", fetchUserController)

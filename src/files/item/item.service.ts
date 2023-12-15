@@ -61,7 +61,7 @@ export default class ItemService {
 
     if (error) return { success: false, msg: error }
 
-    extra = { partnerId: new mongoose.Types.ObjectId(payload._id) }
+    extra = { partnerId: new mongoose.Types.ObjectId(payload?._id) }
 
     if (!payload?.isPartner) extra = {}
 
