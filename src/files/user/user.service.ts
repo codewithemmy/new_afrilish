@@ -59,11 +59,12 @@ export default class UserService {
       console.log("error", error)
     }
 
-    const userEmail: any = user.email
+     const userToken = await tokenHandler({ _id: user._id })
+
     return {
       success: true,
       msg: userMessages.USER_SUCCESS,
-      data: userEmail,
+      data: { userToken }
     }
   }
 
