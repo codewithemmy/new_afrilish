@@ -27,7 +27,10 @@ class SubscriptionController {
     next: NextFunction,
   ) {
     const [error, data] = await manageAsyncOps(
-      SubscriptionService.fetchSubscriptionService(req.query),
+      SubscriptionService.fetchSubscriptionService(
+        req.query,
+        res.locals.jwt._id,
+      ),
     )
 
     if (error) return next(error)

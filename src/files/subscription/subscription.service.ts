@@ -44,6 +44,7 @@ export default class SubscriptionService {
 
   static async fetchSubscriptionService(
     subscriptionPayload: Partial<ISubscription>,
+    userId: any,
   ) {
     const { error, params, limit, skip, sort } = queryConstructor(
       subscriptionPayload,
@@ -53,12 +54,14 @@ export default class SubscriptionService {
 
     if (error) return { success: false, msg: error }
 
+    let user = { userId: new mongoose.Types.ObjectId(userId) }
     const subscription = await SubscriptionRepository.fetchSubscriptionByParams(
       {
         ...params,
         limit,
         skip,
         sort,
+        ...user,
       },
     )
 
