@@ -2,22 +2,22 @@ export interface ISubscription {
   _id?: any
   startDate: Date
   endDate: Date
-  breakfast: IDays
-  lunch: IDays
-  dinner: IDays
+  monday: IMeal
+  tuesday: IMeal
+  wednesday: IMeal
+  thursday: IMeal
+  friday: IMeal
+  saturday: IMeal
+  sunday: IMeal
   userId: any
-  status: "paused" | "active" | "pending"
+  status: "paused" | "active" | "pending" | "completed"
   isDelete: boolean
   createdAt?: Date
   updatedAt?: Date
 }
 
-interface IDays {
-  dayOne: [any]
-  dayTwo: [any]
-  dayThree: [any]
-  dayFour: [any]
-  dayFive: [any]
-  daySix: [any]
-  daySeven: [any]
+interface IMeal {
+  breakfast: [any]
+  launch: [any]
+  dinner: [any]
 }

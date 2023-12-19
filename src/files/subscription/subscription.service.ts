@@ -1,15 +1,8 @@
 import mongoose from "mongoose"
 import { IResponse } from "../../constants"
-import {
-  AlphaNumeric,
-  hashPassword,
-  queryConstructor,
-  verifyPassword,
-} from "../../utils"
+import { queryConstructor, verifyPassword } from "../../utils"
 import SubscriptionRepository from "./subscription.repository"
 import { subscriptionMessages } from "./subscription.messages"
-import { sendMailNotification } from "../../utils/email"
-import { generalMessages } from "../../core/messages"
 import { ISubscription } from "./subscription.interface"
 
 export default class SubscriptionService {

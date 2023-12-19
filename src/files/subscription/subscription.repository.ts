@@ -18,12 +18,13 @@ export default class SubRepository {
       | FilterQuery<Partial<ISubscription>>,
     select: Partial<Record<keyof ISubscription, number | Boolean | object>>,
   ): Promise<Partial<ISubscription> | null> {
-    const subscription: Awaited<ISubscription | null> = await Subscription.findOne(
-      {
-        ...subscriptionPayload,
-      },
-      select,
-    ).lean()
+    const subscription: Awaited<ISubscription | null> =
+      await Subscription.findOne(
+        {
+          ...subscriptionPayload,
+        },
+        select,
+      ).lean()
 
     return subscription
   }
@@ -47,27 +48,26 @@ export default class SubRepository {
           select: "fullName phone email home office",
         })
         .populate([
-          "breakfast.dayOne",
-          "breakfast.dayTwo",
-          "breakfast.dayThree",
-          "breakfast.dayFour",
-          "breakfast.dayFive",
-          "breakfast.daySix",
-          "breakfast.daySeven",
-          "lunch.dayOne",
-          "lunch.dayTwo",
-          "lunch.dayThree",
-          "lunch.dayFour",
-          "lunch.dayFive",
-          "lunch.daySix",
-          "lunch.daySeven",
-          "dinner.dayOne",
-          "dinner.dayTwo",
-          "dinner.dayThree",
-          "dinner.dayFour",
-          "dinner.dayFive",
-          "dinner.daySix",
-          "dinner.daySeven",
+          "monday.breakfast",
+          "monday.launch",
+          "monday.dinner",
+          "tuesday.breakfast",
+          "tuesday.launch",
+          "tuesday.dinner",
+          "wednesday.breakfast",
+          "wednesday.launch",
+          "wednesday.dinner",
+          "thursday.breakfast",
+          "thursday.launch",
+          "thursday.dinner",
+          "friday.breakfast",
+          "friday.dinner",
+          "saturday.breakfast",
+          "saturday.launch",
+          "saturday.dinner",
+          "sunday.breakfast",
+          "sunday.launch",
+          "sunday.dinner",
         ])
         .sort(sort)
         .skip(skip)
