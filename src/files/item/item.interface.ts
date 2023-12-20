@@ -17,10 +17,10 @@ export interface IItem {
   selectPack: string
   status: string
   tag: string
-  healthStat?: { calorie: Number; carb: Number; fat: Number; protein: Number }
   leastOrder?: string
   mostOrder?: string
-  bulkEventPrice: [{ price: Number; guestSize: Number; description: string }]
+  healthStat?: { calorie: Number; carb: Number; fat: Number; protein: Number }
+  bulkEventPrice: { price: Number; guestSize: Number; description: string }
   isDelete: boolean
   createdAt?: Date
   updatedAt?: Date
