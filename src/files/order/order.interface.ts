@@ -27,17 +27,28 @@ export interface IOrder {
   netAmount: Number
   marketPlace: Number
   serviceCharge: Number
-  orderStatus: "pending" | "on-going" | "completed" | "delivered" | "cancelled"
+  orderStatus:
+    | "pending"
+    | "accepted"
+    | "on-going"
+    | "ready"
+    | "in-transit"
+    | "arrived"
+    | "cancelled"
+    | "picked"
+    | "completed"
   confirmDelivery: Boolean
   remarks: string
   riderStatus:
     | "pending"
-    | "rejected"
     | "accepted"
-    | "delivered"
+    | "on-going"
+    | "ready"
+    | "in-transit"
+    | "arrived"
     | "cancelled"
     | "picked"
-    | "on-road"
+    | "completed"
 
   isDelete: boolean
   transactionId: any
