@@ -18,11 +18,11 @@ const ItemSchema = new Schema<IItem>(
     mostOrder: { type: String },
     dateAvailability: { type: Date },
     healthStat: { calorie: Number, carb: Number, fat: Number, protein: Number },
-    bulkEventPrice: {
+    bulkEventPrice: [{
       price: { type: Number },
       guestSize: { type: Number },
       description: { type: String },
-    },
+    }],
     tag: { type: String },
     leastGuestSize: { type: Number },
     menuId: {

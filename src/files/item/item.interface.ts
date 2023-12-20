@@ -20,7 +20,7 @@ export interface IItem {
   healthStat?: { calorie: Number; carb: Number; fat: Number; protein: Number }
   leastOrder?: string
   mostOrder?: string
-  bulkEventPrice: { price: Number; guestSize: Number; description: string }
+  bulkEventPrice: [{ price: Number; guestSize: Number; description: string }]
   isDelete: boolean
   createdAt?: Date
   updatedAt?: Date
