@@ -8,7 +8,6 @@ import ItemService from "./item.service"
 class ItemController {
   async createItemController(req: Request, res: Response, next: NextFunction) {
     const { image, body } = fileModifier(req)
-    console.log("body", body)
     const [error, data] = await manageAsyncOps(
       ItemService.createItem({
         image,

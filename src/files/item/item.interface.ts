@@ -4,6 +4,7 @@ export interface IItem {
   partnerId: any
   name: string
   description: string
+  bulkDescription: string
   image: string
   outOfStock: Boolean
   price: Number
@@ -19,8 +20,12 @@ export interface IItem {
   tag: string
   leastOrder?: string
   mostOrder?: string
-  healthStat?: { calorie: Number; carb: Number; fat: Number; protein: Number }
-  bulkEventPrice: { price: Number; guestSize: Number; description: string }
+  calorie: Number
+  carb: Number
+  fat: Number
+  protein: Number
+  guestSize: Number
+
   bulk: { price: Number; guestSize: Number; description: string }
   isDelete: boolean
   createdAt?: Date

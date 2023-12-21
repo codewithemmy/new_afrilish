@@ -14,7 +14,7 @@ import MenuRepository from "../menu/menu.repository"
 
 export default class ItemService {
   static async createItem(itemPayload: Partial<IItem>): Promise<IResponse> {
-    const { menuId, image, partnerId, bulk, bulkEventPrice } = itemPayload
+    const { menuId, image, partnerId } = itemPayload
 
     if (!image) return { success: false, msg: `image cannot be null` }
 
@@ -28,8 +28,6 @@ export default class ItemService {
     )
 
     if (!menuExist) return { success: false, msg: itemMessages.NOT_FOUND }
-
-    console.log("itemPayload", itemPayload)
 
     const item = await ItemRepository.createItem({
       vendorId: new mongoose.Types.ObjectId(menuExist.vendorId),
