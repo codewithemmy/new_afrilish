@@ -19,10 +19,7 @@ export default class ItemService {
     if (!image) return { success: false, msg: `image cannot be null` }
 
     if (!menuId) return { success: false, msg: itemMessages.EMPTY_ITEM }
-
-    if (!bulk?.price) return { success: false, msg: `bulk cannot be empty` }
-    if (!bulkEventPrice?.price) return { success: false, msg: `bulk cannot be empty` }
-
+F
     const menuExist = await MenuRepository.fetchMenu(
       {
         _id: new mongoose.Types.ObjectId(menuId),
