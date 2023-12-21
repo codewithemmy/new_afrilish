@@ -25,8 +25,6 @@ export interface IItem {
   fat: Number
   protein: Number
   guestSize: Number
-
-  bulk: { price: Number; guestSize: Number; description: string }
   isDelete: boolean
   createdAt?: Date
   updatedAt?: Date
