@@ -19,7 +19,7 @@ export default class ItemService {
     if (!image) return { success: false, msg: `image cannot be null` }
 
     if (!menuId) return { success: false, msg: itemMessages.EMPTY_ITEM }
-F
+
     const menuExist = await MenuRepository.fetchMenu(
       {
         _id: new mongoose.Types.ObjectId(menuId),
