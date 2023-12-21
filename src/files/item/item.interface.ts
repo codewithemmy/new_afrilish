@@ -21,6 +21,7 @@ export interface IItem {
   mostOrder?: string
   healthStat?: { calorie: Number; carb: Number; fat: Number; protein: Number }
   bulkEventPrice: { price: Number; guestSize: Number; description: string }
+  bulk: { price: Number; guestSize: Number; description: string }
   isDelete: boolean
   createdAt?: Date
   updatedAt?: Date
