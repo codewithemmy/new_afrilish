@@ -14,11 +14,14 @@ import MenuRepository from "../menu/menu.repository"
 
 export default class ItemService {
   static async createItem(itemPayload: Partial<IItem>): Promise<IResponse> {
-    const { menuId, image, partnerId } = itemPayload
+    const { menuId, image, partnerId, bulk, bulkEventPrice } = itemPayload
 
     if (!image) return { success: false, msg: `image cannot be null` }
 
     if (!menuId) return { success: false, msg: itemMessages.EMPTY_ITEM }
+
+    if (!bulk?.price) return { success: false, msg: `bulk cannot be empty` }
+    if (!bulkEventPrice?.price) return { success: false, msg: `bulk cannot be empty` }
 
     const menuExist = await MenuRepository.fetchMenu(
       {
