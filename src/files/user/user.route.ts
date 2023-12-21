@@ -5,6 +5,7 @@ import createUserValidation from "../../validations/user/createPartner.validatio
 import userController from "./user.controller"
 import itemController from "../item/item.controller"
 import uploadManager from "../../utils/multer"
+import { isAuthenticated } from "../../utils"
 
 const {
   createUserController,
@@ -31,16 +32,17 @@ UserRouter.post(
 UserRouter.post("/login", loginUserController)
 UserRouter.post("/verify", verifyUserController)
 UserRouter.post("/resend-otp", resendVerificationOtp)
-UserRouter.get("/item", fetchItemController)
 UserRouter.post("/login-code", loginCodeController)
 
 UserRouter.get("/", fetchUserController)
 
 UserRouter.patch(
-  "/:userId",
+  "/",
   uploadManager("userImage").single("image"),
+  isAuthenticated,
   updateUserController,
 )
+UserRouter.get("/item", fetchItemController)
 
 UserRouter.get("/vendor", getVendorByCoordController)
 

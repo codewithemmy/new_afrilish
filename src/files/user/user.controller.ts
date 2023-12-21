@@ -50,7 +50,7 @@ class UserController {
     const { image, body } = fileModifier(req)
     const [error, data] = await manageAsyncOps(
       UserService.updateUserProfile({
-        params: { userId: req.params.userId },
+        params: res.locals.jwt._id,
         userPayload: { ...body, image },
       }),
     )

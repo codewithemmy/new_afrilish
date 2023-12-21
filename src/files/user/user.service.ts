@@ -59,12 +59,12 @@ export default class UserService {
       console.log("error", error)
     }
 
-     const userToken = await tokenHandler({ _id: user._id })
+    const userToken = await tokenHandler({ _id: user._id })
 
     return {
       success: true,
       msg: userMessages.USER_SUCCESS,
-      data: { userToken }
+      data: { userToken },
     }
   }
 
@@ -231,7 +231,7 @@ export default class UserService {
   }
 
   static async updateUserProfile(data: {
-    params: { userId: string }
+    params: any
     userPayload: Partial<IUser & ICoord>
   }) {
     const { params, userPayload } = data
@@ -249,7 +249,7 @@ export default class UserService {
     }
 
     const user = await UserRepository.updateUsersProfile(
-      { _id: new mongoose.Types.ObjectId(params.userId) },
+      { _id: new mongoose.Types.ObjectId(params) },
       {
         $set: {
           ...restOfPayload,
