@@ -228,6 +228,7 @@ export default class OrderService {
   }
 
   static async updateOrderService(orderId: any, data: Partial<IOrder>) {
+    const { orderStatus } = data
     const findOrder = await OrderRepository.fetchOrder(
       { _id: new mongoose.Types.ObjectId(orderId) },
       {},
@@ -235,7 +236,23 @@ export default class OrderService {
     if (!findOrder)
       return { success: false, msg: orderMessages.NOT_FOUND, data: [] }
 
-    const order = OrderRepository.updateOrderDetails(
+    if (orderStatus === "accepted") {
+      const user = await UserRepository.fetchUser(
+        { _id: new mongoose.Types.ObjectId(findOrder.orderedBy) },
+        {},
+      )
+      if (!user) return { success: false, msg: `buyer not found` }
+
+      // Ensure findOrder.totalAmount is defined or provide a default value of 0
+      const totalAmount: any = findOrder.totalAmount
+
+      await UserRepository.updateUsersProfile(
+        { _id: new mongoose.Types.ObjectId(findOrder.orderedBy) },
+        { $dec: { wallet: -totalAmount } },
+      )
+    }
+
+    await OrderRepository.updateOrderDetails(
       { _id: new mongoose.Types.ObjectId(orderId) },
       { ...data },
     )
