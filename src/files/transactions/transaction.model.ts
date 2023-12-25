@@ -31,7 +31,6 @@ const TransactionSchema = new mongoose.Schema<ITransaction>(
     },
     transactionId: {
       type: String,
-      required: true,
     },
     status: {
       type: String,

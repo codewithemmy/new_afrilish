@@ -19,14 +19,7 @@ const stripePaymentIntent = async (payload: {
 
   const paymentIntent = await stripe.paymentIntents.create({ amount, currency })
 
-  return {
-    success: true,
-    msg: transactionMessages.PAYMENT_SUCCESS,
-    data: {
-      clientSecret: paymentIntent.client_secret,
-      transactionId: paymentIntent.id,
-    },
-  }
+  return paymentIntent
 }
 
 export { stripePaymentIntent }

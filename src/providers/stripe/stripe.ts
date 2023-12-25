@@ -7,7 +7,7 @@ export default class StripePaymentService {
   async initiatePaymentIntent(paymentPayload: {
     amount: number
     currency: string
-  }): Promise<IResponse> {
+  }) {
     const { amount, currency } = paymentPayload
 
     const stripe = await stripePaymentIntent({ amount, currency })

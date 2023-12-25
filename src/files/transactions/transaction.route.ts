@@ -4,10 +4,14 @@ import TransactionController from "./transaction.controller"
 
 const TransactionRouter = express.Router()
 
-const { createPaymentIntentController, verifyPaymentController, chargeWalletController } = TransactionController
+const {
+  createPaymentIntentController,
+  verifyPaymentController,
+  chargeWalletController,
+} = TransactionController
 
 //authentications
-TransactionRouter.use(isAuthenticated)
+// TransactionRouter.use(isAuthenticated)
 
 //routes
 TransactionRouter.route("/").post(createPaymentIntentController)

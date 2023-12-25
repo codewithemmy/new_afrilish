@@ -1,4 +1,4 @@
-import mongoose from "mongoose"
+import mongoose, { mongo } from "mongoose"
 import { IResponse } from "../../constants"
 import StripePaymentService from "../../providers/stripe/stripe"
 import { transactionMessages } from "./transaction.messages"
@@ -7,7 +7,7 @@ import { ITransaction } from "./transaction.interface"
 import OrderRepository from "../order/order.repository"
 import TransactionRepository from "./transaction.repository"
 import UserRepository from "../user/user.repository"
-import { IUser } from "../user/user.interface"
+import { providerMessages } from "../../providers/providers.messages"
 
 export default class TransactionService {
   private static paymentProvider: IPaymentProvider
@@ -19,13 +19,18 @@ export default class TransactionService {
   static async initiatePayment(payload: {
     amount: number
     currency: string
+    userId: any
+    orderId: any
   }): Promise<IResponse> {
     await this.getConfig()
-    const { amount, currency } = payload
+    const { amount, currency, userId, orderId } = payload
     const initializePayment = await this.paymentProvider.initiatePaymentIntent({
       amount,
       currency,
     })
+
+    const { data } = initializePayment
+    const { id, client_secret } = data
 
     if (!initializePayment)
       return {
@@ -33,7 +38,21 @@ export default class TransactionService {
         msg: transactionMessages.CREATE_TRANSACTION_FAILURE,
       }
 
-    return initializePayment
+    const transaction = await TransactionRepository.create({
+      userId: new mongoose.Types.ObjectId(userId),
+      amount,
+      currency,
+      orderId: new mongoose.Types.ObjectId(orderId),
+      transactionId: id,
+    })
+
+    if (!transaction)
+      return { success: false, msg: `unable to create transaction` }
+    return {
+      success: true,
+      msg: providerMessages.INITIATE_PAYMENT_SUCCESS,
+      data: { client_secret, id, amount, currency },
+    }
   }
 
   static async chargeWalletService(
@@ -46,6 +65,7 @@ export default class TransactionService {
       },
       {},
     )
+
     const walletBalance: any = confirmWallet?.wallet
 
     const order = await OrderRepository.fetchOrder(
@@ -90,7 +110,7 @@ export default class TransactionService {
     payload: Partial<ITransaction>,
     locals: any,
   ): Promise<IResponse> {
-    const { transactionId, status, amount } = payload
+    const { transactionId, status, amount, orderId } = payload
 
     const transaction = await TransactionRepository.create({
       userId: new mongoose.Types.ObjectId(locals),
