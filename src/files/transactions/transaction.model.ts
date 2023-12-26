@@ -32,10 +32,15 @@ const TransactionSchema = new mongoose.Schema<ITransaction>(
     transactionId: {
       type: String,
     },
+    type: {
+      type: String,
+      enum: ["wallet", "order"],
+      default: "wallet",
+    },
     status: {
       type: String,
-      default: "Pending",
-      enum: ["Failed", "Succeeded", "Pending", "Canceled"],
+      default: "pending",
+      enum: ["failed", "completed", "pending", "canceled"],
     },
     paymentFor: {
       type: String,

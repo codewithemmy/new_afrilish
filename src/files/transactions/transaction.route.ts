@@ -11,7 +11,7 @@ const {
 } = TransactionController
 
 //authentications
-// TransactionRouter.use(isAuthenticated)
+TransactionRouter.use(isAuthenticated)
 
 //routes
 TransactionRouter.route("/").post(createPaymentIntentController)

@@ -23,7 +23,7 @@ export default class TransactionService {
     orderId: any
   }): Promise<IResponse> {
     await this.getConfig()
-    const { amount, currency, userId, orderId } = payload
+    const { amount, currency, userId } = payload
     const initializePayment = await this.paymentProvider.initiatePaymentIntent({
       amount,
       currency,
@@ -42,17 +42,58 @@ export default class TransactionService {
       userId: new mongoose.Types.ObjectId(userId),
       amount,
       currency,
-      orderId: new mongoose.Types.ObjectId(orderId),
       transactionId: id,
+      paymentFor: "fund-wallet",
     })
 
     if (!transaction)
       return { success: false, msg: `unable to create transaction` }
+
     return {
       success: true,
       msg: providerMessages.INITIATE_PAYMENT_SUCCESS,
       data: { client_secret, id, amount, currency },
     }
+  }
+
+  static async verifyPayment(
+    payload: Partial<ITransaction>,
+    locals: any,
+  ): Promise<IResponse> {
+    const { transactionId, status, amount } = payload
+
+    const transaction = await TransactionRepository.create({
+      userId: new mongoose.Types.ObjectId(locals),
+      transactionId,
+      amount,
+    })
+
+    const succeeded: string = "Succeeded"
+
+    if (status === succeeded) {
+      await UserRepository.updateUsersProfile(
+        { _id: new mongoose.Types.ObjectId(locals) },
+        { $inc: { wallet: amount } },
+      )
+      await TransactionRepository.updateTransactionDetails(
+        {
+          userId: new mongoose.Types.ObjectId(locals),
+        },
+        {
+          $set: { status: "completed" },
+        },
+      )
+    } else {
+      await TransactionRepository.updateTransactionDetails(
+        {
+          userId: new mongoose.Types.ObjectId(locals),
+        },
+        {
+          $set: { status: "failed" },
+        },
+      )
+    }
+    return { success: true, msg: transactionMessages.PAYMENT_SUCCESS }
   }
 
   static async chargeWalletService(
@@ -81,66 +122,8 @@ export default class TransactionService {
     const orderAmount: any = order.totalAmount
 
     if (orderAmount > walletBalance)
-      return { success: false, msg: transactionMessages.EQUAL_AMOUNT }
+      return { success: false, msg: transactionMessages.INSUFFICIENT }
 
-    const transaction =
-      await TransactionRepository.findSingleTransactionByParams({
-        userId: new mongoose.Types.ObjectId(locals),
-      })
-
-    if (!transaction)
-      return { success: false, msg: transactionMessages.TRANSACTION_NOT_FOUND }
-
-    await OrderRepository.updateOrderDetails(
-      {
-        _id: new mongoose.Types.ObjectId(payload.orderId),
-      },
-      { $set: { transactionId: transaction?._id, paymentStatus: "paid" } },
-    )
-
-    await UserRepository.updateUsersProfile(
-      { _id: new mongoose.Types.ObjectId(order?.orderedBy) },
-      { $inc: { wallet: -orderAmount } },
-    )
-
-    return { success: true, msg: transactionMessages.PAYMENT_SUCCESS }
-  }
-
-  static async verifyPayment(
-    payload: Partial<ITransaction>,
-    locals: any,
-  ): Promise<IResponse> {
-    const { transactionId, status, amount, orderId } = payload
-
-    const transaction = await TransactionRepository.create({
-      userId: new mongoose.Types.ObjectId(locals),
-      transactionId,
-      amount,
-    })
-
-    if (status === "Succeeded") {
-      await UserRepository.updateUsersProfile(
-        { _id: new mongoose.Types.ObjectId(locals) },
-        { $inc: { wallet: amount } },
-      )
-      await TransactionRepository.updateTransactionDetails(
-        {
-          userId: new mongoose.Types.ObjectId(locals),
-        },
-        {
-          $set: { status: "Succeeded" },
-        },
-      )
-    } else {
-      await TransactionRepository.updateTransactionDetails(
-        {
-          userId: new mongoose.Types.ObjectId(locals),
-        },
-        {
-          $set: { status: "Failed" },
-        },
-      )
-    }
-    return { success: true, msg: transactionMessages.PAYMENT_SUCCESS }
+    return { success: true, msg: transactionMessages.WALLET_VERIFIED }
   }
 }

@@ -8,4 +8,5 @@ export const generalMessages = {
   SUCCESSFUL_LOGIN: "Successful login",
   NOT_VERIFIED: "Unverified user",
   EMAIL_INCORRECT: `email not identified`,
+  INCORRECT_PARTNER: `partner does not exist, kindly register as partner`,
 }

@@ -12,6 +12,7 @@ export interface ITransaction {
   currency: string
   transactionId: string
   paymentFor: string
+  type: "wallet" | "order"
   orderId: any
   channel: "stripe"
   status: transactionStatus
@@ -21,8 +22,8 @@ export interface ITransaction {
 }
 
 export type transactionStatus =
-  | "Pending"
-  | "Canceled"
-  | "Succeeded"
-  | "Failed"
+  | "pending"
+  | "canceled"
+  | "completed"
+  | "failed"
   | { $in: Record<string, any> }

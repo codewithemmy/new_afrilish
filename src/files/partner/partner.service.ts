@@ -85,7 +85,8 @@ export default class PartnerService {
 
     const partner = await PartnerRepository.fetchPartner({ email }, {})
 
-    if (!partner) return { success: false, msg: generalMessages.INCORRECT }
+    if (!partner)
+      return { success: false, msg: generalMessages.INCORRECT_PARTNER }
 
     if (!partner.isVerified)
       return { success: false, msg: generalMessages.NOT_VERIFIED }
