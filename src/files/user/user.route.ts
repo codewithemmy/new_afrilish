@@ -16,6 +16,7 @@ const {
   loginCodeController,
   verifyUserController,
   resendVerificationOtp,
+  userAuthLoginController,
 } = userController
 
 const { fetchItemController } = itemController
@@ -45,5 +46,8 @@ UserRouter.patch(
 UserRouter.get("/item", fetchItemController)
 
 UserRouter.get("/vendor", getVendorByCoordController)
+
+//user auth login route
+UserRouter.post("/login/auth", userAuthLoginController)
 
 export default UserRouter

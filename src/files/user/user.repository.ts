@@ -8,7 +8,7 @@ import { IVendorSearch } from "../partner/partner.interface"
 const { LIMIT, SKIP, SORT } = pagination
 
 export default class UserRepository {
-  static async createUser(userPayload: IUser): Promise<IUser> {
+  static async createUser(userPayload: Partial<IUser>): Promise<IUser> {
     return User.create(userPayload)
   }
 

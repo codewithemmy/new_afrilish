@@ -308,4 +308,71 @@ export default class UserService {
       data: vendors,
     }
   }
+
+  static async userAuthLoginService(userPayload: Partial<IUser>) {
+    const { fullName, email } = userPayload
+
+    const confirmUser = await UserRepository.fetchUser({ email }, {})
+
+    if (confirmUser) {
+      const token = tokenHandler({
+        ...confirmUser,
+        isPartner: false,
+      })
+
+      return {
+        success: true,
+        msg: generalMessages.SUCCESSFUL_LOGIN,
+        data: {
+          _id: confirmUser._id,
+          fullName: confirmUser.fullName,
+          phone: confirmUser.phone,
+          email: confirmUser.email,
+          token,
+        },
+      }
+    }
+
+    const user = await UserRepository.createUser({
+      email: email,
+      fullName: fullName,
+      isVerified: true,
+    })
+
+    const userEmail: any = email
+    const userFullName: any = userEmail
+    // send mail login details to user
+    try {
+      await sendMailNotification(
+        userEmail,
+        "Registration",
+        {
+          name: userFullName,
+          email: userEmail,
+          imageUrl:
+            "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
+        },
+        "USER_REG_AUTH",
+      )
+    } catch (error) {
+      console.log("error", error)
+    }
+
+    const token = tokenHandler({
+      ...user,
+      isPartner: false,
+    })
+
+    return {
+      success: true,
+      msg: generalMessages.SUCCESSFUL_LOGIN,
+      data: {
+        _id: user._id,
+        fullName: user.fullName,
+        phone: user.phone,
+        email: user.email,
+        token,
+      },
+    }
+  }
 }

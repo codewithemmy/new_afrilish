@@ -5,7 +5,7 @@ const UserSchema = new Schema<IUser>(
   {
     fullName: { type: String, required: true },
     image: { type: String },
-    phone: { type: String, required: true },
+    phone: { type: String },
     email: { type: String, required: true },
     isVerified: { type: Boolean, default: false },
     language: { type: String },
@@ -17,10 +17,10 @@ const UserSchema = new Schema<IUser>(
       type: { type: String },
       coordinates: [],
     },
-    referralCode: String,
-    loginCode: Number,
+    referralCode: { type: String },
+    loginCode: { type: Number },
     isDelete: { type: Boolean, default: false },
-    verificationOtp: String,
+    verificationOtp: { type: String },
   },
   { timestamps: true },
 )
