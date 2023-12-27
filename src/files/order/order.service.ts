@@ -124,7 +124,7 @@ export default class OrderService {
     let serviceCharge
     let parsePickUpNumber
     let parseOrderCode
-    let roundTotalPrice
+    let roundTotalPrice: any
     let pickUpNumber
 
     if (deliveryAddress) {
@@ -165,7 +165,21 @@ export default class OrderService {
       schedule = true
     }
 
-    console.log("riders", ridersFee)
+    const confirmWallet = await UserRepository.fetchUser(
+      {
+        _id: new mongoose.Types.ObjectId(locals._id),
+      },
+      {},
+    )
+
+    const walletBalance: any = confirmWallet?.wallet
+
+    if (roundTotalPrice > walletBalance)
+      return {
+        success: false,
+        msg: `insufficient funds, kindly fund your wallet`,
+      }
+
     const currentOrder = await OrderRepository.createOrder({
       pickUpCode: parsePickUpNumber,
       orderId,
