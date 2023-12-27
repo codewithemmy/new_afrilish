@@ -11,6 +11,7 @@ export interface IConfig {
   PAYSTACK_KEY: string
   ENV: string
   STRIPE: string
+  WEBHOOK_SECRET: string
 }
 
 const config = {
@@ -23,6 +24,7 @@ const config = {
   PAYSTACK_KEY: process.env.PAYSTACK_SK_KEY,
   ENV: process.env.ENVIRONMENT,
   STRIPE: process.env.STRIPE_KEY,
+  WEBHOOK_SECRET: process.env.WEBHOOK_SECRET,
 }
 
 export default config

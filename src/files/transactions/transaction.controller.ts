@@ -4,6 +4,13 @@ import { manageAsyncOps } from "../../utils"
 import { CustomError } from "../../utils/error"
 import TransactionService from "./transaction.service"
 import { statusCode } from "../../constants/statusCode"
+import config from "../../core/config"
+import Stripe from "stripe"
+const stripeKey = process.env.STRIPE_KEY
+if (!stripeKey) {
+  throw new Error("Stripe key is not defined")
+}
+const stripe = new Stripe(stripeKey)
 
 class TransactionController {
   async createPaymentIntentController(
@@ -21,28 +28,20 @@ class TransactionController {
     return responseHandler(res, statusCode.CREATED, data!)
   }
 
-  async verifyPaymentController(
+  async stripeWebHookController(
     req: Request,
     res: Response,
     next: NextFunction,
   ) {
-    const [error, data] = await manageAsyncOps(
-      TransactionService.verifyPayment(req.body, res.locals.jwt._id),
+    const sig: any = req.headers["stripe-signature"]
+    const event = stripe.webhooks.constructEvent(
+      req.body,
+      sig,
+      config.WEBHOOK_SECRET!,
     )
 
-    if (error) return next(error)
-    if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
-
-    return responseHandler(res, statusCode.CREATED, data!)
-  }
-
-  async chargeWalletController(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) {
     const [error, data] = await manageAsyncOps(
-      TransactionService.chargeWalletService(req.body, res.locals.jwt._id),
+      TransactionService.verifyPayment(event),
     )
 
     if (error) return next(error)

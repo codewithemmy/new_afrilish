@@ -263,7 +263,7 @@ export default class OrderService {
 
       await UserRepository.updateUsersProfile(
         { _id: new mongoose.Types.ObjectId(findOrder.orderedBy) },
-        { $dec: { wallet: -totalAmount } },
+        { $inc: { wallet: -totalAmount } },
       )
     }
 

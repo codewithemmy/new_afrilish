@@ -3,8 +3,7 @@ import { IResponse } from "../../constants"
 import StripePaymentService from "../../providers/stripe/stripe"
 import { transactionMessages } from "./transaction.messages"
 import { IPaymentProvider } from "./transaction.provider"
-import { ITransaction } from "./transaction.interface"
-import OrderRepository from "../order/order.repository"
+
 import TransactionRepository from "./transaction.repository"
 import UserRepository from "../user/user.repository"
 import { providerMessages } from "../../providers/providers.messages"
@@ -56,74 +55,49 @@ export default class TransactionService {
     }
   }
 
-  static async verifyPayment(
-    payload: Partial<ITransaction>,
-    locals: any,
-  ): Promise<IResponse> {
-    const { transactionId, status, amount } = payload
+  static async verifyPayment(event: any) {
+    // Handle the event
+    try {
+      switch (event.type) {
+        case "payment_intent.canceled":
+          const paymentIntentCanceled = event.data.object
 
-    const transaction = await TransactionRepository.create({
-      userId: new mongoose.Types.ObjectId(locals),
-      transactionId,
-      amount,
-    })
+          await TransactionRepository.updateTransactionDetails(
+            { transactionId: paymentIntentCanceled?.id },
+            { status: "canceled" },
+          )
+          break
 
-    const succeeded: string = "Succeeded"
+        case "payment_intent.payment_failed":
+          const paymentIntentPaymentFailed = event.data.object
+          await TransactionRepository.updateTransactionDetails(
+            { transactionId: paymentIntentPaymentFailed?.id },
+            { status: "failed" },
+          )
 
-    if (status === succeeded) {
-      await UserRepository.updateUsersProfile(
-        { _id: new mongoose.Types.ObjectId(locals) },
-        { $inc: { wallet: amount } },
-      )
-      await TransactionRepository.updateTransactionDetails(
-        {
-          userId: new mongoose.Types.ObjectId(locals),
-        },
-        {
-          $set: { status: "completed" },
-        },
-      )
-    } else {
-      await TransactionRepository.updateTransactionDetails(
-        {
-          userId: new mongoose.Types.ObjectId(locals),
-        },
-        {
-          $set: { status: "failed" },
-        },
-      )
+          break
+        case "payment_intent.succeeded":
+          const paymentIntentSucceeded = event.data.object
+
+          const transaction =
+            await TransactionRepository.updateTransactionDetails(
+              { transactionId: paymentIntentSucceeded?.id },
+              { status: "completed" },
+            )
+
+          await UserRepository.updateUsersProfile(
+            { _id: new mongoose.Types.ObjectId(transaction?.userId) },
+            { $inc: { wallet: transaction?.amount } },
+          )
+          break
+        default:
+          return {
+            success: true,
+            msg: transactionMessages.CREATE_TRANSACTION_SUCCESS,
+          }
+      }
+    } catch (error) {
+      console.log("error", error)
     }
-    return { success: true, msg: transactionMessages.PAYMENT_SUCCESS }
-  }
-
-  static async chargeWalletService(
-    payload: Partial<ITransaction>,
-    locals: any,
-  ): Promise<IResponse> {
-    const confirmWallet = await UserRepository.fetchUser(
-      {
-        _id: new mongoose.Types.ObjectId(locals),
-      },
-      {},
-    )
-
-    const walletBalance: any = confirmWallet?.wallet
-
-    const order = await OrderRepository.fetchOrder(
-      {
-        _id: new mongoose.Types.ObjectId(payload.orderId),
-        orderedBy: new mongoose.Types.ObjectId(locals),
-      },
-      {},
-    )
-
-    if (!order) return { success: false, msg: transactionMessages.NO_ORDER }
-
-    const orderAmount: any = order.totalAmount
-
-    if (orderAmount > walletBalance)
-      return { success: false, msg: transactionMessages.INSUFFICIENT }
-
-    return { success: true, msg: transactionMessages.WALLET_VERIFIED }
   }
 }
