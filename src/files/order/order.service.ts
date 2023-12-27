@@ -165,6 +165,7 @@ export default class OrderService {
       schedule = true
     }
 
+    //confirm wallet 
     const confirmWallet = await UserRepository.fetchUser(
       {
         _id: new mongoose.Types.ObjectId(locals._id),
