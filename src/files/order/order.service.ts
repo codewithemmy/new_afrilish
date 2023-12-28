@@ -12,7 +12,7 @@ import VendorRepository from "../partner/vendor/vendor.repository"
 import { partnerMessages } from "../partner/partner.messages"
 import UserRepository from "../user/user.repository"
 import ItemRepository from "../item/item.repository"
-import { IOrder } from "./order.interface"
+import { DayPayload, IOrder } from "./order.interface"
 
 export default class OrderService {
   static async evaluateOrderService(
@@ -144,7 +144,7 @@ export default class OrderService {
     }
 
     if (pickUp) {
-      ridersFee = kilometers * 2
+      ridersFee = 0
       const parseAmount: any = Number(netAmount)
       const marketPlace: Number = 3
 
@@ -165,7 +165,7 @@ export default class OrderService {
       schedule = true
     }
 
-    //confirm wallet 
+    //confirm wallet
     const confirmWallet = await UserRepository.fetchUser(
       {
         _id: new mongoose.Types.ObjectId(locals._id),
@@ -208,6 +208,244 @@ export default class OrderService {
 
     if (!currentOrder)
       return { success: false, msg: orderMessages.ORDER_FAILURE }
+
+    return {
+      success: true,
+      msg: orderMessages.ORDER_SUCCESS,
+      data: currentOrder,
+    }
+  }
+
+  static async evaluateScheduleOrderService(
+    orderPayload: {
+      lat: any
+      lng: any
+      note: string
+      pickUp: Boolean
+      scheduleId: any
+      deliveryAddress: string
+      vendorId: string
+      monday: DayPayload
+      tuesday: DayPayload
+      wednesday: DayPayload
+      thursday: DayPayload
+      friday: DayPayload
+      saturday: DayPayload
+      sunday: DayPayload
+    },
+    locals: any,
+  ): Promise<IResponse> {
+    const {
+      vendorId,
+      lng,
+      lat,
+      note,
+      pickUp,
+      scheduleId,
+      deliveryAddress,
+      monday,
+      tuesday,
+      wednesday,
+      thursday,
+      friday,
+      saturday,
+      sunday,
+    } = orderPayload
+
+    const vendor = await VendorRepository.fetchVendor(
+      {
+        _id: new mongoose.Types.ObjectId(vendorId),
+      },
+      {},
+    )
+    if (!vendor) return { success: false, msg: partnerMessages.VENDOR_ERROR }
+
+    let vendorLng: any
+    let vendorLat: any
+
+    // Check if vendor.locationCoord is defined before accessing its properties
+    if (vendor.locationCoord && vendor.locationCoord.coordinates) {
+      vendorLat = vendor.locationCoord.coordinates[0]
+      vendorLng = vendor.locationCoord.coordinates[1]
+    } else {
+      // Handle the case where locationCoord or coordinates is undefined
+      return {
+        success: false,
+        msg: "Location coordinates not available for the vendor.",
+      }
+    }
+
+    // Radius of the Earth in kilometers
+    const R = 6371.0
+    // Convert latitude and longitude from degrees to radians
+    const lat1Rad: any = deg2rad(vendorLat)
+    const lon1Rad: any = deg2rad(vendorLng)
+    const lat2Rad: any = deg2rad(lat)
+    const lon2Rad: any = deg2rad(lng)
+
+    // Haversine formula
+    const dLat = lat2Rad - lat1Rad
+    const dLon = lon2Rad - lon1Rad
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1Rad) *
+        Math.cos(lat2Rad) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2)
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+    const distance = R * c
+
+    let kilometers: any = distance.toFixed(2)
+
+    let ridersFee
+
+    const customer = await UserRepository.fetchUser(
+      { _id: new mongoose.Types.ObjectId(locals._id) },
+      {},
+    )
+
+    if (!customer) return { success: false, msg: `unable to identify customer` }
+
+    const days = [
+      "monday",
+      "tuesday",
+      "wednesday",
+      "thursday",
+      "friday",
+      "saturday",
+      "sunday",
+    ]
+    const allItems: any[] = []
+
+    for (const day of days) {
+      // Use type assertion directly on orderPayload[day]
+      const dayPayload: DayPayload | undefined =
+        orderPayload[day as keyof typeof orderPayload]
+
+      /**find a place to confirm if schedule exist */
+
+      // Check if the dayPayload and its breakfast, lunch, dinner properties exist
+      if (
+        dayPayload &&
+        dayPayload.breakfast &&
+        dayPayload.lunch &&
+        dayPayload.dinner
+      ) {
+        // Concatenate items for each meal
+        const allMealsItems = dayPayload.breakfast.item.concat(
+          dayPayload.lunch.item,
+          dayPayload.dinner.item,
+        )
+        allItems.push(...allMealsItems)
+      }
+    }
+
+    // Calculate the total price based on the item array
+    const netAmount = allItems.reduce((total, currentItem: any) => {
+      return total + currentItem.price * currentItem.quantity
+    }, 0)
+
+    /// Directly specify the type when declaring orderItems
+    let orderItems: any = []
+
+    // Populate orderItems
+    allItems.forEach((payloadItem) => {
+      orderItems.push({
+        _id: payloadItem._id,
+        quantity: payloadItem.quantity,
+        price: payloadItem.price,
+      })
+    })
+
+    let serviceCharge
+    let parsePickUpNumber
+    let parseOrderCode
+    let roundTotalPrice: any
+    let pickUpNumber
+
+    if (deliveryAddress) {
+      ridersFee = kilometers * 2
+      const parseAmount: any = Number(netAmount)
+      const deliveryFee: number = 2
+      const marketPlace: number = 3
+
+      let totalPrice: any = parseAmount + deliveryFee + marketPlace + ridersFee
+      roundTotalPrice = Math.ceil(totalPrice)
+      serviceCharge = (10 * roundTotalPrice) / 100
+
+      pickUpNumber = genRandomNumber()
+      parsePickUpNumber = Number(pickUpNumber)
+      let orderCode = genRandomNumber()
+      parseOrderCode = Number(orderCode)
+    }
+
+    if (pickUp) {
+      ridersFee = 0
+      const parseAmount: any = Number(netAmount)
+      const marketPlace: number = 3
+
+      let totalPrice: any = parseAmount + marketPlace
+      roundTotalPrice = Math.ceil(totalPrice)
+      serviceCharge = (10 * roundTotalPrice) / 100
+
+      pickUpNumber = genRandomNumber()
+      parsePickUpNumber = Number(pickUpNumber)
+      let orderCode = genRandomNumber()
+      parseOrderCode = Number(orderCode)
+    }
+
+    let orderId = `#${AlphaNumeric(3, "number")}`
+
+    let schedule
+    if (scheduleId) {
+      schedule = true
+    }
+
+    // Confirm wallet balance
+    const confirmWallet = await UserRepository.fetchUser(
+      {
+        _id: new mongoose.Types.ObjectId(locals._id),
+      },
+      {},
+    )
+
+    const walletBalance: any = confirmWallet?.wallet
+
+    if (roundTotalPrice > walletBalance) {
+      return {
+        success: false,
+        msg: `Insufficient funds, kindly fund your wallet`,
+      }
+    }
+
+    const currentOrder = await OrderRepository.createOrder({
+      pickUpCode: parsePickUpNumber,
+      orderId,
+      pickUp,
+      deliveryAddress,
+      orderCode: parseOrderCode,
+      itemId: orderItems,
+      orderedBy: new mongoose.Types.ObjectId(locals._id),
+      vendorId: new mongoose.Types.ObjectId(vendor._id),
+      locationCoord: {
+        type: "Point",
+        coordinates: [parseFloat(lng), parseFloat(lat)],
+      },
+      userEmail: locals.email,
+      ridersFee,
+      userName: locals.fullName,
+      note,
+      serviceCharge,
+      orderDate: new Date(),
+      totalAmount: roundTotalPrice,
+      schedule,
+      netAmount,
+      scheduleId: new mongoose.Types.ObjectId(scheduleId),
+    })
+
+    if (!currentOrder) {
+      return { success: false, msg: orderMessages.ORDER_FAILURE }
+    }
 
     return {
       success: true,

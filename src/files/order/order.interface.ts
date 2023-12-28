@@ -65,3 +65,14 @@ interface ILocation {
   type: string
   coordinates: [Number, Number]
 }
+
+export type DayPayload = {
+  breakfast: MealPayload
+  lunch: MealPayload
+  dinner: MealPayload
+}
+
+// Define the MealPayload type for better TypeScript type-checking
+type MealPayload = {
+  item: Array<{ _id: any; quantity: Number; price: Number }>
+}

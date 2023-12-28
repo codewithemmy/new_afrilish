@@ -20,6 +20,21 @@ class OrderController {
     return responseHandler(res, statusCode.CREATED, data!)
   }
 
+  async evaluateScheduleOrderController(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    const [error, data] = await manageAsyncOps(
+      OrderService.evaluateScheduleOrderService(req.body, res.locals.jwt),
+    )
+
+    if (error) return next(error)
+    if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
+
+    return responseHandler(res, statusCode.CREATED, data!)
+  }
+
   async fetchOrderController(req: Request, res: Response, next: NextFunction) {
     const [error, data] = await manageAsyncOps(
       OrderService.fetchOrderService(req.query),

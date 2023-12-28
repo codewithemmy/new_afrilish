@@ -4,13 +4,6 @@ import { manageAsyncOps } from "../../utils"
 import { CustomError } from "../../utils/error"
 import TransactionService from "./transaction.service"
 import { statusCode } from "../../constants/statusCode"
-import config from "../../core/config"
-import Stripe from "stripe"
-const stripeKey = process.env.STRIPE_KEY
-if (!stripeKey) {
-  throw new Error("Stripe key is not defined")
-}
-const stripe = new Stripe(stripeKey)
 
 class TransactionController {
   async createPaymentIntentController(
