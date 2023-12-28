@@ -34,6 +34,7 @@ class TransactionController {
     next: NextFunction,
   ) {
     try {
+      console.log("req.body", req.body)
       const rawBodyBuffer = Buffer.from(JSON.stringify(req.body))
       const sig: any = req.headers["stripe-signature"]
       const event = stripe.webhooks.constructEvent(
