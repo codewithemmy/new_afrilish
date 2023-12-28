@@ -44,7 +44,7 @@ PartnerRouter.post(
   loginPartnerController,
 )
 
-// PartnerRouter.use(isAuthenticated)
+PartnerRouter.use(isAuthenticated)
 
 PartnerRouter.get("/", fetchSinglePartnerController)
 PartnerRouter.patch("/vendor/operation/:vendorId", operationUpdateController)
