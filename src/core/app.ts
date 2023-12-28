@@ -4,7 +4,6 @@ import compression from "compression"
 import cors from "cors"
 import { routes } from "./routes"
 import { handleApplicationErrors, notFound } from "./response"
-import bodyParser from "body-parser"
 
 export const app = express()
 

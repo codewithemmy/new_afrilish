@@ -34,11 +34,10 @@ class TransactionController {
     next: NextFunction,
   ) {
     try {
-      // const rawBodyBuffer = Buffer.from(JSON.stringify(req.body))
-      // const sig: any = req.headers["stripe-signature"]
       const event = req.body
 
       console.log("Received Stripe event:", event?.type)
+      console.log("Received Stripe event type:", event)
 
       const [error, data] = await manageAsyncOps(
         TransactionService.verifyPayment(event),
