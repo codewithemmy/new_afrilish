@@ -21,7 +21,7 @@ class TransactionController {
     const [error, data] = await manageAsyncOps(
       TransactionService.initiatePayment(req.body),
     )
-
+    console.log("error", error)
     if (error) return next(error)
     if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
 
@@ -34,9 +34,10 @@ class TransactionController {
     next: NextFunction,
   ) {
     try {
+      const rawBodyBuffer = Buffer.from(JSON.stringify(req.body))
       const sig: any = req.headers["stripe-signature"]
       const event = stripe.webhooks.constructEvent(
-        req.body,
+        rawBodyBuffer,
         sig,
         config.WEBHOOK_SECRET!,
       )

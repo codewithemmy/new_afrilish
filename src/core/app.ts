@@ -9,8 +9,6 @@ import bodyParser from "body-parser"
 export const app = express()
 
 export const application = async () => {
-  // Use body-parser middleware to parse raw body as Buffer
-  app.use(bodyParser.raw({ type: "application/json" }))
   app.use(express.json())
   app.use(express.urlencoded({ extended: false }))
   app.use(helmet())
