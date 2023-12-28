@@ -19,7 +19,6 @@ export default class TransactionService {
     amount: number
     currency: string
     userId: any
-    orderId: any
   }): Promise<IResponse> {
     await this.getConfig()
     const { amount, currency, userId } = payload

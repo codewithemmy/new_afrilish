@@ -13,7 +13,6 @@ export interface ITransaction {
   transactionId: string
   paymentFor: string
   type: "wallet" | "order"
-  orderId: any
   channel: "stripe"
   status: transactionStatus
   metaData?: string

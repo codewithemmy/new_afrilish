@@ -18,11 +18,6 @@ const TransactionSchema = new mongoose.Schema<ITransaction>(
     currency: {
       type: String,
     },
-    orderId: {
-      type: mongoose.Types.ObjectId,
-      ref: "Order",
-      unique: true,
-    },
     channel: {
       type: String,
       required: true,
