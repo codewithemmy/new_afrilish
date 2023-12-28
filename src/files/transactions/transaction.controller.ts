@@ -36,9 +36,6 @@ class TransactionController {
     try {
       const event = req.body
 
-      console.log("Received Stripe event:", event?.type)
-      console.log("Received Stripe event type:", event)
-
       const [error, data] = await manageAsyncOps(
         TransactionService.verifyPayment(event),
       )
