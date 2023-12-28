@@ -33,23 +33,28 @@ class TransactionController {
     res: Response,
     next: NextFunction,
   ) {
-    const sig: any = req.headers["stripe-signature"]
-    const event = stripe.webhooks.constructEvent(
-      req.body,
-      sig,
-      config.WEBHOOK_SECRET!,
-    )
+    try {
+      const sig: any = req.headers["stripe-signature"]
+      const event = stripe.webhooks.constructEvent(
+        req.body,
+        sig,
+        config.WEBHOOK_SECRET!,
+      )
 
-    console.log("events", event)
+      console.log("Received Stripe event:", event)
 
-    const [error, data] = await manageAsyncOps(
-      TransactionService.verifyPayment(event),
-    )
+      const [error, data] = await manageAsyncOps(
+        TransactionService.verifyPayment(event),
+      )
 
-    if (error) return next(error)
-    if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
+      if (error) return next(error)
+      if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
 
-    return responseHandler(res, statusCode.CREATED, data!)
+      return responseHandler(res, statusCode.CREATED, data!)
+    } catch (error) {
+      console.error("Error in stripeWebHookController:", error)
+      next(error)
+    }
   }
 }
 
