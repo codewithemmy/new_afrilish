@@ -40,6 +40,8 @@ class TransactionController {
       config.WEBHOOK_SECRET!,
     )
 
+    console.log("events", event)
+
     const [error, data] = await manageAsyncOps(
       TransactionService.verifyPayment(event),
     )
