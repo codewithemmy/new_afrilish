@@ -4,10 +4,13 @@ import compression from "compression"
 import cors from "cors"
 import { routes } from "./routes"
 import { handleApplicationErrors, notFound } from "./response"
+import bodyParser from "body-parser"
 
 export const app = express()
 
 export const application = async () => {
+  // Use body-parser middleware to parse raw body as Buffer
+  app.use(bodyParser.raw({ type: "application/json" }))
   app.use(express.json())
   app.use(express.urlencoded({ extended: false }))
   app.use(helmet())
@@ -19,7 +22,6 @@ export const application = async () => {
   app.get("/", (req, res) => {
     res.status(200).json({ message: "App working fine. Welcome" })
   })
-
 
   routes(app)
   app.use(handleApplicationErrors) //application errors handler
