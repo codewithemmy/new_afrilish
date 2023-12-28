@@ -60,35 +60,13 @@ export default class TransactionService {
     try {
       switch (event.type) {
         case "payment_intent.canceled":
-          const paymentIntentCanceled = event.data.object
-
-          await TransactionRepository.updateTransactionDetails(
-            { transactionId: paymentIntentCanceled?.id },
-            { status: "canceled" },
-          )
+          await this.handleCanceledPaymentIntent(event)
           break
-
         case "payment_intent.payment_failed":
-          const paymentIntentPaymentFailed = event.data.object
-          await TransactionRepository.updateTransactionDetails(
-            { transactionId: paymentIntentPaymentFailed?.id },
-            { status: "failed" },
-          )
-
+          await this.handleFailedPaymentIntent(event)
           break
         case "payment_intent.succeeded":
-          const paymentIntentSucceeded = event.data.object
-
-          const transaction =
-            await TransactionRepository.updateTransactionDetails(
-              { transactionId: paymentIntentSucceeded?.id },
-              { status: "completed" },
-            )
-
-          await UserRepository.updateUsersProfile(
-            { _id: new mongoose.Types.ObjectId(transaction?.userId) },
-            { $inc: { wallet: transaction?.amount } },
-          )
+          await this.handleSucceededPaymentIntent(event)
           break
         default:
           return {
@@ -97,7 +75,38 @@ export default class TransactionService {
           }
       }
     } catch (error) {
-      console.log("error", error)
+      console.error("Error in verifyPayment:", error)
+      throw error
     }
+  }
+
+  private static async handleCanceledPaymentIntent(event: any) {
+    const paymentIntentCanceled = event.data.object
+    await TransactionRepository.updateTransactionDetails(
+      { transactionId: paymentIntentCanceled?.id },
+      { status: "canceled" },
+    )
+  }
+
+  private static async handleFailedPaymentIntent(event: any) {
+    const paymentIntentPaymentFailed = event.data.object
+    await TransactionRepository.updateTransactionDetails(
+      { transactionId: paymentIntentPaymentFailed?.id },
+      { status: "failed" },
+    )
+  }
+
+  private static async handleSucceededPaymentIntent(event: any) {
+    const paymentIntentSucceeded = event.data.object
+
+    const transaction = await TransactionRepository.updateTransactionDetails(
+      { transactionId: paymentIntentSucceeded?.id },
+      { status: "completed" },
+    )
+
+    await UserRepository.updateUsersProfile(
+      { _id: new mongoose.Types.ObjectId(transaction?.userId) },
+      { $inc: { wallet: transaction?.amount } },
+    )
   }
 }

@@ -47,7 +47,7 @@ class TransactionController {
     )
 
     if (error) return next(error)
-    res.send(200)
+    if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
 
     return responseHandler(res, statusCode.CREATED, data!)
   }
