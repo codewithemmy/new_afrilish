@@ -35,7 +35,7 @@ UserRouter.post("/verify", verifyUserController)
 UserRouter.post("/resend-otp", resendVerificationOtp)
 UserRouter.post("/login-code", loginCodeController)
 
-UserRouter.get("/", fetchUserController)
+UserRouter.get("/", isAuthenticated, fetchUserController)
 
 UserRouter.patch(
   "/",

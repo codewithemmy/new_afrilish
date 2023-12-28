@@ -9,7 +9,6 @@ const { createPaymentIntentController, stripeWebHookController } =
 
 TransactionRouter.route("/stripe-webhook").post(stripeWebHookController)
 
-//authentications
 TransactionRouter.use(isAuthenticated)
 
 //routes

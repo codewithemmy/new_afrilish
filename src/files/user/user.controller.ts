@@ -37,7 +37,7 @@ class UserController {
 
   async fetchUserController(req: Request, res: Response, next: NextFunction) {
     const [error, data] = await manageAsyncOps(
-      UserService.fetchUserService(req.query),
+      UserService.fetchUserService(req.query, res.locals.jwt._id),
     )
 
     if (error) return next(error)

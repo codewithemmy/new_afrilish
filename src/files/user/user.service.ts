@@ -204,7 +204,7 @@ export default class UserService {
     }
   }
 
-  static async fetchUserService(userPayload: Partial<IUser>) {
+  static async fetchUserService(userPayload: Partial<IUser>, locals: any) {
     const { error, params, limit, skip, sort } = queryConstructor(
       userPayload,
       "createdAt",
@@ -213,8 +213,11 @@ export default class UserService {
 
     if (error) return { success: false, msg: error }
 
+    let id = { _id: new mongoose.Types.ObjectId(locals) }
+
     const user = await UserRepository.fetchUserByParams({
       ...params,
+      ...id,
       limit,
       skip,
       sort,
