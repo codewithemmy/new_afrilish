@@ -12,6 +12,7 @@ import VendorRepository from "../partner/vendor/vendor.repository"
 import { partnerMessages } from "../partner/partner.messages"
 import UserRepository from "../user/user.repository"
 import ItemRepository from "../item/item.repository"
+import SubscriptionRepository from "../subscription/subscription.repository"
 import { DayPayload, IOrder } from "./order.interface"
 
 export default class OrderService {
@@ -252,6 +253,17 @@ export default class OrderService {
       sunday,
     } = orderPayload
 
+    if (!scheduleId)
+      return { success: false, msg: `scheduleId cannot be null or empty` }
+
+    const confirmSchedule = await SubscriptionRepository.fetchSubscription(
+      { _id: new mongoose.Types.ObjectId(scheduleId) },
+      {},
+    )
+
+    if (!confirmSchedule)
+      return { success: false, msg: `schedule or subscription not found` }
+
     const vendor = await VendorRepository.fetchVendor(
       {
         _id: new mongoose.Types.ObjectId(vendorId),
@@ -321,9 +333,7 @@ export default class OrderService {
       // Use type assertion directly on orderPayload[day]
       const dayPayload: DayPayload | undefined =
         orderPayload[day as keyof typeof orderPayload]
-
-      /**find a place to confirm if schedule exist */
-
+        
       // Check if the dayPayload and its breakfast, lunch, dinner properties exist
       if (
         dayPayload &&
