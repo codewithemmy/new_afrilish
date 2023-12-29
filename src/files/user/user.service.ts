@@ -291,11 +291,14 @@ export default class UserService {
 
     if (error) return { success: false, msg: error }
 
+    let extra = { isAvailable: true }
+
     const vendors = await UserRepository.getVendorByCoord({
       ...params,
       limit,
       skip,
       sort,
+      ...extra,
     })
 
     if (vendors.length < 1)
