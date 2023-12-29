@@ -26,7 +26,7 @@ class OrderController {
     next: NextFunction,
   ) {
     const [error, data] = await manageAsyncOps(
-      OrderService.evaluateScheduleOrderService(req.body, res.locals.jwt),
+      OrderService.evaluateScheduleOrderService(req.body, res.locals.jwt._id),
     )
 
     if (error) return next(error)

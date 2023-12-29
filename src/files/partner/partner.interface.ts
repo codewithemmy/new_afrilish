@@ -21,6 +21,7 @@ export interface IVendor {
   _id?: any
   name: string
   email: string
+  wallet: Number
   updated: Boolean
   phone: string
   payment?: IPaymentInfo

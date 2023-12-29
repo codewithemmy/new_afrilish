@@ -3,12 +3,13 @@ import { IVendor } from "../partner.interface"
 
 const VendorSchema = new Schema<IVendor>(
   {
-    name: String,
-    email: String,
-    address: String,
-    price: String,
-    location: String,
-    vendorType: String,
+    name: { type: String },
+    email: { type: String, unique: true },
+    address: { type: String },
+    price: { type: String },
+    location: { type: String },
+    wallet: { type: Number, default: 0 },
+    vendorType: { type: String },
     payment: { bank: String, account: Number, name: String },
     updated: { type: Boolean, default: false },
     locationCoord: {
@@ -21,9 +22,9 @@ const VendorSchema = new Schema<IVendor>(
       tags: String,
       updated: { type: Boolean, default: false },
     },
-    phone: String,
-    image: String,
-    rating: Number,
+    phone: { type: String },
+    image: { type: String },
+    rating: { type: Number },
     isAvailable: { type: Boolean, default: true },
     partnerId: { type: mongoose.Types.ObjectId, ref: "Partner" },
   },

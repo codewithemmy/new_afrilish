@@ -6,40 +6,167 @@ const SubscriptionSchema = new Schema<ISubscription>(
     startDate: { type: Date },
     endDate: { type: Date },
     monday: {
-      breakfast: [{ type: mongoose.Types.ObjectId, ref: "Item" }],
-      launch: [{ type: mongoose.Types.ObjectId, ref: "Item" }],
-      dinner: [{ type: mongoose.Types.ObjectId, ref: "Item" }],
+      breakfast: {
+        item: [
+          { type: mongoose.Types.ObjectId, ref: "Item" },
+          { type: Number },
+          { price: Number },
+        ],
+      },
+      launch: {
+        item: [
+          { type: mongoose.Types.ObjectId, ref: "Item" },
+          { type: Number },
+          { price: Number },
+        ],
+      },
+      dinner: {
+        item: [
+          { type: mongoose.Types.ObjectId, ref: "Item" },
+          { type: Number },
+          { price: Number },
+        ],
+      },
     },
     tuesday: {
-      breakfast: [{ type: mongoose.Types.ObjectId, ref: "Item" }],
-      launch: [{ type: mongoose.Types.ObjectId, ref: "Item" }],
-      dinner: [{ type: mongoose.Types.ObjectId, ref: "Item" }],
+      breakfast: {
+        item: [
+          { type: mongoose.Types.ObjectId, ref: "Item" },
+          { type: Number },
+          { price: Number },
+        ],
+      },
+      launch: {
+        item: [
+          { type: mongoose.Types.ObjectId, ref: "Item" },
+          { type: Number },
+          { price: Number },
+        ],
+      },
+      dinner: {
+        item: [
+          { type: mongoose.Types.ObjectId, ref: "Item" },
+          { type: Number },
+          { price: Number },
+        ],
+      },
     },
     wednesday: {
-      breakfast: [{ type: mongoose.Types.ObjectId, ref: "Item" }],
-      launch: [{ type: mongoose.Types.ObjectId, ref: "Item" }],
-      dinner: [{ type: mongoose.Types.ObjectId, ref: "Item" }],
+      breakfast: {
+        item: [
+          { type: mongoose.Types.ObjectId, ref: "Item" },
+          { type: Number },
+          { price: Number },
+        ],
+      },
+      launch: {
+        item: [
+          { type: mongoose.Types.ObjectId, ref: "Item" },
+          { type: Number },
+          { price: Number },
+        ],
+      },
+      dinner: {
+        item: [
+          { type: mongoose.Types.ObjectId, ref: "Item" },
+          { type: Number },
+          { price: Number },
+        ],
+      },
     },
     thursday: {
-      breakfast: [{ type: mongoose.Types.ObjectId, ref: "Item" }],
-      launch: [{ type: mongoose.Types.ObjectId, ref: "Item" }],
-      dinner: [{ type: mongoose.Types.ObjectId, ref: "Item" }],
+      breakfast: {
+        item: [
+          { type: mongoose.Types.ObjectId, ref: "Item" },
+          { type: Number },
+          { price: Number },
+        ],
+      },
+      launch: {
+        item: [
+          { type: mongoose.Types.ObjectId, ref: "Item" },
+          { type: Number },
+          { price: Number },
+        ],
+      },
+      dinner: {
+        item: [
+          { type: mongoose.Types.ObjectId, ref: "Item" },
+          { type: Number },
+          { price: Number },
+        ],
+      },
     },
     friday: {
-      breakfast: [{ type: mongoose.Types.ObjectId, ref: "Item" }],
-      launch: [{ type: mongoose.Types.ObjectId, ref: "Item" }],
-      dinner: [{ type: mongoose.Types.ObjectId, ref: "Item" }],
+      breakfast: {
+        item: [
+          { type: mongoose.Types.ObjectId, ref: "Item" },
+          { type: Number },
+          { price: Number },
+        ],
+      },
+      launch: {
+        item: [
+          { type: mongoose.Types.ObjectId, ref: "Item" },
+          { type: Number },
+          { price: Number },
+        ],
+      },
+      dinner: {
+        item: [
+          { type: mongoose.Types.ObjectId, ref: "Item" },
+          { type: Number },
+          { price: Number },
+        ],
+      },
     },
     saturday: {
-      breakfast: [{ type: mongoose.Types.ObjectId, ref: "Item" }],
-      launch: [{ type: mongoose.Types.ObjectId, ref: "Item" }],
-      dinner: [{ type: mongoose.Types.ObjectId, ref: "Item" }],
+      breakfast: {
+        item: [
+          { type: mongoose.Types.ObjectId, ref: "Item" },
+          { type: Number },
+          { price: Number },
+        ],
+      },
+      launch: {
+        item: [
+          { type: mongoose.Types.ObjectId, ref: "Item" },
+          { type: Number },
+          { price: Number },
+        ],
+      },
+      dinner: {
+        item: [
+          { type: mongoose.Types.ObjectId, ref: "Item" },
+          { type: Number },
+          { price: Number },
+        ],
+      },
     },
     sunday: {
-      breakfast: [{ type: mongoose.Types.ObjectId, ref: "Item" }],
-      launch: [{ type: mongoose.Types.ObjectId, ref: "Item" }],
-      dinner: [{ type: mongoose.Types.ObjectId, ref: "Item" }],
+      breakfast: {
+        item: [
+          { type: mongoose.Types.ObjectId, ref: "Item" },
+          { type: Number },
+          { price: Number },
+        ],
+      },
+      launch: {
+        item: [
+          { type: mongoose.Types.ObjectId, ref: "Item" },
+          { type: Number },
+          { price: Number },
+        ],
+      },
+      dinner: {
+        item: [
+          { type: mongoose.Types.ObjectId, ref: "Item" },
+          { type: Number },
+          { price: Number },
+        ],
+      },
     },
+
     isDelete: { type: Boolean, default: false },
     status: {
       type: String,

@@ -16,8 +16,23 @@ export interface ISubscription {
   updatedAt?: Date
 }
 
-interface IMeal {
-  breakfast: [any]
-  launch: [any]
-  dinner: [any]
+// interface IMeal {
+//   breakfast: IItemList
+//   launch: IItemList
+//   dinner: IItemList
+// }
+
+// interface IItemList {
+//   item: [_id: any, quantity: Number, price: Number]
+// }
+
+type IMeal = {
+  breakfast: IItemList
+  lunch: IItemList
+  dinner: IItemList
+}
+
+// Define the MealPayload type for better TypeScript type-checking
+type IItemList = {
+  item: Array<{ _id: any; quantity: Number; price: Number }>
 }

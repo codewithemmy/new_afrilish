@@ -14,6 +14,7 @@ import UserRepository from "../user/user.repository"
 import ItemRepository from "../item/item.repository"
 import SubscriptionRepository from "../subscription/subscription.repository"
 import { DayPayload, IOrder } from "./order.interface"
+import PartnerRepository from "../partner/partner.repository"
 
 export default class OrderService {
   static async evaluateOrderService(
@@ -24,21 +25,12 @@ export default class OrderService {
       item: [{ _id: any; quantity: Number; price: Number }]
       note: string
       pickUp: Boolean
-      scheduleId: any
       deliveryAddress: string
     },
     locals: any,
   ): Promise<IResponse> {
-    const {
-      vendorId,
-      lng,
-      lat,
-      item,
-      note,
-      scheduleId,
-      deliveryAddress,
-      pickUp,
-    } = orderPayload
+    const { vendorId, lng, lat, item, note, deliveryAddress, pickUp } =
+      orderPayload
 
     const vendor = await VendorRepository.fetchVendor(
       {
@@ -161,11 +153,6 @@ export default class OrderService {
 
     let orderId = `#${AlphaNumeric(3, "number")}`
 
-    let schedule
-    if (scheduleId) {
-      schedule = true
-    }
-
     //confirm wallet
     const confirmWallet = await UserRepository.fetchUser(
       {
@@ -199,12 +186,11 @@ export default class OrderService {
       ridersFee,
       userName: locals.fullName,
       note,
+      schedule: false,
       serviceCharge,
       orderDate: new Date(),
       totalAmount: roundTotalPrice,
-      schedule,
       netAmount,
-      scheduleId: new mongoose.Types.ObjectId(scheduleId),
     })
 
     if (!currentOrder)
@@ -219,11 +205,12 @@ export default class OrderService {
 
   static async evaluateScheduleOrderService(
     orderPayload: {
+      startDate: Date
+      endDate: Date
       lat: any
       lng: any
       note: string
       pickUp: Boolean
-      scheduleId: any
       deliveryAddress: string
       vendorId: string
       monday: DayPayload
@@ -237,12 +224,13 @@ export default class OrderService {
     locals: any,
   ): Promise<IResponse> {
     const {
+      startDate,
+      endDate,
       vendorId,
       lng,
       lat,
       note,
       pickUp,
-      scheduleId,
       deliveryAddress,
       monday,
       tuesday,
@@ -253,16 +241,31 @@ export default class OrderService {
       sunday,
     } = orderPayload
 
-    if (!scheduleId)
-      return { success: false, msg: `scheduleId cannot be null or empty` }
-
     const confirmSchedule = await SubscriptionRepository.fetchSubscription(
-      { _id: new mongoose.Types.ObjectId(scheduleId) },
+      { startDate, endDate },
       {},
     )
 
-    if (!confirmSchedule)
-      return { success: false, msg: `schedule or subscription not found` }
+    if (confirmSchedule)
+      return {
+        success: false,
+        msg: `similar start date and end date already exist`,
+      }
+
+    const schedule = await SubscriptionRepository.createSubscription({
+      startDate,
+      endDate,
+      monday,
+      tuesday,
+      wednesday,
+      thursday,
+      friday,
+      saturday,
+      sunday,
+      userId: new mongoose.Types.ObjectId(locals),
+    })
+
+    if (!schedule) return { success: false, msg: `unable to create schedule` }
 
     const vendor = await VendorRepository.fetchVendor(
       {
@@ -312,7 +315,7 @@ export default class OrderService {
     let ridersFee
 
     const customer = await UserRepository.fetchUser(
-      { _id: new mongoose.Types.ObjectId(locals._id) },
+      { _id: new mongoose.Types.ObjectId(locals) },
       {},
     )
 
@@ -333,7 +336,7 @@ export default class OrderService {
       // Use type assertion directly on orderPayload[day]
       const dayPayload: DayPayload | undefined =
         orderPayload[day as keyof typeof orderPayload]
-        
+
       // Check if the dayPayload and its breakfast, lunch, dinner properties exist
       if (
         dayPayload &&
@@ -406,11 +409,6 @@ export default class OrderService {
 
     let orderId = `#${AlphaNumeric(3, "number")}`
 
-    let schedule
-    if (scheduleId) {
-      schedule = true
-    }
-
     // Confirm wallet balance
     const confirmWallet = await UserRepository.fetchUser(
       {
@@ -448,9 +446,9 @@ export default class OrderService {
       serviceCharge,
       orderDate: new Date(),
       totalAmount: roundTotalPrice,
-      schedule,
+      schedule: true,
       netAmount,
-      scheduleId: new mongoose.Types.ObjectId(scheduleId),
+      scheduleId: new mongoose.Types.ObjectId(schedule._id),
     })
 
     if (!currentOrder) {
@@ -512,6 +510,11 @@ export default class OrderService {
       await UserRepository.updateUsersProfile(
         { _id: new mongoose.Types.ObjectId(findOrder.orderedBy) },
         { $inc: { wallet: -totalAmount } },
+      )
+
+      await VendorRepository.updateVendorDetails(
+        { vendorId: findOrder.vendorId },
+        { $inc: { wallet: totalAmount } },
       )
     }
 
