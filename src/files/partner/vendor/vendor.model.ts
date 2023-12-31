@@ -10,7 +10,7 @@ const VendorSchema = new Schema<IVendor>(
     location: { type: String },
     wallet: { type: Number, default: 0 },
     vendorType: { type: String },
-    payment: { bank: String, account: Number, name: String },
+    payment: { sortCode: String, account: Number, name: String },
     updated: { type: Boolean, default: false },
     locationCoord: {
       type: { type: String },

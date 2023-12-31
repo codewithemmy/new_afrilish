@@ -15,7 +15,7 @@ export const partnerMessages = {
   VERIFIED: "verification successful",
   INCORRECT_INFO: "incorrect info",
   OTP: "otp sent",
-  VENDOR_PHONE: "phone or email details already exist",
+  VENDOR_DETAILS: "phone or email details already exist",
   VENDOR_SUCCESS: "vendor successfully created",
   VENDOR_FAILURE: "unable to create vendor",
   VENDOR_EXIST: "vendor already exist",

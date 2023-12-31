@@ -3,7 +3,6 @@ export interface IPartner {
   fullName: string
   phone: string
   email: string
-  language: string
   business?: IBusiness
   vendorId?: [any]
   location?: string
@@ -47,7 +46,7 @@ interface IBusiness {
 }
 
 interface IPaymentInfo {
-  bank: string
+  sortCode: string
   account: Number
   name: string
 }
