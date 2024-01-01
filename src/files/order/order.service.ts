@@ -196,9 +196,14 @@ export default class OrderService {
     if (!currentOrder)
       return { success: false, msg: orderMessages.ORDER_FAILURE }
 
+    await UserRepository.updateUsersProfile(
+      { _id: new mongoose.Types.ObjectId(locals._id) },
+      { $inc: { wallet: -roundTotalPrice } },
+    )
+
     return {
       success: true,
-      msg: orderMessages.ORDER_SUCCESS,
+      msg: `Order successful. Wallet debited of ${roundTotalPrice}. Wallet is refunded if seller rejects order`,
       data: currentOrder,
     }
   }
@@ -506,20 +511,28 @@ export default class OrderService {
 
       // Ensure findOrder.totalAmount is defined or provide a default value of 0
       const totalAmount: any = findOrder.totalAmount
-
-      await UserRepository.updateUsersProfile(
-        { _id: new mongoose.Types.ObjectId(findOrder.orderedBy) },
-        { $inc: { wallet: -totalAmount } },
-      )
-
       await VendorRepository.updateVendorDetails(
         { vendorId: findOrder.vendorId },
         { $inc: { wallet: totalAmount } },
       )
     }
+    
+    if (orderStatus === "cancelled") {
+      const user = await UserRepository.fetchUser(
+        { _id: new mongoose.Types.ObjectId(findOrder.orderedBy) },
+        {},
+      )
+      if (!user) return { success: false, msg: `buyer not found` }
+
+      const totalAmount: any = findOrder.totalAmount
+      await UserRepository.updateUsersProfile(
+        { _id: new mongoose.Types.ObjectId(user._id) },
+        { $inc: { wallet: totalAmount } },
+      )
+    }
 
     await OrderRepository.updateOrderDetails(
-      { _id: new mongoose.Types.ObjectId(orderId) },
+      { _id: new mongoose.Types.ObjectId(findOrder._id) },
       { ...data },
     )
 
