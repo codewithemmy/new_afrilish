@@ -303,7 +303,7 @@ export default class UserService {
 
     if (vendors.length < 1)
       return {
-        success: false,
+        success: true,
         msg: userMessages.NOT_FOUND,
         data: [],
       }
