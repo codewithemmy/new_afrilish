@@ -516,7 +516,7 @@ export default class OrderService {
         { $inc: { wallet: totalAmount } },
       )
     }
-    
+
     if (orderStatus === "cancelled") {
       const user = await UserRepository.fetchUser(
         { _id: new mongoose.Types.ObjectId(findOrder.orderedBy) },
