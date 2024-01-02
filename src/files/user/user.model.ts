@@ -8,7 +8,6 @@ const UserSchema = new Schema<IUser>(
     phone: { type: String },
     email: { type: String, required: true },
     isVerified: { type: Boolean, default: false },
-    language: { type: String },
     wallet: { type: Number, default: 0 },
     home: { type: String },
     address: { type: String },

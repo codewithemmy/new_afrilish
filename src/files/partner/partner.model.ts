@@ -1,6 +1,5 @@
 import mongoose, { Schema, model } from "mongoose"
 import { IPartner } from "./partner.interface"
-// import { IRestaurant } from "./partner.interface"
 
 const PartnerSchema = new Schema<IPartner>(
   {
