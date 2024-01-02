@@ -8,6 +8,7 @@ export interface IUser {
   wallet: Number
   loginCode: Number
   home: string
+  address: string
   office: string
   locationCoord: ILocation
   referralCode?: string

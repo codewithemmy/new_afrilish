@@ -11,6 +11,7 @@ const UserSchema = new Schema<IUser>(
     language: { type: String },
     wallet: { type: Number, default: 0 },
     home: { type: String },
+    address: { type: String },
     office: { type: String },
     dateOfBirth: { type: Date },
     locationCoord: {
