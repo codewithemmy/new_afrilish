@@ -6,6 +6,7 @@ const VendorSchema = new Schema<IVendor>(
     name: { type: String },
     email: { type: String, unique: true },
     address: { type: String },
+    businessNumber: { type: String },
     price: { type: String },
     location: { type: String },
     wallet: { type: Number, default: 0 },

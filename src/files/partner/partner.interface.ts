@@ -21,6 +21,7 @@ export interface IVendor {
   name: string
   email: string
   wallet: Number
+  businessNumber: String
   updated: Boolean
   phone: string
   payment?: IPaymentInfo
