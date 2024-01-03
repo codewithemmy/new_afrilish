@@ -304,7 +304,7 @@ export default class UserService {
     if (vendors.length < 1)
       return {
         success: true,
-        msg: userMessages.NOT_FOUND,
+        msg: `No vendor currently available in your chosen location, we are working on it. Thank you`,
         data: [],
       }
 
