@@ -515,10 +515,10 @@ export default class OrderService {
       if (!user) return { success: false, msg: `buyer not found` }
 
       // Ensure findOrder.totalAmount is defined or provide a default value of 0
-      const totalAmount: any = findOrder.totalAmount
+      const netAmount: any = findOrder.netAmount
       await VendorRepository.updateVendorDetails(
         { vendorId: findOrder.vendorId },
-        { $inc: { wallet: totalAmount } },
+        { $inc: { wallet: netAmount } },
       )
     }
 

@@ -137,7 +137,7 @@ export default class TransactionService {
         { status: "completed" },
       )
 
-      const order = await OrderRepository.updateOrderDetails(
+      await OrderRepository.updateOrderDetails(
         {
           _id: new mongoose.Types.ObjectId(transaction?.order),
         },
