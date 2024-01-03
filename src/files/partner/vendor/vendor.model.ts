@@ -1,4 +1,5 @@
 import mongoose, { Schema, model } from "mongoose"
+
 import { IVendor } from "../partner.interface"
 
 const VendorSchema = new Schema<IVendor>(
@@ -17,6 +18,7 @@ const VendorSchema = new Schema<IVendor>(
       type: { type: String },
       coordinates: [],
     },
+    averageRating: { type: Number, default: 0 },
     vendorOperations: {
       operation: [{ day: String, openingTime: String, closingTime: String }],
       orderAmount: Number,
@@ -25,7 +27,13 @@ const VendorSchema = new Schema<IVendor>(
     },
     phone: { type: String },
     image: { type: String },
-    rating: { type: Number },
+    rating: [
+      {
+        rate: Number,
+        review: String,
+        ratedBy: { type: mongoose.Types.ObjectId, ref: "Users" },
+      },
+    ],
     isAvailable: { type: Boolean, default: true },
     partnerId: { type: mongoose.Types.ObjectId, ref: "Partner" },
   },

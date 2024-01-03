@@ -31,12 +31,19 @@ export interface IVendor {
   locationCoord?: ILocation
   address: string
   image: string
+  averageRating: Number
   partnerId: any
   isAvailable: Boolean
   vendorType?: "restaurantVendor" | "bulkFoodVendor" | "eventPlannerVendor"
-  rating?: Number
+  rating?: [IRating]
   createdAt?: Date
   updatedAt?: Date
+}
+
+export interface IRating {
+  rate: Number
+  review: string
+  ratedBy: any
 }
 
 interface IBusiness {
