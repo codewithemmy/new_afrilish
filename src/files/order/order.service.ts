@@ -20,6 +20,7 @@ export default class OrderService {
   static async evaluateOrderService(
     orderPayload: {
       vendorId: string
+      isWallet: Boolean
       lng: any
       lat: any
       item: [{ _id: any; quantity: Number; price: Number }]
@@ -29,8 +30,16 @@ export default class OrderService {
     },
     locals: any,
   ): Promise<IResponse> {
-    const { vendorId, lng, lat, item, note, deliveryAddress, pickUp } =
-      orderPayload
+    const {
+      vendorId,
+      lng,
+      lat,
+      item,
+      isWallet,
+      note,
+      deliveryAddress,
+      pickUp,
+    } = orderPayload
 
     const vendor = await VendorRepository.fetchVendor(
       {
@@ -153,22 +162,23 @@ export default class OrderService {
 
     let orderId = `#${AlphaNumeric(3, "number")}`
 
-    //confirm wallet
-    const confirmWallet = await UserRepository.fetchUser(
-      {
-        _id: new mongoose.Types.ObjectId(locals._id),
-      },
-      {},
-    )
+    if (isWallet) {
+      //confirm wallet
+      const confirmWallet = await UserRepository.fetchUser(
+        {
+          _id: new mongoose.Types.ObjectId(locals._id),
+        },
+        {},
+      )
 
-    const walletBalance: any = confirmWallet?.wallet
+      const walletBalance: any = confirmWallet?.wallet
 
-    if (roundTotalPrice > walletBalance)
-      return {
-        success: false,
-        msg: `insufficient funds, kindly fund your wallet`,
-      }
-
+      if (roundTotalPrice > walletBalance)
+        return {
+          success: false,
+          msg: `insufficient funds, kindly fund your wallet`,
+        }
+    }
     const currentOrder = await OrderRepository.createOrder({
       pickUpCode: parsePickUpNumber,
       orderId,
@@ -196,14 +206,9 @@ export default class OrderService {
     if (!currentOrder)
       return { success: false, msg: orderMessages.ORDER_FAILURE }
 
-    await UserRepository.updateUsersProfile(
-      { _id: new mongoose.Types.ObjectId(locals._id) },
-      { $inc: { wallet: -roundTotalPrice } },
-    )
-
     return {
       success: true,
-      msg: `Order successful. Wallet debited of ${roundTotalPrice}. Wallet is refunded if seller rejects order`,
+      msg: `Order successful. Seller will review your order`,
       data: currentOrder,
     }
   }
@@ -552,17 +557,20 @@ export default class OrderService {
 
     const totalOrders = await OrderRepository.fetchAllOrders({
       vendorId: new mongoose.Types.ObjectId(vendor._id),
+      isConfirmed: true,
     })
     const payment = await OrderRepository.fetchAllOrders({
       vendorId: new mongoose.Types.ObjectId(vendor._id),
       paymentStatus: "paid",
       orderStatus: "completed",
+      isConfirmed: true,
     })
 
     const orderCompleted = await OrderRepository.fetchAllOrders({
       vendorId: new mongoose.Types.ObjectId(vendor._id),
       paymentStatus: "paid",
       orderStatus: "completed",
+      isConfirmed: true,
     })
 
     const totalPayment = payment.reduce((accumulator, currentExpense) => {

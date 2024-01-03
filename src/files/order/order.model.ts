@@ -73,6 +73,7 @@ const OrderSchema = new Schema<IOrder>(
     serviceCharge: { type: Number },
     confirmDelivery: { type: Boolean },
     remarks: { type: String },
+    isConfirmed: { type: Boolean, default: false },
     delivery: { type: Boolean },
     readyTime: { type: String },
     paymentIntentId: { type: String },
