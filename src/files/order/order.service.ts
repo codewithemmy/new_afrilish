@@ -467,9 +467,9 @@ export default class OrderService {
     }
   }
 
-  static async fetchOrderService(subscriptionPayload: Partial<IOrder>) {
+  static async fetchOrderService(payload: Partial<IOrder>) {
     const { error, params, limit, skip, sort } = queryConstructor(
-      subscriptionPayload,
+      payload,
       "createdAt",
       "Order",
     )
@@ -539,6 +539,44 @@ export default class OrderService {
     return {
       success: true,
       msg: orderMessages.UPDATE_SUCCESS,
+    }
+  }
+
+  static async orderAnalysisService(payload: any) {
+    const vendor = await VendorRepository.fetchVendor(
+      { partnerId: new mongoose.Types.ObjectId(payload) },
+      {},
+    )
+
+    if (!vendor) return { success: false, msg: `vendor not available` }
+
+    const totalOrders = await OrderRepository.fetchAllOrders({
+      vendorId: new mongoose.Types.ObjectId(vendor._id),
+    })
+    const payment = await OrderRepository.fetchAllOrders({
+      vendorId: new mongoose.Types.ObjectId(vendor._id),
+      paymentStatus: "paid",
+      orderStatus: "completed",
+    })
+
+    const orderCompleted = await OrderRepository.fetchAllOrders({
+      vendorId: new mongoose.Types.ObjectId(vendor._id),
+      paymentStatus: "paid",
+      orderStatus: "completed",
+    })
+
+    const totalPayment = payment.reduce((accumulator, currentExpense) => {
+      return accumulator + currentExpense.totalAmount.valueOf()
+    }, 0)
+
+    return {
+      success: true,
+      msg: orderMessages.FETCH_SUCCESS,
+      data: {
+        totalOrders: totalOrders.length,
+        totalPayment,
+        orderCompleted: orderCompleted.length,
+      },
     }
   }
 }

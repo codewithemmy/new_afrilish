@@ -10,6 +10,16 @@ export default class OrderRepository {
     return Order.create(orderPayload)
   }
 
+  static async fetchAllOrders(
+    orderPayload: Partial<IOrder> | FilterQuery<Partial<IOrder>>,
+  ) {
+    const order: Awaited<IOrder[] | null> = await Order.find({
+      ...orderPayload,
+    })
+
+    return order
+  }
+
   static async fetchOrder(
     orderPayload: Partial<IOrder> | FilterQuery<Partial<IOrder>>,
     select: Partial<Record<keyof IOrder, number | Boolean | object>>,

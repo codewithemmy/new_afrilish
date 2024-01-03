@@ -57,6 +57,21 @@ class OrderController {
 
     return responseHandler(res, statusCode.SUCCESS, data!)
   }
+
+  async orderAnalysisController(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    const [error, data] = await manageAsyncOps(
+      OrderService.orderAnalysisService(res.locals.jwt._id),
+    )
+
+    if (error) return next(error)
+    if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
+
+    return responseHandler(res, statusCode.SUCCESS, data!)
+  }
 }
 
 export default new OrderController()
