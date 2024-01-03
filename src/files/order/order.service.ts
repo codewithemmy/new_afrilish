@@ -507,7 +507,7 @@ export default class OrderService {
     if (!findOrder)
       return { success: false, msg: orderMessages.NOT_FOUND, data: [] }
 
-    if (orderStatus === "accepted") {
+    if (orderStatus === "completed") {
       const user = await UserRepository.fetchUser(
         { _id: new mongoose.Types.ObjectId(findOrder.orderedBy) },
         {},

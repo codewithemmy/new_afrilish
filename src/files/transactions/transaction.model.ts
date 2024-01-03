@@ -7,6 +7,10 @@ const TransactionSchema = new mongoose.Schema<ITransaction>(
       type: mongoose.Types.ObjectId,
       ref: "User",
     },
+    order: {
+      type: mongoose.Types.ObjectId,
+      ref: "Order",
+    },
     vendorId: {
       type: mongoose.Types.ObjectId,
       ref: "Vendor",
@@ -39,6 +43,8 @@ const TransactionSchema = new mongoose.Schema<ITransaction>(
     },
     paymentFor: {
       type: String,
+      enum: ["fund-wallet", "normal-order"],
+      default: "fund-wallet",
     },
     metaData: String,
   },

@@ -16,7 +16,6 @@ OrderRouter.use(isAuthenticated)
 OrderRouter.post("/", evaluateOrderController)
 OrderRouter.get("/", fetchOrderController)
 OrderRouter.patch("/:orderId", updateOrderController)
-OrderRouter.patch("/:orderId", updateOrderController)
 
 //analysis
 OrderRouter.get("/analysis", orderAnalysisController)

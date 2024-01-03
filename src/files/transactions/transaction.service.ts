@@ -7,6 +7,7 @@ import { IPaymentProvider } from "./transaction.provider"
 import TransactionRepository from "./transaction.repository"
 import UserRepository from "../user/user.repository"
 import { providerMessages } from "../../providers/providers.messages"
+import OrderRepository from "../order/order.repository"
 
 export default class TransactionService {
   private static paymentProvider: IPaymentProvider
@@ -19,9 +20,23 @@ export default class TransactionService {
     amount: number
     currency: string
     userId: any
+    paymentFor: string
+    orderId: any
   }): Promise<IResponse> {
     await this.getConfig()
-    const { amount, currency, userId } = payload
+    const { amount, currency, userId, paymentFor, orderId } = payload
+
+    let order
+    if (orderId) {
+      order = { _id: new mongoose.Types.ObjectId(orderId) }
+    }
+
+    if (!paymentFor)
+      return {
+        success: false,
+        msg: `paymentFor cannot be empty`,
+      }
+
     const initializePayment = await this.paymentProvider.initiatePaymentIntent({
       amount,
       currency,
@@ -41,7 +56,9 @@ export default class TransactionService {
       amount,
       currency,
       transactionId: id,
-      paymentFor: "fund-wallet",
+      paymentFor,
+      type: paymentFor === "fund-wallet" ? "wallet" : "order",
+      order,
     })
 
     if (!transaction)
@@ -98,14 +115,34 @@ export default class TransactionService {
   private static async handleSucceededPaymentIntent(event: any) {
     const paymentIntentSucceeded = event.data.object
 
-    const transaction = await TransactionRepository.updateTransactionDetails(
-      { transactionId: paymentIntentSucceeded?.id },
-      { status: "completed" },
-    )
+    const getWalletTransaction =
+      await TransactionRepository.findSingleTransactionByParams({
+        transactionId: paymentIntentSucceeded?.id,
+      })
 
-    await UserRepository.updateUsersProfile(
-      { _id: new mongoose.Types.ObjectId(transaction?.userId) },
-      { $inc: { wallet: transaction?.amount } },
-    )
+    if (getWalletTransaction?.paymentFor === "fund-wallet") {
+      const transaction = await TransactionRepository.updateTransactionDetails(
+        { transactionId: paymentIntentSucceeded?.id },
+        { status: "completed" },
+      )
+
+      await UserRepository.updateUsersProfile(
+        { _id: new mongoose.Types.ObjectId(transaction?.userId) },
+        { $inc: { wallet: transaction?.amount } },
+      )
+    }
+    if (getWalletTransaction?.paymentFor === "normal-order") {
+      const transaction = await TransactionRepository.updateTransactionDetails(
+        { transactionId: paymentIntentSucceeded?.id },
+        { status: "completed" },
+      )
+
+      const order = await OrderRepository.updateOrderDetails(
+        {
+          _id: new mongoose.Types.ObjectId(transaction?.order),
+        },
+        { paymentStatus: "paid", isConfirmed: true },
+      )
+    }
   }
 }

@@ -7,6 +7,7 @@ export interface IPaymentResponse {
 export interface ITransaction {
   _id?: any
   userId: any
+  order: any
   vendorId: any
   amount: Number
   currency: string

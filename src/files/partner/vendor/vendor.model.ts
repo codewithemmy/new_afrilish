@@ -34,7 +34,7 @@ const VendorSchema = new Schema<IVendor>(
         ratedBy: { type: mongoose.Types.ObjectId, ref: "Users" },
       },
     ],
-    isAvailable: { type: Boolean, default: true },
+    isAvailable: { type: Boolean, default: false },
     partnerId: { type: mongoose.Types.ObjectId, ref: "Partner" },
   },
   { timestamps: true },
