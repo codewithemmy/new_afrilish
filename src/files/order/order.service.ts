@@ -435,6 +435,7 @@ export default class OrderService {
       userEmail: locals.email,
       ridersFee,
       userName: locals.fullName,
+      isWallet: true,
       note,
       serviceCharge,
       orderDate: new Date(),
