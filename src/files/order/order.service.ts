@@ -510,20 +510,6 @@ export default class OrderService {
       }
     }
 
-    if (orderStatus === "cancelled") {
-      const user = await UserRepository.fetchUser(
-        { _id: new mongoose.Types.ObjectId(findOrder.orderedBy) },
-        {},
-      )
-      if (!user) return { success: false, msg: `buyer not found` }
-
-      const totalAmount: any = findOrder.totalAmount
-      await UserRepository.updateUsersProfile(
-        { _id: new mongoose.Types.ObjectId(user._id) },
-        { $inc: { wallet: totalAmount } },
-      )
-    }
-
     await OrderRepository.updateOrderDetails(
       { _id: new mongoose.Types.ObjectId(findOrder._id) },
       { ...data },

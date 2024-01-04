@@ -116,12 +116,12 @@ export default class TransactionService {
   private static async handleSucceededPaymentIntent(event: any) {
     const paymentIntentSucceeded = event.data.object
 
-    const getWalletTransaction =
+    const getTransaction =
       await TransactionRepository.findSingleTransactionByParams({
         transactionId: paymentIntentSucceeded?.id,
       })
 
-    if (getWalletTransaction?.paymentFor === "fund-wallet") {
+    if (getTransaction?.paymentFor === "fund-wallet") {
       const transaction = await TransactionRepository.updateTransactionDetails(
         { transactionId: paymentIntentSucceeded?.id },
         { status: "completed" },
@@ -132,7 +132,7 @@ export default class TransactionService {
         { $inc: { wallet: transaction?.amount } },
       )
     }
-    if (getWalletTransaction?.paymentFor === "normal-order") {
+    if (getTransaction?.paymentFor === "normal-order") {
       const transaction = await TransactionRepository.updateTransactionDetails(
         { transactionId: paymentIntentSucceeded?.id },
         { status: "completed" },
