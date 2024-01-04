@@ -4,6 +4,7 @@ export interface IOrder {
   orderCode: Number
   orderId: string
   pickUp: Boolean
+  isWallet: Boolean
   isConfirmed: Boolean
   delivery: Boolean
   schedule: Boolean

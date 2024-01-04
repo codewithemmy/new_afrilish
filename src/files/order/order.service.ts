@@ -176,6 +176,7 @@ export default class OrderService {
       },
       userEmail: locals.email,
       ridersFee,
+      isWallet,
       userName: locals.fullName,
       note,
       schedule: false,
