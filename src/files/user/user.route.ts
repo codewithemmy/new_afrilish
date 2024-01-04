@@ -17,6 +17,7 @@ const {
   verifyUserController,
   resendVerificationOtp,
   userAuthLoginController,
+  userSupportController,
 } = userController
 
 const { fetchItemController } = itemController
@@ -34,6 +35,7 @@ UserRouter.post("/login", loginUserController)
 UserRouter.post("/verify", verifyUserController)
 UserRouter.post("/resend-otp", resendVerificationOtp)
 UserRouter.post("/login-code", loginCodeController)
+UserRouter.post("/support", userSupportController)
 
 UserRouter.get("/", isAuthenticated, fetchUserController)
 

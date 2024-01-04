@@ -381,4 +381,31 @@ export default class UserService {
       },
     }
   }
+
+  static async userSupportService(userPayload: {
+    email: string
+    message: string
+  }) {
+    const { message, email } = userPayload
+    // send mail login details to user
+    try {
+      await sendMailNotification(
+        "info@afrilish.com",
+        "Support/Report",
+        {
+          email: email,
+          message,
+          imageUrl:
+            "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
+        },
+        "SUPPORT",
+      )
+    } catch (error) {
+      console.log("error", error)
+    }
+    return {
+      success: true,
+      msg: `support sent successfully`,
+    }
+  }
 }

@@ -122,6 +122,17 @@ class UserController {
 
     return responseHandler(res, statusCode.SUCCESS, data!)
   }
+
+  async userSupportController(req: Request, res: Response, next: NextFunction) {
+    const [error, data] = await manageAsyncOps(
+      UserService.userSupportService(req.body),
+    )
+
+    if (error) return next(error)
+    if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
+
+    return responseHandler(res, statusCode.SUCCESS, data!)
+  }
 }
 
 export default new UserController()
