@@ -475,18 +475,39 @@ export default class OrderService {
       return { success: false, msg: orderMessages.NOT_FOUND, data: [] }
 
     if (orderStatus === "completed") {
-      const user = await UserRepository.fetchUser(
-        { _id: new mongoose.Types.ObjectId(findOrder.orderedBy) },
-        {},
-      )
-      if (!user) return { success: false, msg: `buyer not found` }
+      if (findOrder.isWallet) {
+        const user = await UserRepository.fetchUser(
+          { _id: new mongoose.Types.ObjectId(findOrder.orderedBy) },
+          {},
+        )
+        if (!user) return { success: false, msg: `buyer not found` }
 
-      // Ensure findOrder.totalAmount is defined or provide a default value of 0
-      const netAmount: any = findOrder.netAmount
-      await VendorRepository.updateVendorDetails(
-        { vendorId: findOrder.vendorId },
-        { $inc: { wallet: netAmount } },
-      )
+        // Ensure findOrder.totalAmount is defined or provide a default value of 0
+        const totalAmount: any = findOrder.totalAmount
+        const netAmount: any = findOrder.netAmount
+        await VendorRepository.updateVendorDetails(
+          { vendorId: findOrder.vendorId },
+          { $inc: { wallet: netAmount } },
+        )
+
+        await UserRepository.updateUsersProfile(
+          { _id: new mongoose.Types.ObjectId(user._id) },
+          { $inc: { wallet: -totalAmount } },
+        )
+      } else {
+        const user = await UserRepository.fetchUser(
+          { _id: new mongoose.Types.ObjectId(findOrder.orderedBy) },
+          {},
+        )
+        if (!user) return { success: false, msg: `buyer not found` }
+
+        // Ensure findOrder.totalAmount is defined or provide a default value of 0
+        const netAmount: any = findOrder.netAmount
+        await VendorRepository.updateVendorDetails(
+          { vendorId: findOrder.vendorId },
+          { $inc: { wallet: netAmount } },
+        )
+      }
     }
 
     if (orderStatus === "cancelled") {
