@@ -410,15 +410,6 @@ export default class OrderService {
       {},
     )
 
-    const walletBalance: any = confirmWallet?.wallet
-
-    if (roundTotalPrice > walletBalance) {
-      return {
-        success: false,
-        msg: `Insufficient funds, kindly fund your wallet`,
-      }
-    }
-
     const currentOrder = await OrderRepository.createOrder({
       pickUpCode: parsePickUpNumber,
       orderId,
