@@ -14,7 +14,6 @@ import UserRepository from "../user/user.repository"
 import ItemRepository from "../item/item.repository"
 import SubscriptionRepository from "../subscription/subscription.repository"
 import { DayPayload, IOrder } from "./order.interface"
-import PartnerRepository from "../partner/partner.repository"
 
 export default class OrderService {
   static async evaluateOrderService(
@@ -547,7 +546,7 @@ export default class OrderService {
     }
   }
 
-  static async orderAnalysisService(payload: any) {
+  static async orderAnalysisService(payload: any, query: any) {
     const vendor = await VendorRepository.fetchVendor(
       { partnerId: new mongoose.Types.ObjectId(payload) },
       {},
@@ -555,15 +554,38 @@ export default class OrderService {
 
     if (!vendor) return { success: false, msg: `vendor not available` }
 
+    let dateFilter
+    if (query.timeFrame === "weekly") {
+      dateFilter = {
+        createdAt: {
+          $gte: new Date(new Date().setDate(new Date().getDate() - 7)),
+        },
+      }
+    } else if (query.timeFrame === "monthly") {
+      dateFilter = {
+        createdAt: {
+          $gte: new Date(new Date().setMonth(new Date().getMonth() - 1)),
+        },
+      }
+    } else if (query.timeFrame === "yearly") {
+      dateFilter = {
+        createdAt: {
+          $gte: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
+        },
+      }
+    }
+
     const totalOrders = await OrderRepository.fetchAllOrders({
       vendorId: new mongoose.Types.ObjectId(vendor._id),
       isConfirmed: true,
+      ...dateFilter,
     })
     const payment = await OrderRepository.fetchAllOrders({
       vendorId: new mongoose.Types.ObjectId(vendor._id),
       paymentStatus: "paid",
       orderStatus: "completed",
       isConfirmed: true,
+      ...dateFilter,
     })
 
     const orderCompleted = await OrderRepository.fetchAllOrders({
@@ -571,6 +593,7 @@ export default class OrderService {
       paymentStatus: "paid",
       orderStatus: "completed",
       isConfirmed: true,
+      ...dateFilter,
     })
 
     const totalPayment = payment.reduce((accumulator, currentExpense) => {

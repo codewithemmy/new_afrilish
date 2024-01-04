@@ -64,7 +64,7 @@ class OrderController {
     next: NextFunction,
   ) {
     const [error, data] = await manageAsyncOps(
-      OrderService.orderAnalysisService(res.locals.jwt._id),
+      OrderService.orderAnalysisService(res.locals.jwt._id, req.query),
     )
 
     if (error) return next(error)
