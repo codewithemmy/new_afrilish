@@ -4,8 +4,11 @@ import TransactionController from "./transaction.controller"
 
 const TransactionRouter = express.Router()
 
-const { createPaymentIntentController, stripeWebHookController } =
-  TransactionController
+const {
+  createPaymentIntentController,
+  stripeWebHookController,
+  confirmWalletController,
+} = TransactionController
 
 TransactionRouter.route("/stripe-webhook").post(stripeWebHookController)
 
@@ -13,5 +16,6 @@ TransactionRouter.use(isAuthenticated)
 
 //routes
 TransactionRouter.route("/").post(createPaymentIntentController)
+TransactionRouter.route("/wallet/confirm").post(confirmWalletController)
 
 export default TransactionRouter

@@ -402,14 +402,6 @@ export default class OrderService {
 
     let orderId = `#${AlphaNumeric(3, "number")}`
 
-    // Confirm wallet balance
-    const confirmWallet = await UserRepository.fetchUser(
-      {
-        _id: new mongoose.Types.ObjectId(locals._id),
-      },
-      {},
-    )
-
     const currentOrder = await OrderRepository.createOrder({
       pickUpCode: parsePickUpNumber,
       orderId,

@@ -42,6 +42,24 @@ class TransactionController {
       next(error)
     }
   }
+
+  async confirmWalletController(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    const [error, data] = await manageAsyncOps(
+      TransactionService.confirmWalletOrderService(
+        req.body,
+        res.locals.jwt._id,
+      ),
+    )
+
+    if (error) return next(error)
+    if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
+
+    return responseHandler(res, statusCode.CREATED, data!)
+  }
 }
 
 export default new TransactionController()

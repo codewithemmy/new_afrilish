@@ -8,6 +8,7 @@ import TransactionRepository from "./transaction.repository"
 import UserRepository from "../user/user.repository"
 import { providerMessages } from "../../providers/providers.messages"
 import OrderRepository from "../order/order.repository"
+import { IOrder } from "../order/order.interface"
 
 export default class TransactionService {
   private static paymentProvider: IPaymentProvider
@@ -143,6 +144,66 @@ export default class TransactionService {
         },
         { paymentStatus: "paid", isConfirmed: true },
       )
+    }
+  }
+
+  static async confirmWalletOrderService(
+    payload: Partial<IOrder>,
+    userId: any,
+  ) {
+    const { orderId } = payload
+    if (!orderId)
+      return {
+        success: false,
+        msg: `orderId cannot be empty`,
+      }
+
+    const order = await OrderRepository.fetchOrder(
+      {
+        _id: new mongoose.Types.ObjectId(orderId),
+        orderedBy: new mongoose.Types.ObjectId(userId),
+      },
+      {},
+    )
+
+    if (!order)
+      return {
+        success: false,
+        msg: `orderId not available`,
+      }
+
+    const user = await UserRepository.fetchUser(
+      {
+        _id: new mongoose.Types.ObjectId(userId),
+      },
+      {},
+    )
+
+    if (!user)
+      return {
+        success: false,
+        msg: `user does not exist`,
+      }
+
+    const totalAmount = Number(order?.totalAmount)
+    const userWallet = Number(user?.wallet)
+
+    if (totalAmount > userWallet)
+      return {
+        success: false,
+        msg: `insufficient funds, kindly fund your wallet`,
+      }
+
+    await OrderRepository.updateOrderDetails(
+      {
+        _id: new mongoose.Types.ObjectId(order._id),
+      },
+      { paymentStatus: "paid", isConfirmed: true },
+    )
+
+    return {
+      success: true,
+      msg: `successful`,
     }
   }
 }
