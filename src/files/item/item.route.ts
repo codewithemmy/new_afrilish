@@ -20,6 +20,10 @@ ItemRouter.post(
 )
 
 ItemRouter.route("/").get(fetchItemController)
-ItemRouter.route("/:itemId").patch(updateItemController)
+ItemRouter.patch(
+  "/:itemId",
+  uploadManager("itemImage").single("image"),
+  updateItemController,
+)
 
 export default ItemRouter
