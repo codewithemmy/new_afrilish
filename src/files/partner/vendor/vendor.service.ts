@@ -26,14 +26,7 @@ export default class VendorService {
 
     const validateVendor = await VendorRepository.fetchVendor(
       {
-        $or: [
-          {
-            phone,
-          },
-          {
-            email,
-          },
-        ],
+        email,
       },
       {
         _id: 1,
