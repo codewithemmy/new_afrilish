@@ -11,7 +11,7 @@ export default class VendorService {
   static async createVendor(
     vendorPayload: Partial<IVendor>,
   ): Promise<IResponse> {
-    const { phone, email, partnerId } = vendorPayload
+    const { email, partnerId } = vendorPayload
 
     const verifyPartner = await PartnerRepository.fetchPartner(
       { _id: new mongoose.Types.ObjectId(partnerId) },
