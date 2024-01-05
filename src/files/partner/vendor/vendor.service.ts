@@ -13,7 +13,8 @@ export default class VendorService {
   ): Promise<IResponse> {
     const { phone, email, partnerId } = vendorPayload
 
-    console.log("vendorPayload", vendorPayload)
+    console.log("vendorPayload", email)
+    console.log("vendorPayload", phone)
 
     const verifyPartner = await PartnerRepository.fetchPartner(
       { _id: new mongoose.Types.ObjectId(partnerId) },
