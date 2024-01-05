@@ -135,8 +135,6 @@ class PartnerController {
   async vendorController(req: Request, res: Response, next: NextFunction) {
     let { image, body } = fileModifier(req)
 
-    console.log("body", body)
-
     const [error, data] = await manageAsyncOps(
       VendorService.createVendor({
         image,
