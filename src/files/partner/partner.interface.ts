@@ -34,7 +34,11 @@ export interface IVendor {
   averageRating: Number
   partnerId: any
   isAvailable: Boolean
-  vendorType?: "restaurantVendor" | "bulkFoodVendor" | "eventPlannerVendor"
+  vendorType?:
+    | "restaurantVendor"
+    | "bulkFoodVendor"
+    | "eventPlannerVendor"
+    | "privateVendor"
   rating?: [IRating]
   createdAt?: Date
   updatedAt?: Date
