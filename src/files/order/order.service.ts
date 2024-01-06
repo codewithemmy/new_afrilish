@@ -19,7 +19,6 @@ export default class OrderService {
   static async evaluateOrderService(
     orderPayload: {
       vendorId: string
-      isWallet: Boolean
       lng: any
       lat: any
       item: [{ _id: any; quantity: Number; price: Number }]
@@ -29,16 +28,8 @@ export default class OrderService {
     },
     locals: any,
   ): Promise<IResponse> {
-    const {
-      vendorId,
-      lng,
-      lat,
-      item,
-      isWallet,
-      note,
-      deliveryAddress,
-      pickUp,
-    } = orderPayload
+    const { vendorId, lng, lat, item, note, deliveryAddress, pickUp } =
+      orderPayload
 
     const vendor = await VendorRepository.fetchVendor(
       {
@@ -176,7 +167,6 @@ export default class OrderService {
       },
       userEmail: locals.email,
       ridersFee,
-      isWallet,
       userName: locals.fullName,
       note,
       schedule: false,

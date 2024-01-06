@@ -151,7 +151,7 @@ export default class TransactionService {
     payload: Partial<IOrder>,
     userId: any,
   ) {
-    const { orderId } = payload
+    const { orderId, isWallet } = payload
     if (!orderId)
       return {
         success: false,
@@ -198,7 +198,7 @@ export default class TransactionService {
       {
         _id: new mongoose.Types.ObjectId(order._id),
       },
-      { paymentStatus: "paid", isConfirmed: true },
+      { paymentStatus: "paid", isConfirmed: true, isWallet },
     )
 
     return {
