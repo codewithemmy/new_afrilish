@@ -5,7 +5,7 @@ import { IVendor } from "../partner.interface"
 const VendorSchema = new Schema<IVendor>(
   {
     name: { type: String },
-    email: { type: String, unique: true },
+    email: { type: String },
     address: { type: String },
     businessNumber: { type: String },
     price: { type: String },

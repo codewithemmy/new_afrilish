@@ -11,7 +11,7 @@ export default class VendorService {
   static async createVendor(
     vendorPayload: Partial<IVendor>,
   ): Promise<IResponse> {
-    const { email, partnerId } = vendorPayload
+    const { email, partnerId, vendorType } = vendorPayload
 
     const verifyPartner = await PartnerRepository.fetchPartner(
       { _id: new mongoose.Types.ObjectId(partnerId) },
@@ -24,6 +24,7 @@ export default class VendorService {
     const validateVendor = await VendorRepository.fetchVendor(
       {
         email,
+        vendorType,
       },
       {
         _id: 1,
@@ -31,7 +32,7 @@ export default class VendorService {
     )
 
     if (validateVendor)
-      return { success: false, msg: partnerMessages.VENDOR_DETAILS }
+      return { success: false, msg: `vendor with email already exist` }
 
     const vendor = await VendorRepository.createVendor({
       partnerId: partnerId,
