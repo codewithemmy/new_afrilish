@@ -95,6 +95,14 @@ export default class UserRepository {
           },
         },
         {
+          $lookup: {
+            from: "item",
+            localField: "itemId",
+            foreignField: "_id",
+            as: "items",
+          },
+        },
+        {
           $sort: {
             createdAt: 1,
           },
@@ -108,6 +116,7 @@ export default class UserRepository {
                   { price: { $regex: search, $options: "i" } },
                   { address: { $regex: search, $options: "i" } },
                   { email: { $regex: search, $options: "i" } },
+                  { "items.name": { $regex: search, $options: "i" } },
                 ],
                 ...extraParams,
               },
@@ -124,6 +133,14 @@ export default class UserRepository {
       // lng and lat not provided, perform query without $geoNear
       const vendor = await Vendor.aggregate([
         {
+          $lookup: {
+            from: "item",
+            localField: "itemId",
+            foreignField: "_id",
+            as: "items",
+          },
+        },
+        {
           $sort: {
             createdAt: 1,
           },
@@ -137,6 +154,7 @@ export default class UserRepository {
                   { price: { $regex: search, $options: "i" } },
                   { address: { $regex: search, $options: "i" } },
                   { email: { $regex: search, $options: "i" } },
+                  { "items.name": { $regex: search, $options: "i" } },
                 ],
                 ...extraParams,
               },

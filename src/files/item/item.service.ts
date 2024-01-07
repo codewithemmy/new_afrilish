@@ -11,6 +11,7 @@ import ItemRepository from "./item.repository"
 import { itemMessages } from "./item.messages"
 import { IItem } from "./item.interface"
 import MenuRepository from "../menu/menu.repository"
+import VendorRepository from "../partner/vendor/vendor.repository"
 
 export default class ItemService {
   static async createItem(itemPayload: Partial<IItem>): Promise<IResponse> {
@@ -38,10 +39,16 @@ export default class ItemService {
 
     if (!item._id) return { success: false, msg: itemMessages.ITEM_FAILURE }
 
-    await MenuRepository.updateMenuDetails(
-      { _id: new mongoose.Types.ObjectId(menuId) },
-      { $push: { item: new mongoose.Types.ObjectId(item._id) } },
-    )
+    await Promise.all([
+      await MenuRepository.updateMenuDetails(
+        { _id: new mongoose.Types.ObjectId(menuId) },
+        { $push: { item: new mongoose.Types.ObjectId(item._id) } },
+      ),
+      await VendorRepository.updateVendorDetails(
+        { _id: new mongoose.Types.ObjectId(menuExist.vendorId) },
+        { $push: { itemId: new mongoose.Types.ObjectId(item._id) } },
+      ),
+    ])
 
     return {
       success: true,

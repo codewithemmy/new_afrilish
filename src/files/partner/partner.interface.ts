@@ -19,6 +19,7 @@ export interface IPartner {
 export interface IVendor {
   _id?: any
   name: string
+  itemId?: [any]
   email: string
   wallet: Number
   businessNumber: String
