@@ -196,13 +196,13 @@ export default class OrderService {
       pickUp: Boolean
       deliveryAddress: string
       vendorId: string
-      monday: DayPayload
-      tuesday: DayPayload
-      wednesday: DayPayload
-      thursday: DayPayload
-      friday: DayPayload
-      saturday: DayPayload
-      sunday: DayPayload
+      monday?: DayPayload
+      tuesday?: DayPayload
+      wednesday?: DayPayload
+      thursday?: DayPayload
+      friday?: DayPayload
+      saturday?: DayPayload
+      sunday?: DayPayload
     },
     locals: any,
   ): Promise<IResponse> {
