@@ -355,8 +355,6 @@ export default class UserService {
         {
           name: userFullName,
           email: userEmail,
-          imageUrl:
-            "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
         },
         "USER_REG_AUTH",
       )
