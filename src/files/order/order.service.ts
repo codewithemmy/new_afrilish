@@ -399,7 +399,7 @@ export default class OrderService {
       deliveryAddress,
       orderCode: parseOrderCode,
       itemId: orderItems,
-      orderedBy: new mongoose.Types.ObjectId(locals._id),
+      orderedBy: new mongoose.Types.ObjectId(locals),
       vendorId: new mongoose.Types.ObjectId(vendor._id),
       locationCoord: {
         type: "Point",

@@ -30,6 +30,7 @@ class OrderController {
       OrderService.evaluateScheduleOrderService(req.body, res.locals.jwt._id),
     )
 
+    console.log("res.locals", res.locals.jwt._id)
     if (error) return next(error)
     if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
 
