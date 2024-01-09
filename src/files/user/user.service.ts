@@ -160,8 +160,6 @@ export default class UserService {
           name: fullName,
           email,
           otp: randomNumber,
-          imageUrl:
-            "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
         },
         "USER_CODE",
       )
@@ -393,8 +391,6 @@ export default class UserService {
         {
           email: email,
           message,
-          imageUrl:
-            "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
         },
         "SUPPORT",
       )
