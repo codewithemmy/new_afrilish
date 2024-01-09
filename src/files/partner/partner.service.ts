@@ -93,7 +93,7 @@ export default class PartnerService {
 
     const validatePassword = await verifyPassword(password!, partner.password!)
     if (!validatePassword)
-      return { success: false, msg: generalMessages.INCORRECT_DETAILS }
+      return { success: false, msg: generalMessages.INCORRECT }
 
     partner.password = undefined
 

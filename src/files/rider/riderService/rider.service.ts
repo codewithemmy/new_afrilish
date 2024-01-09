@@ -176,15 +176,14 @@ export default class RiderService {
 
     const rider = await RiderRepository.fetchRider({ email }, {})
 
-    if (!rider)
-      return { success: false, msg: generalMessages.INCORRECT_DETAILS }
+    if (!rider) return { success: false, msg: generalMessages.INCORRECT }
 
     if (!rider.isVerified)
       return { success: false, msg: generalMessages.NOT_VERIFIED }
 
     const validatePassword = await verifyPassword(password!, rider.password!)
     if (!validatePassword)
-      return { success: false, msg: generalMessages.INCORRECT_DETAILS }
+      return { success: false, msg: generalMessages.INCORRECT }
 
     rider.password = undefined
 
