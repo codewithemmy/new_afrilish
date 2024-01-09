@@ -44,6 +44,8 @@ const OrderSchema = new Schema<IOrder>(
       default: "pending",
     },
     orderDate: { type: Date },
+    startDate: { type: Date },
+    endDate: { type: Date },
     schedule: { type: Boolean, default: false },
     riderStatus: {
       type: String,

@@ -24,6 +24,8 @@ export interface IOrder {
   userName: string
   paymentStatus: "paid" | "pending" | "failed"
   orderDate: Date
+  startDate: Date
+  endDate: Date
   paymentResponse: string
   ridersFee: Number
   netAmount: Number

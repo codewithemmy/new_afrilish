@@ -416,6 +416,8 @@ export default class OrderService {
       schedule: true,
       netAmount,
       scheduleId: new mongoose.Types.ObjectId(schedule._id),
+      startDate,
+      endDate,
     })
 
     if (!currentOrder) {
