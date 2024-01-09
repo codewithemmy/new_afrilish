@@ -48,14 +48,10 @@ export default class PartnerService {
     if (!partner)
       return { success: false, msg: partnerMessages.PARTNER_FAILURE }
 
-    // send mail login details to partner
     try {
       const substitutional_parameters = {
         name: fullName,
-        email: email,
         otp,
-        imageUrl:
-          "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
       }
 
       await sendMailNotification(
@@ -267,10 +263,7 @@ export default class PartnerService {
     try {
       const substitutional_parameters = {
         name: fullName,
-        email: email,
         otp,
-        imageUrl:
-          "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
       }
 
       await sendMailNotification(
