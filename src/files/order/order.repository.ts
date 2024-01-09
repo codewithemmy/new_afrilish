@@ -70,6 +70,8 @@ export default class OrderRepository {
           "sunday.launch.item",
           "sunday.dinner.item",
         ],
+        select:
+          "-createdAt -updatedAt -_id -startDate -endDate -isDelete -__v -userId -status",
       })
       .sort(sort)
       .skip(skip)
