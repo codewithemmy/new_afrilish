@@ -10,6 +10,7 @@ const OrderSchema = new Schema<IOrder>(
     pickUp: { type: Boolean, default: false },
     isWallet: { type: Boolean, default: false },
     isEvent: { type: Boolean, default: false },
+    isBulk: { type: Boolean, default: false },
     deliveryAddress: { type: String },
     note: { type: String },
     itemId: [

@@ -7,6 +7,7 @@ export interface IOrder {
   pickUp: Boolean
   isWallet: Boolean
   isEvent: Boolean
+  isBulk: Boolean
   isConfirmed: Boolean
   delivery: Boolean
   schedule: Boolean

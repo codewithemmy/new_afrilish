@@ -20,6 +20,7 @@ export default class OrderService {
     orderPayload: {
       vendorId: string
       isEvent?: Boolean
+      isBulk?: Boolean
       daysOfEvent?: Number
       lng: any
       lat: any
@@ -45,6 +46,7 @@ export default class OrderService {
       deliveryAddress,
       pickUp,
       isEvent,
+      isBulk,
       startDate,
       endDate,
       startTime,
@@ -205,6 +207,7 @@ export default class OrderService {
       eventDescription,
       daysOfEvent,
       eventLocation,
+      isBulk,
     })
 
     if (!currentOrder)
