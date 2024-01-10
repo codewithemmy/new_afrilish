@@ -32,8 +32,23 @@ export default class ItemRepository {
       ...restOfPayload
     } = itemPayload
 
+    const { search, ...extraParams } = restOfPayload
+
+    let query = {}
+
+    if (search) {
+      query = {
+        $or: [
+          { guestSize: { $regex: search, $options: "i" } },
+          { leastGuestSize: { $regex: search, $options: "i" } },
+          { description: { $regex: search, $options: "i" } },
+        ],
+      }
+    }
+
     const item: Awaited<IItem[] | null> = await Item.find({
-      ...restOfPayload,
+      ...extraParams,
+      ...query,
     })
       .sort(sort)
       .skip(skip)
