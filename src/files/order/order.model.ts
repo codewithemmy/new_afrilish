@@ -85,6 +85,7 @@ const OrderSchema = new Schema<IOrder>(
     readyTime: { type: String },
     paymentIntentId: { type: String },
     eventDescription: { type: String },
+    eventLocation: { type: String },
     locationCoord: {
       type: { type: String },
       coordinates: [Number],

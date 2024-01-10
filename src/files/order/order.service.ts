@@ -32,6 +32,7 @@ export default class OrderService {
       startTime?: string
       endTime?: string
       eventDescription?: string
+      eventLocation?: string
     },
     locals: any,
   ): Promise<IResponse> {
@@ -50,6 +51,7 @@ export default class OrderService {
       endTime,
       eventDescription,
       daysOfEvent,
+      eventLocation,
     } = orderPayload
 
     const vendor = await VendorRepository.fetchVendor(
@@ -202,6 +204,7 @@ export default class OrderService {
       endTime,
       eventDescription,
       daysOfEvent,
+      eventLocation,
     })
 
     if (!currentOrder)
