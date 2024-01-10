@@ -19,17 +19,38 @@ export default class OrderService {
   static async evaluateOrderService(
     orderPayload: {
       vendorId: string
+      isEvent?: Boolean
+      daysOfEvent?: Number
       lng: any
       lat: any
       item: [{ _id: any; quantity: Number; price: Number }]
-      note: string
-      pickUp: Boolean
+      note?: string
+      pickUp?: Boolean
       deliveryAddress: string
+      startDate?: Date
+      endDate?: Date
+      startTime?: string
+      endTime?: string
+      eventDescription?: string
     },
     locals: any,
   ): Promise<IResponse> {
-    const { vendorId, lng, lat, item, note, deliveryAddress, pickUp } =
-      orderPayload
+    const {
+      vendorId,
+      lng,
+      lat,
+      item,
+      note,
+      deliveryAddress,
+      pickUp,
+      isEvent,
+      startDate,
+      endDate,
+      startTime,
+      endTime,
+      eventDescription,
+      daysOfEvent,
+    } = orderPayload
 
     const vendor = await VendorRepository.fetchVendor(
       {
@@ -167,6 +188,7 @@ export default class OrderService {
       },
       userEmail: locals.email,
       ridersFee,
+      isEvent,
       userName: locals.fullName,
       note,
       schedule: false,
@@ -174,6 +196,12 @@ export default class OrderService {
       orderDate: new Date(),
       totalAmount: roundTotalPrice,
       netAmount,
+      startDate,
+      endDate,
+      startTime,
+      endTime,
+      eventDescription,
+      daysOfEvent,
     })
 
     if (!currentOrder)
@@ -181,7 +209,7 @@ export default class OrderService {
 
     return {
       success: true,
-      msg: `Order successful. Seller will review your order`,
+      msg: `Order successful. Vendor will review your order`,
       data: currentOrder,
     }
   }

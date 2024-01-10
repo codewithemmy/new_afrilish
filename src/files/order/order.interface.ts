@@ -1,10 +1,12 @@
 export interface IOrder {
   _id?: any
   pickUpCode: Number
+  daysOfEvent: Number
   orderCode: Number
   orderId: string
   pickUp: Boolean
   isWallet: Boolean
+  isEvent: Boolean
   isConfirmed: Boolean
   delivery: Boolean
   schedule: Boolean
@@ -25,6 +27,8 @@ export interface IOrder {
   paymentStatus: "paid" | "pending" | "failed"
   orderDate: Date
   startDate: Date
+  startTime: string
+  endTime: string
   endDate: Date
   paymentResponse: string
   ridersFee: Number
@@ -58,6 +62,7 @@ export interface IOrder {
   transactionId: any
   scheduleId: any
   readyTime: string
+  eventDescription: string
   paymentIntentId: string
   status: "accepted" | "rejected" | "pending"
   locationCoord: ILocation

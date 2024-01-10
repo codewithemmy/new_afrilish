@@ -5,9 +5,11 @@ const OrderSchema = new Schema<IOrder>(
   {
     pickUpCode: { type: Number },
     orderCode: { type: Number },
+    daysOfEvent: { type: Number },
     orderId: { type: String },
     pickUp: { type: Boolean, default: false },
     isWallet: { type: Boolean, default: false },
+    isEvent: { type: Boolean, default: false },
     deliveryAddress: { type: String },
     note: { type: String },
     itemId: [
@@ -46,6 +48,8 @@ const OrderSchema = new Schema<IOrder>(
     orderDate: { type: Date },
     startDate: { type: Date },
     endDate: { type: Date },
+    startTime: { type: String },
+    endTime: { type: String },
     schedule: { type: Boolean, default: false },
     riderStatus: {
       type: String,
@@ -80,6 +84,7 @@ const OrderSchema = new Schema<IOrder>(
     delivery: { type: Boolean },
     readyTime: { type: String },
     paymentIntentId: { type: String },
+    eventDescription: { type: String },
     locationCoord: {
       type: { type: String },
       coordinates: [Number],
