@@ -1,5 +1,5 @@
 export const transactionMessages = {
-  CREATE_TRANSACTION_SUCCESS: "Transaction created successful",
+  CREATE_TRANSACTION_SUCCESS: "Transaction created successfully",
   CREATE_TRANSACTION_FAILURE: "Unable to create transaction",
 
   TRANSACTION_FETCHED: "Transactions fetched successfully",

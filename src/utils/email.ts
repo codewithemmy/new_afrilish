@@ -41,7 +41,7 @@ export const sendMailNotification = async (
   const compiledTemplate = handlebars.compile(source)
 
   await mailTransport.sendMail({
-    from: '"Afrilish Team" <info@afrilish.com>', // sender address
+    from: '"no_reply@afrilish.com" <no_reply@afrilish.com>', // sender address
     to: to_email, // list of receivers
     subject: subject, // Subject line
     html: compiledTemplate(substitutional_parameters),
