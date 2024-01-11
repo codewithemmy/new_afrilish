@@ -67,14 +67,14 @@ export interface IOrder {
   eventLocation: string
   paymentIntentId: string
   status: "accepted" | "rejected" | "pending"
-  locationCoord: ILocation
+  locationCoord?: ILocation
   createdAt?: Date
   updatedAt?: Date
 }
 
 interface ILocation {
-  type: string
-  coordinates: [Number, Number]
+  type?: string
+  coordinates?: [Number, Number]
 }
 
 export type DayPayload = {

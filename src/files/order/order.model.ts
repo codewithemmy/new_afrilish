@@ -89,7 +89,7 @@ const OrderSchema = new Schema<IOrder>(
     eventLocation: { type: String },
     locationCoord: {
       type: { type: String },
-      coordinates: [Number],
+      coordinates: [],
     },
   },
   { timestamps: true },

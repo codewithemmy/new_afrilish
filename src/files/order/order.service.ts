@@ -22,8 +22,8 @@ export default class OrderService {
       isEvent?: Boolean
       isBulk?: Boolean
       daysOfEvent?: Number
-      lng: any
-      lat: any
+      lng?: any
+      lat?: any
       item: [{ _id: any; quantity: Number; price: Number }]
       note?: string
       pickUp?: Boolean
@@ -55,9 +55,7 @@ export default class OrderService {
       daysOfEvent,
       eventLocation,
     } = orderPayload
-
-    console.log("orderPayload", orderPayload)
-
+    let kilometers: any
     const vendor = await VendorRepository.fetchVendor(
       {
         _id: new mongoose.Types.ObjectId(vendorId),
@@ -68,40 +66,41 @@ export default class OrderService {
 
     let vendorLng: any
     let vendorLat: any
-
-    // Check if vendor.locationCoord is defined before accessing its properties
-    if (vendor.locationCoord && vendor.locationCoord.coordinates) {
-      vendorLat = vendor.locationCoord.coordinates[0]
-      vendorLng = vendor.locationCoord.coordinates[1]
-    } else {
-      // Handle the case where locationCoord or coordinates is undefined
-      return {
-        success: false,
-        msg: "Location coordinates not available for the vendor.",
+    if (!pickUp) {
+      // Check if vendor.locationCoord is defined before accessing its properties
+      if (vendor?.locationCoord && vendor?.locationCoord?.coordinates) {
+        vendorLat = vendor?.locationCoord?.coordinates[0]
+        vendorLng = vendor?.locationCoord?.coordinates[1]
+      } else {
+        // Handle the case where locationCoord or coordinates is undefined
+        return {
+          success: false,
+          msg: "Location coordinates not available for the vendor.",
+        }
       }
+
+      // Radius of the Earth in kilometers
+      const R = 6371.0
+      // Convert latitude and longitude from degrees to radians
+      const lat1Rad: any = deg2rad(vendorLat)
+      const lon1Rad: any = deg2rad(vendorLng)
+      const lat2Rad: any = deg2rad(lat)
+      const lon2Rad: any = deg2rad(lng)
+
+      // Haversine formula
+      const dLat = lat2Rad - lat1Rad
+      const dLon = lon2Rad - lon1Rad
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1Rad) *
+          Math.cos(lat2Rad) *
+          Math.sin(dLon / 2) *
+          Math.sin(dLon / 2)
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+      const distance = R * c
+
+      kilometers = distance.toFixed(2)
     }
-
-    // Radius of the Earth in kilometers
-    const R = 6371.0
-    // Convert latitude and longitude from degrees to radians
-    const lat1Rad: any = deg2rad(vendorLat)
-    const lon1Rad: any = deg2rad(vendorLng)
-    const lat2Rad: any = deg2rad(lat)
-    const lon2Rad: any = deg2rad(lng)
-
-    // Haversine formula
-    const dLat = lat2Rad - lat1Rad
-    const dLon = lon2Rad - lon1Rad
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(lat1Rad) *
-        Math.cos(lat2Rad) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2)
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-    const distance = R * c
-
-    let kilometers: any = distance.toFixed(2)
 
     let ridersFee
 
@@ -231,8 +230,8 @@ export default class OrderService {
     orderPayload: {
       startDate: Date
       endDate: Date
-      lat: any
-      lng: any
+      lat?: any
+      lng?: any
       note: string
       pickUp: Boolean
       deliveryAddress: string
@@ -247,6 +246,7 @@ export default class OrderService {
     },
     locals: any,
   ): Promise<IResponse> {
+    let kilometers: any
     const {
       startDate,
       endDate,
@@ -302,39 +302,41 @@ export default class OrderService {
     let vendorLng: any
     let vendorLat: any
 
-    // Check if vendor.locationCoord is defined before accessing its properties
-    if (vendor.locationCoord && vendor.locationCoord.coordinates) {
-      vendorLat = vendor.locationCoord.coordinates[0]
-      vendorLng = vendor.locationCoord.coordinates[1]
-    } else {
-      // Handle the case where locationCoord or coordinates is undefined
-      return {
-        success: false,
-        msg: "Location coordinates not available for the vendor.",
+    if (!pickUp) {
+      // Check if vendor.locationCoord is defined before accessing its properties
+      if (vendor?.locationCoord && vendor?.locationCoord?.coordinates) {
+        vendorLat = vendor?.locationCoord?.coordinates[0]
+        vendorLng = vendor?.locationCoord?.coordinates[1]
+      } else {
+        // Handle the case where locationCoord or coordinates is undefined
+        return {
+          success: false,
+          msg: "Location coordinates not available for the vendor.",
+        }
       }
+
+      // Radius of the Earth in kilometers
+      const R = 6371.0
+      // Convert latitude and longitude from degrees to radians
+      const lat1Rad: any = deg2rad(vendorLat)
+      const lon1Rad: any = deg2rad(vendorLng)
+      const lat2Rad: any = deg2rad(lat)
+      const lon2Rad: any = deg2rad(lng)
+
+      // Haversine formula
+      const dLat = lat2Rad - lat1Rad
+      const dLon = lon2Rad - lon1Rad
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1Rad) *
+          Math.cos(lat2Rad) *
+          Math.sin(dLon / 2) *
+          Math.sin(dLon / 2)
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+      const distance = R * c
+
+      kilometers = distance.toFixed(2)
     }
-
-    // Radius of the Earth in kilometers
-    const R = 6371.0
-    // Convert latitude and longitude from degrees to radians
-    const lat1Rad: any = deg2rad(vendorLat)
-    const lon1Rad: any = deg2rad(vendorLng)
-    const lat2Rad: any = deg2rad(lat)
-    const lon2Rad: any = deg2rad(lng)
-
-    // Haversine formula
-    const dLat = lat2Rad - lat1Rad
-    const dLon = lon2Rad - lon1Rad
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(lat1Rad) *
-        Math.cos(lat2Rad) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2)
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-    const distance = R * c
-
-    let kilometers: any = distance.toFixed(2)
 
     let ridersFee
 
@@ -432,6 +434,7 @@ export default class OrderService {
     }
 
     let orderId = `#${AlphaNumeric(3, "number")}`
+    const totalSum: Number = serviceCharge + roundTotalPrice
 
     const currentOrder = await OrderRepository.createOrder({
       pickUpCode: parsePickUpNumber,
@@ -453,7 +456,7 @@ export default class OrderService {
       note,
       serviceCharge,
       orderDate: new Date(),
-      totalAmount: roundTotalPrice,
+      totalAmount: totalSum,
       schedule: true,
       netAmount,
       scheduleId: new mongoose.Types.ObjectId(schedule._id),
