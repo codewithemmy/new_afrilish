@@ -45,7 +45,7 @@ export default class OrderRepository {
     const order: Awaited<IOrder[] | null> = await Order.find({
       ...restOfPayload,
     })
-      .populate({ path: "itemId._id", select: "name" })
+      .populate({ path: "itemId._id" })
       .populate({
         path: "scheduleId",
         populate: [
