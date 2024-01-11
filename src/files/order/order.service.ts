@@ -178,6 +178,9 @@ export default class OrderService {
     }
 
     let orderId = `#${AlphaNumeric(3, "number")}`
+    if (isEvent) {
+      ridersFee = 0
+    }
 
     const currentOrder = await OrderRepository.createOrder({
       pickUpCode: parsePickUpNumber,
