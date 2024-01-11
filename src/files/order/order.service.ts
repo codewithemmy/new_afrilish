@@ -56,6 +56,8 @@ export default class OrderService {
       eventLocation,
     } = orderPayload
 
+    console.log("orderPayload", orderPayload)
+
     const vendor = await VendorRepository.fetchVendor(
       {
         _id: new mongoose.Types.ObjectId(vendorId),
