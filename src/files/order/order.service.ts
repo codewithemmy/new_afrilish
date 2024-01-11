@@ -182,6 +182,8 @@ export default class OrderService {
       ridersFee = 0
     }
 
+    const totalSum: Number = serviceCharge + roundTotalPrice
+
     const currentOrder = await OrderRepository.createOrder({
       pickUpCode: parsePickUpNumber,
       orderId,
@@ -203,7 +205,7 @@ export default class OrderService {
       schedule: false,
       serviceCharge,
       orderDate: new Date(),
-      totalAmount: roundTotalPrice,
+      totalAmount: totalSum,
       netAmount,
       startDate,
       endDate,
