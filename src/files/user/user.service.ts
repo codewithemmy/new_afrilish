@@ -289,14 +289,21 @@ export default class UserService {
 
     if (error) return { success: false, msg: error }
 
-    let extra = { isAvailable: true }
+    const { vendorType } = query
 
+    let extra = { isAvailable: true }
+    let privateVendor = {}
+
+    if (vendorType === "privateVendor") {
+      privateVendor = { vendorType: "privateVendor" }
+    }
     const vendors = await UserRepository.getVendorByCoord({
       ...params,
       limit,
       skip,
       sort,
       ...extra,
+      ...privateVendor,
     })
 
     if (vendors.length < 1)

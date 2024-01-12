@@ -89,7 +89,7 @@ export default class UserRepository {
               coordinates: [parseFloat(lngString), parseFloat(latString)],
             },
             key: "locationCoord",
-            maxDistance: parseFloat(floatString) * 1609,
+            maxDistance: parseFloat(floatString) * 800,
             distanceField: "distance",
             spherical: true,
           },
