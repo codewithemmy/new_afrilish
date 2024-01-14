@@ -3,6 +3,7 @@ import validate from "../../validations/validate"
 import { checkSchema } from "express-validator"
 import createPartnerValidation from "../../validations/partner/createPartner.validation"
 import riderController from "./riderController/rider.controller"
+import { isAuthenticated } from "../../utils"
 
 const RiderRouter = express.Router()
 
@@ -23,6 +24,8 @@ RiderRouter.post("/login", loginRiderController)
 RiderRouter.post("/forgot-password", forgotPasswordController)
 RiderRouter.post("/reset-password", resetPasswordController)
 RiderRouter.post("/resend-otp", resendOtpController)
+
+RiderRouter.use(isAuthenticated)
 RiderRouter.post("/change-password", changePasswordController)
 
 export default RiderRouter
