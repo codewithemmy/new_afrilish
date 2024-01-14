@@ -114,8 +114,6 @@ export default class UserService {
         name: fullName,
         email: email,
         otp,
-        imageUrl:
-          "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
       }
 
       await sendMailNotification(

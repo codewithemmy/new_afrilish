@@ -15,5 +15,5 @@ export const riderMessages = {
   DELETE_FAILURE: "Rider data was not deleted, please try again",
   VERIFIED: "Rider verification successful",
   INCORRECT_INFO: "Likely incorrect Otp used",
-  OTP: "Otp sent. Otp should be applied on or before 10 minutes",
+  OTP: "Otp sent",
 }

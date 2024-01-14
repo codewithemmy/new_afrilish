@@ -22,7 +22,7 @@ RiderRouter.post("/verify", verifyRiderController)
 RiderRouter.post("/login", loginRiderController)
 RiderRouter.post("/forgot-password", forgotPasswordController)
 RiderRouter.post("/reset-password", resetPasswordController)
-RiderRouter.post("/resend-otp/:id", resendOtpController)
+RiderRouter.post("/resend-otp", resendOtpController)
 RiderRouter.post("/change-password", changePasswordController)
 
 export default RiderRouter

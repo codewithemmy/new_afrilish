@@ -78,39 +78,32 @@ export default class RiderService {
     }
   }
 
-  static async resentOtpService(riderPayload: any): Promise<IResponse> {
-    // check if rider exists using phone or email
-    const validateRider = await RiderRepository.fetchRider(
-      { _id: new mongoose.Types.ObjectId(riderPayload) },
-      {
-        _id: 1,
-      },
-    )
+  static async resentOtpService(riderPayload: {
+    email: string
+  }): Promise<IResponse> {
+    let { email } = riderPayload
 
-    if (!validateRider) return { success: true, msg: riderMessages.FETCH_ERROR }
+    const rider = await RiderRepository.fetchRider({ email }, {})
 
-    const otp = AlphaNumeric(4)
+    const otp = AlphaNumeric(4, "numbers")
 
-    const email: any = validateRider.email
-    const name: any = validateRider.fullName
+    const fullName: any = rider?.fullName
 
     const updateRider = await RiderRepository.updateRiderDetails(
       { email },
-      { verificationToken: otp },
+      { verificationOtp: otp },
     )
 
-    if (!updateRider) return { success: true, msg: `unable to send otp` }
+    if (!updateRider) return { success: false, msg: riderMessages.UPDATE_ERROR }
 
-    const substitutional_parameters = {
-      name: name,
-      email: email,
-      otp: otp,
-      imageUrl:
-        "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
-    }
-
-    // send mail login details to rider
+    // send mail login details to partner
     try {
+      const substitutional_parameters = {
+        name: fullName,
+        email: email,
+        otp,
+      }
+
       await sendMailNotification(
         email,
         "Registration",

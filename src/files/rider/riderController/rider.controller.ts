@@ -19,7 +19,7 @@ class RiderController {
 
   async resendOtpController(req: Request, res: Response, next: NextFunction) {
     const [error, data] = await manageAsyncOps(
-      RiderService.resentOtpService(req.params.id),
+      RiderService.resentOtpService(req.body),
     )
 
     if (error) return next(error)
