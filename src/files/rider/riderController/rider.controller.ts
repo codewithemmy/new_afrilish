@@ -32,7 +32,6 @@ class RiderController {
     const [error, data] = await manageAsyncOps(
       RiderService.verifyRiderService(req.body),
     )
-
     if (error) return next(error)
     if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
 
@@ -58,7 +57,7 @@ class RiderController {
     const [error, data] = await manageAsyncOps(
       RiderService.forgotPasswordService(req.body),
     )
-
+    console.log("error", error)
     if (error) return next(error)
     if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
 
@@ -88,6 +87,7 @@ class RiderController {
     const [error, data] = await manageAsyncOps(
       RiderService.resetRiderPassword(req.body),
     )
+
     if (error) return next(error)
     if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
 

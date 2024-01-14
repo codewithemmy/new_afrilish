@@ -1,6 +1,6 @@
 export interface IRider {
   _id?: any
-  name: string
+  fullName: string
   email: string
   password: string
   phone: string
@@ -13,8 +13,6 @@ export interface IRider {
   rating?: Number
   verificationToken: string
   passwordToken: string
-  resetTokenExpirationDate?: Date
-  passwordTokenExpirationDate: Date
   createdAt?: Date
   updatedAt?: Date
 }

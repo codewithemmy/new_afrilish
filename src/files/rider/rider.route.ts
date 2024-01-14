@@ -18,11 +18,11 @@ const {
 
 //routes
 RiderRouter.post("/", createRiderController)
-RiderRouter.post("/resend-otp/:id", resendOtpController)
 RiderRouter.post("/verify", verifyRiderController)
 RiderRouter.post("/login", loginRiderController)
 RiderRouter.post("/forgot-password", forgotPasswordController)
-RiderRouter.post("/change-password", changePasswordController)
 RiderRouter.post("/reset-password", resetPasswordController)
+RiderRouter.post("/resend-otp/:id", resendOtpController)
+RiderRouter.post("/change-password", changePasswordController)
 
 export default RiderRouter

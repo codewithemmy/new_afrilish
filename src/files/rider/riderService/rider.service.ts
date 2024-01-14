@@ -17,10 +17,10 @@ export default class RiderService {
   static async createRider(riderPayload: {
     email: string
     phone: string
-    name: string
+    fullName: string
     password: string
   }): Promise<IResponse> {
-    const { password, phone, email, name } = riderPayload
+    const { password, phone, email, fullName } = riderPayload
 
     // check if rider exists using phone or email
     const validateRider = await RiderRepository.fetchRider(
@@ -42,7 +42,7 @@ export default class RiderService {
     if (validateRider)
       return { success: true, msg: riderMessages.EXISTING_RIDER }
 
-    const otp = AlphaNumeric(4)
+    const otp = AlphaNumeric(4, "number")
 
     const rider = await RiderRepository.createRider({
       ...riderPayload,
@@ -53,11 +53,9 @@ export default class RiderService {
     if (!rider) return { success: false, msg: riderMessages.RIDER_FAILURE }
 
     const substitutional_parameters = {
-      name: name,
+      name: fullName,
       email: email,
       otp: otp,
-      imageUrl:
-        "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
     }
 
     // send mail login details to rider
@@ -94,7 +92,7 @@ export default class RiderService {
     const otp = AlphaNumeric(4)
 
     const email: any = validateRider.email
-    const name: any = validateRider.name
+    const name: any = validateRider.fullName
 
     const updateRider = await RiderRepository.updateRiderDetails(
       { email },
@@ -145,13 +143,11 @@ export default class RiderService {
       { verificationToken: "", isVerified: true },
     )
 
-    const name: any = confirmOtp.name
+    const name: any = confirmOtp.fullName
 
     const substitutional_parameters = {
       name: name,
       email: email,
-      imageUrl:
-        "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
     }
 
     // send mail login details to rider
@@ -202,25 +198,18 @@ export default class RiderService {
 
     if (!rider) return { success: false, msg: riderMessages.FETCH_ERROR }
 
-    const generateOtp = AlphaNumeric(4)
-
-    //set otp timeout to 60 ten minutes
-    const tenMinutes = 1000 * 60 * 10
-    const passwordTokenExpirationDate = new Date(Date.now() + tenMinutes)
+    const generateOtp = AlphaNumeric(4, "number")
 
     await RiderRepository.updateRiderDetails(
       { email },
       {
-        passwordToken: generateOtp,
-        passwordTokenExpirationDate: passwordTokenExpirationDate,
+        verificationToken: generateOtp,
       },
     )
 
     /**send otp to email or phone number*/
     const substitutional_parameters = {
-      resetOtp: generateOtp,
-      imageUrl:
-        "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
+      otp: generateOtp,
     }
 
     try {
@@ -245,30 +234,21 @@ export default class RiderService {
     const { email, newPassword, otp } = payload
 
     const rider = await RiderRepository.fetchRider(
-      { email, passwordToken: otp },
-      { passwordTokenExpirationDate: 1 },
+      { email, verificationToken: otp },
+      {},
     )
 
-    if (!rider) return { success: false, msg: riderMessages.FETCH_ERROR }
-
-    const currentDate: any = new Date().toISOString
-
-    if (
-      rider.passwordTokenExpirationDate &&
-      rider.passwordTokenExpirationDate > currentDate
-    )
-      return { success: false, msg: riderMessages.FETCH_ERROR }
+    if (!rider) return { success: false, msg: riderMessages.INCORRECT_INFO }
 
     const updatePassword = await RiderRepository.updateRiderDetails(
       { email },
       {
         password: await hashPassword(newPassword),
-        passwordToken: "",
-        passwordTokenExpirationDate: "",
+        verificationToken: "",
       },
     )
     if (!updatePassword)
-      return { success: false, msg: riderMessages.UPDATE_ERROR }
+      return { success: false, msg: riderMessages.INCORRECT_INFO }
 
     return { success: true, msg: riderMessages.PASSWORD_RESET_SUCCESS }
   }

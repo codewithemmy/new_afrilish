@@ -4,7 +4,7 @@ import { IRider } from "./rider.interface"
 
 const RiderSchema = new Schema<IRider>(
   {
-    name: { type: String, required: true },
+    fullName: { type: String, required: true },
     phone: { type: String, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },
@@ -15,12 +15,9 @@ const RiderSchema = new Schema<IRider>(
       coordinates: [],
     },
     location: { type: String },
-    wallet: { type: Number },
+    wallet: { type: Number, default: 0 },
     rating: { type: Number },
     verificationToken: { type: String },
-    passwordToken: { type: String },
-    resetTokenExpirationDate: { type: Date },
-    passwordTokenExpirationDate: { type: Date },
     isVerified: { type: Boolean, default: false },
   },
   { timestamps: true },
