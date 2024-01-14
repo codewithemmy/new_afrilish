@@ -1,6 +1,5 @@
 import mongoose, { Schema, model } from "mongoose"
 import { IRider } from "./rider.interface"
-// import { IRestaurant } from "./partner.interface"
 
 const RiderSchema = new Schema<IRider>(
   {
@@ -15,6 +14,7 @@ const RiderSchema = new Schema<IRider>(
       coordinates: [],
     },
     location: { type: String },
+    isDelete: { type: Boolean },
     wallet: { type: Number, default: 0 },
     rating: { type: Number },
     verificationToken: { type: String },

@@ -9,6 +9,7 @@ export interface IRider {
   locationCoord?: ILocation
   image: string
   wallet: Number
+  isDelete: Boolean
   serviceAvailable: Boolean
   rating?: Number
   verificationToken: string
@@ -19,5 +20,5 @@ export interface IRider {
 
 interface ILocation {
   type?: string
-  coordinates?: [Number, Number]
+  coordinates?: [lat: Number, lng: Number]
 }

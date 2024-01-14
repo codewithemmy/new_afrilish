@@ -46,7 +46,7 @@ export default class RiderRepository {
     riderPayload: Partial<IRider>,
     update: UpdateQuery<Partial<IRider>>,
   ) {
-    const updatePartner = await Rider.findOneAndUpdate(
+    const updateRider = await Rider.findOneAndUpdate(
       {
         ...riderPayload,
       },
@@ -54,6 +54,14 @@ export default class RiderRepository {
       { new: true, runValidators: true }, //returns details about the update
     )
 
-    return updatePartner
+    return updateRider
+  }
+
+  static async deleteRiderDetails(riderPayload: Partial<IRider>) {
+    const deleteRider = await Rider.findOneAndDelete({
+      ...riderPayload,
+    })
+
+    return deleteRider
   }
 }

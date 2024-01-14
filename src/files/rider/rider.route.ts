@@ -5,6 +5,7 @@ import createPartnerValidation from "../../validations/partner/createPartner.val
 import riderController from "./riderController/rider.controller"
 import riderProfileController from "./riderController/riderProfile.controller"
 import { isAuthenticated } from "../../utils"
+import uploadManager from "../../utils/multer"
 
 const RiderRouter = express.Router()
 
@@ -18,7 +19,8 @@ const {
   resetPasswordController,
 } = riderController
 
-const { riderProfile } = riderProfileController
+const { riderProfile, riderProfileUPdate, deleteRiderProfile } =
+  riderProfileController
 
 //routes
 RiderRouter.post("/", createRiderController)
@@ -27,11 +29,17 @@ RiderRouter.post("/login", loginRiderController)
 RiderRouter.post("/forgot-password", forgotPasswordController)
 RiderRouter.post("/reset-password", resetPasswordController)
 RiderRouter.post("/resend-otp", resendOtpController)
+RiderRouter.delete("/:id", deleteRiderProfile)
 
 RiderRouter.use(isAuthenticated)
 RiderRouter.post("/change-password", changePasswordController)
 
 //rider profile
 RiderRouter.get("/", riderProfile)
+RiderRouter.patch(
+  "/",
+  uploadManager("image").single("image"),
+  riderProfileUPdate,
+)
 
 export default RiderRouter

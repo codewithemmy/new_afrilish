@@ -1,9 +1,10 @@
 import { NextFunction, Response, Request } from "express"
 import { responseHandler } from "../../../core/response"
-import { manageAsyncOps } from "../../../utils"
+import { fileModifier, manageAsyncOps } from "../../../utils"
 import { CustomError } from "../../../utils/error"
 import { statusCode } from "../../../constants/statusCode"
 import RiderService from "../riderService/riderProfile.service"
+import { IRider } from "../rider.interface"
 
 class RiderProfileController {
   async riderProfile(req: Request, res: Response, next: NextFunction) {
@@ -17,82 +18,33 @@ class RiderProfileController {
     return responseHandler(res, statusCode.CREATED, data!)
   }
 
-  // async resendOtpController(req: Request, res: Response, next: NextFunction) {
-  //   const [error, data] = await manageAsyncOps(
-  //     RiderService.resentOtpService(req.body),
-  //   )
+  async riderProfileUPdate(req: Request, res: Response, next: NextFunction) {
+    const { body, image } = await fileModifier(req)
+    const [error, data] = await manageAsyncOps(
+      RiderService.updateRiderProfile({
+        params: res.locals.jwt._id,
+        riderPayload: { ...body, image },
+      }),
+    )
 
-  //   if (error) return next(error)
-  //   if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
+    if (error) return next(error)
+    if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
 
-  //   return responseHandler(res, statusCode.CREATED, data!)
-  // }
+    return responseHandler(res, statusCode.CREATED, data!)
+  }
 
-  // async verifyRiderController(req: Request, res: Response, next: NextFunction) {
-  //   const [error, data] = await manageAsyncOps(
-  //     RiderService.verifyRiderService(req.body),
-  //   )
-  //   if (error) return next(error)
-  //   if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
+  async deleteRiderProfile(req: Request, res: Response, next: NextFunction) {
+    const [error, data] = await manageAsyncOps(
+      RiderService.deleteRider(req.params.id),
+    )
 
-  //   return responseHandler(res, statusCode.SUCCESS, data!)
-  // }
+    console.log("error", error)
 
-  // async loginRiderController(req: Request, res: Response, next: NextFunction) {
-  //   const [error, data] = await manageAsyncOps(
-  //     RiderService.loginRider(req.body),
-  //   )
+    if (error) return next(error)
+    if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
 
-  //   if (error) return next(error)
-  //   if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
-
-  //   return responseHandler(res, statusCode.SUCCESS, data!)
-  // }
-
-  // async forgotPasswordController(
-  //   req: Request,
-  //   res: Response,
-  //   next: NextFunction,
-  // ) {
-  //   const [error, data] = await manageAsyncOps(
-  //     RiderService.forgotPasswordService(req.body),
-  //   )
-  //   console.log("error", error)
-  //   if (error) return next(error)
-  //   if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
-
-  //   return responseHandler(res, statusCode.SUCCESS, data!)
-  // }
-
-  // async changePasswordController(
-  //   req: Request,
-  //   res: Response,
-  //   next: NextFunction,
-  // ) {
-  //   const [error, data] = await manageAsyncOps(
-  //     RiderService.changeRiderPassword(req.body, res.locals.jwt._id),
-  //   )
-
-  //   if (error) return next(error)
-  //   if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
-
-  //   return responseHandler(res, statusCode.SUCCESS, data!)
-  // }
-
-  // async resetPasswordController(
-  //   req: Request,
-  //   res: Response,
-  //   next: NextFunction,
-  // ) {
-  //   const [error, data] = await manageAsyncOps(
-  //     RiderService.resetRiderPassword(req.body),
-  //   )
-
-  //   if (error) return next(error)
-  //   if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
-
-  //   return responseHandler(res, statusCode.SUCCESS, data!)
-  // }
+    return responseHandler(res, statusCode.CREATED, data!)
+  }
 }
 
 export default new RiderProfileController()
