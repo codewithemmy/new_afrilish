@@ -50,8 +50,6 @@ export default class UserService {
           name: fullName,
           otp,
           email,
-          imageUrl:
-            "https://res.cloudinary.com/dn6eonkzc/image/upload/v1684420375/DEV/vlasbjyf9antscatbgzt.webp",
         },
         "USER_REG",
       )
