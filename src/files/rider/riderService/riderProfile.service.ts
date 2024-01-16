@@ -72,4 +72,20 @@ export default class RiderService {
 
     return { success: true, msg: riderMessages.RIDER_DELETE }
   }
+
+  static async riderDocumentUpload(
+    data: { image: string; body: any },
+    params: any,
+  ) {
+    const { image, body } = data
+    const rider = await RiderRepository.updateRiderDetails(
+      { _id: new mongoose.Types.ObjectId(params) },
+      {
+        $set: { document: { image, ...body } },
+      },
+    )
+    if (!rider) return { success: false, msg: riderMessages.UPDATE_ERROR }
+
+    return { success: true, msg: `Document upload successful` }
+  }
 }

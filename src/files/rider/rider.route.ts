@@ -19,8 +19,12 @@ const {
   resetPasswordController,
 } = riderController
 
-const { riderProfile, riderProfileUPdate, deleteRiderProfile } =
-  riderProfileController
+const {
+  riderProfile,
+  riderProfileUPdate,
+  deleteRiderProfile,
+  riderDocumentUpload,
+} = riderProfileController
 
 //routes
 RiderRouter.post(
@@ -28,6 +32,7 @@ RiderRouter.post(
   uploadManager("image").single("image"),
   createRiderController,
 )
+
 RiderRouter.post("/verify", verifyRiderController)
 RiderRouter.post("/login", loginRiderController)
 RiderRouter.post("/forgot-password", forgotPasswordController)
@@ -46,4 +51,9 @@ RiderRouter.patch(
   riderProfileUPdate,
 )
 
+RiderRouter.patch(
+  "/document",
+  uploadManager("document").single("image"),
+  riderDocumentUpload,
+)
 export default RiderRouter
