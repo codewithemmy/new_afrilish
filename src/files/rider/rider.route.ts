@@ -23,7 +23,11 @@ const { riderProfile, riderProfileUPdate, deleteRiderProfile } =
   riderProfileController
 
 //routes
-RiderRouter.post("/", createRiderController)
+RiderRouter.post(
+  "/",
+  uploadManager("image").single("image"),
+  createRiderController,
+)
 RiderRouter.post("/verify", verifyRiderController)
 RiderRouter.post("/login", loginRiderController)
 RiderRouter.post("/forgot-password", forgotPasswordController)

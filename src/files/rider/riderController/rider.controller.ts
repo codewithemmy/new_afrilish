@@ -7,8 +7,10 @@ import RiderService from "../riderService/rider.service"
 
 class RiderController {
   async createRiderController(req: Request, res: Response, next: NextFunction) {
+    const { body } = await fileModifier(req)
+    const { fullName, email, phone, password } = body
     const [error, data] = await manageAsyncOps(
-      RiderService.createRider(req.body),
+      RiderService.createRider({ fullName, email, phone, password }),
     )
 
     if (error) return next(error)

@@ -114,9 +114,12 @@ export default class RiderService {
       console.log("error", error)
     }
 
+    const token = tokenHandler({ _id: rider?._id, userType: "rider" })
+
     return {
       success: true,
       msg: riderMessages.OTP,
+      data: { token },
     }
   }
 
