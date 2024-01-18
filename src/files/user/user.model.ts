@@ -3,14 +3,19 @@ import { IUser } from "./user.interface"
 
 const UserSchema = new Schema<IUser>(
   {
-    fullName: { type: String, required: true },
+    fullName: { type: String },
     image: { type: String },
     phone: { type: String },
     email: { type: String, required: true },
-    password: { type: String, required: true },
+    password: { type: String },
     isVerified: { type: Boolean, default: false },
     wallet: { type: Number, default: 0 },
     home: { type: String },
+    authType: {
+      type: String,
+      default: "normal",
+      enum: ["normal", "google", "apple"],
+    },
     address: { type: String },
     office: { type: String },
     dateOfBirth: { type: Date },

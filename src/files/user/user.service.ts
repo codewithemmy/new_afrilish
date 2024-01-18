@@ -220,8 +220,7 @@ export default class UserService {
       { password: await hashPassword(newPassword), verificationOtp: "" },
     )
 
-    if (!updateUser)
-      return { success: false, msg: userMessages.UPDATE_ERROR }
+    if (!updateUser) return { success: false, msg: userMessages.UPDATE_ERROR }
 
     return { success: true, msg: userMessages.UPDATE_SUCCESS }
   }
@@ -344,12 +343,21 @@ export default class UserService {
     }
   }
 
-  static async userAuthLoginService(userPayload: Partial<IUser>) {
-    const { fullName, email } = userPayload
+  static async userAuthLoginService(userPayload: {
+    fullName: string
+    email: string
+    authType?: string
+    action?: string
+  }) {
+    const { fullName, email, authType, action } = userPayload
 
     const confirmUser = await UserRepository.fetchUser({ email }, {})
 
-    if (confirmUser) {
+    if (
+      confirmUser &&
+      authType === confirmUser.authType &&
+      action === "login"
+    ) {
       const token = tokenHandler({
         ...confirmUser,
         isPartner: false,
@@ -372,6 +380,7 @@ export default class UserService {
       email: email,
       fullName: fullName,
       isVerified: true,
+      authType,
     })
 
     const userEmail: any = email

@@ -5,6 +5,7 @@ export interface IUser {
   phone: string
   email: string
   image: string
+  authType?: string
   wallet: Number
   loginCode: Number
   home: string
