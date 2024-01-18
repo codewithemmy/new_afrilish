@@ -7,6 +7,7 @@ const UserSchema = new Schema<IUser>(
     image: { type: String },
     phone: { type: String },
     email: { type: String, required: true },
+    password: { type: String, required: true },
     isVerified: { type: Boolean, default: false },
     wallet: { type: Number, default: 0 },
     home: { type: String },

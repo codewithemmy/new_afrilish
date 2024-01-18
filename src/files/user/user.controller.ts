@@ -15,10 +15,8 @@ class UserController {
     return responseHandler(res, statusCode.CREATED, data!)
   }
 
-  async loginCodeController(req: Request, res: Response, next: NextFunction) {
-    const [error, data] = await manageAsyncOps(
-      UserService.loginCodeService(req.body),
-    )
+  async userLoginController(req: Request, res: Response, next: NextFunction) {
+    const [error, data] = await manageAsyncOps(UserService.loginUser(req.body))
 
     if (error) return next(error)
     if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
@@ -26,8 +24,28 @@ class UserController {
     return responseHandler(res, statusCode.SUCCESS, data!)
   }
 
-  async loginUserController(req: Request, res: Response, next: NextFunction) {
-    const [error, data] = await manageAsyncOps(UserService.loginUser(req.body))
+  async forgotPasswordController(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    const [error, data] = await manageAsyncOps(
+      UserService.forgotPasswordService(req.body),
+    )
+    if (error) return next(error)
+    if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
+
+    return responseHandler(res, statusCode.SUCCESS, data!)
+  }
+
+  async resetPasswordController(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    const [error, data] = await manageAsyncOps(
+      UserService.resetPasswordService(req.body),
+    )
 
     if (error) return next(error)
     if (!data?.success) return next(new CustomError(data!.msg, 400, data!))

@@ -9,15 +9,16 @@ import { isAuthenticated } from "../../utils"
 
 const {
   createUserController,
-  loginUserController,
   fetchUserController,
   updateUserController,
   getVendorByCoordController,
-  loginCodeController,
+  userLoginController,
   verifyUserController,
   resendVerificationOtp,
   userAuthLoginController,
   userSupportController,
+  forgotPasswordController,
+  resetPasswordController
 } = userController
 
 const { fetchItemController } = itemController
@@ -31,10 +32,11 @@ UserRouter.post(
   createUserController,
 )
 
-UserRouter.post("/login", loginUserController)
+UserRouter.post("/forgot-password", forgotPasswordController)
+UserRouter.patch("/reset-password", resetPasswordController)
 UserRouter.post("/verify", verifyUserController)
 UserRouter.post("/resend-otp", resendVerificationOtp)
-UserRouter.post("/login-code", loginCodeController)
+UserRouter.post("/login", userLoginController)
 UserRouter.post("/support", userSupportController)
 
 UserRouter.get("/", isAuthenticated, fetchUserController)

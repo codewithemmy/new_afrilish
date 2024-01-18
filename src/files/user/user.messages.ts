@@ -16,4 +16,5 @@ export const userMessages = {
   OTP_FAILURE: "unable to send otp",
   OTP_SENT: "otp sent successfully",
   INCORRECT_CODE: "otp is incorrect, use a valid otp",
+  OTP: "OTP sent",
 }

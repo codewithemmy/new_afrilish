@@ -1,6 +1,12 @@
 import mongoose from "mongoose"
 import { IResponse } from "../../constants"
-import { AlphaNumeric, queryConstructor, tokenHandler } from "../../utils"
+import {
+  AlphaNumeric,
+  hashPassword,
+  queryConstructor,
+  tokenHandler,
+  verifyPassword,
+} from "../../utils"
 import { ICoord, IUser } from "./user.interface"
 import UserRepository from "./user.repository"
 import { userMessages } from "./user.messages"
@@ -11,7 +17,7 @@ import { partnerMessages } from "../partner/partner.messages"
 
 export default class UserService {
   static async createUser(userPayload: IUser): Promise<IResponse> {
-    let { phone, email, fullName } = userPayload
+    let { phone, email, fullName, password } = userPayload
 
     // check if user exists using phone or email
     const validateUser = await UserRepository.fetchUser(
@@ -32,10 +38,12 @@ export default class UserService {
 
     if (validateUser) return { success: false, msg: userMessages.DETAILS }
 
+    const encryptPassword = await hashPassword(password)
     const otp = AlphaNumeric(4, "numbers")
 
     const user = await UserRepository.createUser({
       ...userPayload,
+      password: encryptPassword,
       verificationOtp: otp,
     })
 
@@ -130,60 +138,20 @@ export default class UserService {
     }
   }
 
-  static async loginCodeService(userPayload: Pick<IUser, "email">) {
-    const { email } = userPayload
+  static async loginUser(userPayload: Pick<IUser, "email" | "password">) {
+    const { email, password } = userPayload
     const user = await UserRepository.fetchUser({ email }, {})
 
-    if (!user) return { success: false, msg: generalMessages.EMAIL_INCORRECT }
+    if (!user) return { success: false, msg: userMessages.FETCH_ERROR }
 
-    const randomNumber = AlphaNumeric(4, "number")
+    const validatePassword = await verifyPassword(password!, user.password!)
 
-    const updateUser = await UserRepository.updateUsersProfile(
-      { email },
-      { loginCode: randomNumber },
-    )
+    if (!validatePassword)
+      return { success: false, msg: generalMessages.INCORRECT }
 
-    if (!updateUser) return { success: false, msg: userMessages.OTP_FAILURE }
+    user.password = undefined
 
-    let fullName: any = user.fullName
-
-    // send mail login details to user
-    try {
-      await sendMailNotification(
-        email,
-        "Login Code",
-        {
-          name: fullName,
-          email,
-          otp: randomNumber,
-        },
-        "USER_CODE",
-      )
-    } catch (error) {
-      console.log("error", error)
-    }
-
-    return {
-      success: true,
-      msg: userMessages.OTP_SENT,
-    }
-  }
-
-  static async loginUser(userPayload: Partial<IUser>) {
-    const { loginCode, email } = userPayload
-    const user = await UserRepository.fetchUser({ loginCode, email }, {})
-
-    if (!user) return { success: false, msg: userMessages.INCORRECT_CODE }
-
-    await UserRepository.updateUsersProfile(
-      { email, loginCode },
-      { loginCode: "" },
-    )
-
-    const token = tokenHandler({
-      ...user,
-      isPartner: false,
-    })
+    const token = tokenHandler({ ...user, userType: "user" })
 
     return {
       success: true,
@@ -196,6 +164,66 @@ export default class UserService {
         token,
       },
     }
+  }
+
+  static async forgotPasswordService(payload: { email: string }) {
+    const { email } = payload
+    const user = await UserRepository.fetchUser({ email: email }, {})
+
+    if (!user) return { success: false, msg: userMessages.FETCH_ERROR }
+
+    const generateOtp = AlphaNumeric(4, "number")
+
+    await UserRepository.updateUsersProfile(
+      { email },
+      { verificationOtp: generateOtp },
+    )
+
+    /**send otp to email or phone number*/
+    const substitutional_parameters = {
+      resetOtp: generateOtp,
+    }
+
+    try {
+      await sendMailNotification(
+        email,
+        "Reset Password",
+        substitutional_parameters,
+        "RESET_OTP",
+      )
+    } catch (error) {
+      console.log("error", error)
+    }
+
+    return { success: true, msg: userMessages.OTP }
+  }
+
+  static async resetPasswordService(userPayload: {
+    otp: string
+    newPassword: string
+    email: string
+  }) {
+    const { newPassword, email, otp } = userPayload
+
+    const user = await UserRepository.fetchUser(
+      {
+        email,
+        verificationOtp: otp,
+      },
+      {},
+    )
+
+    if (!user) return { success: false, msg: userMessages.FETCH_ERROR }
+
+    const updateUser = await UserRepository.updateUsersProfile(
+      { email },
+      { password: await hashPassword(newPassword), verificationOtp: "" },
+    )
+
+    if (!updateUser)
+      return { success: false, msg: userMessages.UPDATE_ERROR }
+
+    return { success: true, msg: userMessages.UPDATE_SUCCESS }
   }
 
   static async fetchUserService(userPayload: Partial<IUser>, locals: any) {

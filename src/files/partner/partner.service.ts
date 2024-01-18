@@ -310,7 +310,7 @@ export default class PartnerService {
 
     if (!partner) return { success: false, msg: partnerMessages.FETCH_ERROR }
 
-    const generateOtp = AlphaNumeric(4)
+    const generateOtp = AlphaNumeric(4, "number")
 
     await PartnerRepository.updatePartnerDetails(
       { email },
@@ -333,7 +333,7 @@ export default class PartnerService {
       console.log("error", error)
     }
 
-    return { success: true, msg: partnerMessages.OTP, generateOtp }
+    return { success: true, msg: partnerMessages.OTP }
   }
 
   static async resetPasswordService(partnerPayload: {
