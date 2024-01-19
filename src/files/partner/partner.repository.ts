@@ -6,7 +6,9 @@ import Partner from "./partner.model"
 const { LIMIT, SKIP, SORT } = pagination
 
 export default class PartnerRepository {
-  static async createPartner(partnerPayload: IPartner): Promise<IPartner> {
+  static async createPartner(
+    partnerPayload: Partial<IPartner>,
+  ): Promise<IPartner> {
     return Partner.create(partnerPayload)
   }
 
@@ -17,7 +19,7 @@ export default class PartnerRepository {
     const partner: Awaited<IPartner | null> = await Partner.findOne(
       {
         ...partnerPayload,
-      },                                      
+      },
       select,
     ).lean()
 

@@ -364,4 +364,79 @@ export default class PartnerService {
 
     return { success: true, msg: partnerMessages.UPDATE_SUCCESS }
   }
+
+  static async partnerAuthLoginService(partnerPayload: {
+    fullName: string
+    email: string
+    authType?: string
+    action?: string
+  }) {
+    const { fullName, email, authType, action } = partnerPayload
+
+    const confirmPartner = await PartnerRepository.fetchPartner({ email }, {})
+
+    if (
+      confirmPartner &&
+      authType === confirmPartner.authType &&
+      action === "login"
+    ) {
+      const token = tokenHandler({
+        ...confirmPartner,
+        isPartner: true,
+      })
+
+      return {
+        success: true,
+        msg: generalMessages.SUCCESSFUL_LOGIN,
+        data: {
+          _id: confirmPartner._id,
+          fullName: confirmPartner.fullName,
+          phone: confirmPartner.phone,
+          email: confirmPartner.email,
+          token,
+        },
+      }
+    }
+
+    const partner = await PartnerRepository.createPartner({
+      email: email,
+      fullName: fullName,
+      isVerified: true,
+      authType,
+    })
+
+    const userEmail: any = email
+    const userFullName: any = fullName
+    // send mail login details to user
+    try {
+      await sendMailNotification(
+        userEmail,
+        "Sign Up",
+        {
+          name: userFullName,
+          email: userEmail,
+        },
+        "PARTNER_REG",
+      )
+    } catch (error) {
+      console.log("error", error)
+    }
+
+    const token = tokenHandler({
+      ...partner,
+      isPartner: true,
+    })
+
+    return {
+      success: true,
+      msg: generalMessages.SUCCESSFUL_LOGIN,
+      data: {
+        _id: partner._id,
+        fullName: partner.fullName,
+        phone: partner.phone,
+        email: partner.email,
+        token,
+      },
+    }
+  }
 }

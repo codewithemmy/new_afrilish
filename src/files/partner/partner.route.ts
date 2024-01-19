@@ -24,6 +24,7 @@ const {
   forgotPasswordController,
   resetPasswordController,
   resendVerificationOtpController,
+  partnerAuthLoginController
 } = partnerController
 
 //routes
@@ -43,6 +44,9 @@ PartnerRouter.post(
   validate(checkSchema(loginPartnerValidation)),
   loginPartnerController,
 )
+
+//google and apple login
+PartnerRouter.post("/login/auth", partnerAuthLoginController)
 
 PartnerRouter.use(isAuthenticated)
 

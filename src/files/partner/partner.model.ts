@@ -3,10 +3,11 @@ import { IPartner } from "./partner.interface"
 
 const PartnerSchema = new Schema<IPartner>(
   {
-    fullName: { type: String, required: true },
-    phone: { type: String, required: true },
+    fullName: { type: String },
+    phone: { type: String },
     email: { type: String, required: true },
-    password: { type: String, required: true },
+    authType: { type: String },
+    password: { type: String },
     business: { name: String, phone: String, email: String, address: String },
     vendorId: [{ type: mongoose.Types.ObjectId, ref: "Vendor" }],
     location: { type: String },

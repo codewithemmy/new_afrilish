@@ -384,7 +384,7 @@ export default class UserService {
     })
 
     const userEmail: any = email
-    const userFullName: any = userEmail
+    const userFullName: any = fullName
     // send mail login details to user
     try {
       await sendMailNotification(

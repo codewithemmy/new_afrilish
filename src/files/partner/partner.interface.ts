@@ -3,6 +3,7 @@ export interface IPartner {
   fullName: string
   phone: string
   email: string
+  authType: string
   business?: IBusiness
   vendorId?: [any]
   location?: string
