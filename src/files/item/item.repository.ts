@@ -79,4 +79,12 @@ export default class ItemRepository {
 
     return item
   }
+
+  static async deleteItemDetails(itemPayload: Partial<IItem>) {
+    const item = await Item.findByIdAndDelete({
+      ...itemPayload,
+    })
+
+    return item
+  }
 }

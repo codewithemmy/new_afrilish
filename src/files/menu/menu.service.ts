@@ -1,17 +1,11 @@
 import mongoose from "mongoose"
 import { IResponse } from "../../constants"
-import {
-  AlphaNumeric,
-  hashPassword,
-  queryConstructor,
-  tokenHandler,
-  verifyPassword,
-} from "../../utils"
+import { queryConstructor } from "../../utils"
 import MenuRepository from "./menu.repository"
 import { menuMessages } from "./menu.messages"
-import { sendMailNotification } from "../../utils/email"
-import { generalMessages } from "../../core/messages"
 import { IMenu } from "./menu.interface"
+import PartnerRepository from "../partner/partner.repository"
+import ItemRepository from "../item/item.repository"
 
 export default class MenuService {
   static async createMenu(menuPayload: Partial<IMenu>): Promise<IResponse> {
@@ -79,124 +73,31 @@ export default class MenuService {
     return { success: true, msg: menuMessages.UPDATE_SUCCESS }
   }
 
-  // static async restaurantUpdateService(data: {
-  //   params: { partnerId: string }
-  //   menuPayload: Partial<IMenu>
-  // }) {
-  //   const { params, menuPayload } = data
-  //   // ensure password is not updated here
-  //   const { password, ...restOfPayload } = menuPayload
+  static async deleteMenuService(menuId: string) {
+    const menuExist = await MenuRepository.fetchMenu(
+      {
+        _id: new mongoose.Types.ObjectId(menuId),
+      },
+      {},
+    )
 
-  //   const partner = await MenuRepository.updatePartnerDetails(
-  //     { _id: new mongoose.Types.ObjectId(params.partnerId) },
-  //     {
-  //       $push: { restaurant: { ...restOfPayload } },
-  //     },
-  //   )
+    if (!menuExist) return { success: false, msg: menuMessages.INVALID_ID }
 
-  //   if (!partner) return { success: false, msg: menuMessages.UPDATE_ERROR }
+    const menuItem: any = menuExist.item
 
-  //   return { success: true, msg: menuMessages.UPDATE_SUCCESS }
-  // }
+    // Delete each associated item by ID
+    for (const itemId of menuItem) {
+      await ItemRepository.deleteItemDetails({
+        _id: new mongoose.Types.ObjectId(itemId),
+      })
+    }
 
-  // static async operationUpdateService(data: {
-  //   params: { partnerId: string }
-  //   menuPayload: Partial<IMenu>
-  // }) {
-  //   const { params, menuPayload } = data
-  //   // ensure password is not updated here
-  //   const { password, ...restOfPayload } = menuPayload
+    const menu = await MenuRepository.deleteMenuDetails({
+      _id: new mongoose.Types.ObjectId(menuId),
+    })
 
-  //   const partner = await MenuRepository.updatePartnerDetails(
-  //     { _id: new mongoose.Types.ObjectId(params.partnerId) },
-  //     {
-  //       $push: { operations: { ...restOfPayload } },
-  //     },
-  //   )
+    if (!menu) return { success: false, msg: menuMessages.DELETE_FAILURE }
 
-  //   if (!partner) return { success: false, msg: menuMessages.UPDATE_ERROR }
-
-  //   return { success: true, msg: menuMessages.UPDATE_SUCCESS }
-  // }
-
-  // private static async updatePassword(password: string, id: string) {
-  //   const hashedPassword = await hashPassword(password)
-
-  //   return MenuRepository.updatePartnerDetails(
-  //     {
-  //       _id: new mongoose.Types.ObjectId(id),
-  //     },
-  //     {
-  //       $set: {
-  //         password: hashedPassword,
-  //       },
-  //     },
-  //   )
-  // }
-
-  // static async resetPassword(data: {
-  //   params: { partnerId: string }
-  //   payload: { oldPassword: string; newPassword: string }
-  // }) {
-  //   const { params, payload } = data
-
-  //   const partner = await MenuRepository.fetchPartner(
-  //     {
-  //       _id: new mongoose.Types.ObjectId(params.partnerId),
-  //     },
-  //     {
-  //       password: 1,
-  //     },
-  //   )
-
-  //   if (!partner) return { success: false, msg: menuMessages.FETCH_ERROR }
-
-  //   const passwordCheck = await verifyPassword(
-  //     payload.oldPassword,
-  //     partner.password!,
-  //   )
-
-  //   if (!passwordCheck)
-  //     return { success: false, msg: menuMessages.INCORRECT_PASSWORD }
-
-  //   const updatePassword = await this.updatePassword(
-  //     payload.newPassword,
-  //     params.partnerId,
-  //   )
-
-  //   if (!updatePassword)
-  //     return { success: false, msg: partnerMessages.PASSWORD_RESET_ERROR }
-
-  //   return { success: true, msg: partnerMessages.PASSWORD_RESET_SUCCESS }
-  // }
-
-  // static async deletePartnerService(data: { params: { partnerId: string } }) {
-  //   const { params } = data
-
-  //   const partner = await MenuRepository.updatePartnerDetails(
-  //     { _id: new mongoose.Types.ObjectId(params.partnerId) },
-  //     {
-  //       $set: {
-  //         isDelete: true,
-  //       },
-  //     },
-  //   )
-
-  //   if (!partner) return { success: false, msg: partnerMessages.DELETE_FAILURE }
-
-  //   return { success: true, msg: partnerMessages.PARTNER_DELETE }
-  // }
-
-  // static async fetchSinglePartnerService(data: any) {
-  //   const partner = await MenuRepository.fetchPartner(
-  //     {
-  //       _id: new mongoose.Types.ObjectId(data),
-  //     },
-  //     {},
-  //   )
-
-  //   if (!partner) return { success: false, msg: partnerMessages.FETCH_ERROR }
-
-  //   return { success: true, msg: partnerMessages.FETCH_SUCCESS, partner }
-  // }
+    return { success: true, msg: menuMessages.MENU_DELETE }
+  }
 }

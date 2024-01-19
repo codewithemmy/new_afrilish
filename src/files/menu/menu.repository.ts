@@ -57,4 +57,12 @@ export default class MenuRepository {
 
     return updateMenu
   }
+
+  static async deleteMenuDetails(menuPayload: Partial<IMenu>) {
+    const menu = await Menu.findByIdAndDelete({
+      ...menuPayload,
+    })
+
+    return menu
+  }
 }

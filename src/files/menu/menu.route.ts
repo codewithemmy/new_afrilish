@@ -1,20 +1,21 @@
 import express from "express"
-import validate from "../../validations/validate"
-import { checkSchema } from "express-validator"
 import uploadManager from "../../utils/multer"
 
 import { adminVerifier, isAuthenticated } from "../../utils"
 import menuController from "./menu.controller"
-// import loginPartnerValidation from "../../validations/partner/loginPartner.validation"
 
 const MenuRouter = express.Router()
 
-const { createMenuController, fetchMenuController, updateMenuController } =
-  menuController
+const {
+  createMenuController,
+  fetchMenuController,
+  updateMenuController,
+  deleteMenuController,
+} = menuController
 
 MenuRouter.get("/", fetchMenuController)
 
-MenuRouter.use(isAuthenticated)
+// MenuRouter.use(isAuthenticated)
 
 //routes
 MenuRouter.post(
@@ -28,5 +29,7 @@ MenuRouter.patch(
   uploadManager("menuImage").single("image"),
   updateMenuController,
 )
+
+MenuRouter.delete("/:menuId", deleteMenuController)
 
 export default MenuRouter

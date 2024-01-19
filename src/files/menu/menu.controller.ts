@@ -42,6 +42,17 @@ class MenuController {
 
     return responseHandler(res, statusCode.CREATED, data!)
   }
+
+  async deleteMenuController(req: Request, res: Response, next: NextFunction) {
+    const [error, data] = await manageAsyncOps(
+      MenuService.deleteMenuService(req.params.menuId as string),
+    )
+
+    if (error) return next(error)
+    if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
+
+    return responseHandler(res, statusCode.CREATED, data!)
+  }
 }
 
 export default new MenuController()
