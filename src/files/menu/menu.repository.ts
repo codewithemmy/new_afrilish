@@ -44,7 +44,7 @@ export default class MenuRepository {
   }
 
   static async updateMenuDetails(
-    menuPayload: Partial<IMenu>,
+    menuPayload: any,
     update: UpdateQuery<Partial<IMenu>>,
   ) {
     const updateMenu = await Menu.findOneAndUpdate(

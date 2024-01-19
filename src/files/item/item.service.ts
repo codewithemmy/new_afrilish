@@ -105,4 +105,27 @@ export default class ItemService {
 
     return { success: true, msg: itemMessages.UPDATE_SUCCESS }
   }
+
+  static async deleteItemService(itemId: string) {
+    const itemExist = await ItemRepository.fetchItem(
+      {
+        _id: new mongoose.Types.ObjectId(itemId),
+      },
+      {},
+    )
+
+    if (!itemExist) return { success: false, msg: itemMessages.INVALID_ID }
+
+    Promise.all([
+      await MenuRepository.updateMenuDetails(
+        { item: { $in: [new mongoose.Types.ObjectId(itemId)] } },
+        { $pull: { item: new mongoose.Types.ObjectId(itemId) } },
+      ),
+      await ItemRepository.deleteItemDetails({
+        _id: new mongoose.Types.ObjectId(itemId),
+      }),
+    ])
+
+    return { success: true, msg: itemMessages.ITEM_DELETE }
+  }
 }

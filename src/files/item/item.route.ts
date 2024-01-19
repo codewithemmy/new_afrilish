@@ -7,10 +7,14 @@ import itemController from "./item.controller"
 
 const ItemRouter = express.Router()
 
-const { createItemController, fetchItemController, updateItemController } =
-  itemController
+const {
+  createItemController,
+  fetchItemController,
+  updateItemController,
+  deleteItemController,
+} = itemController
 
-ItemRouter.use(isAuthenticated)
+// ItemRouter.use(isAuthenticated)
 
 //routes
 ItemRouter.post(
@@ -25,5 +29,7 @@ ItemRouter.patch(
   uploadManager("itemImage").single("image"),
   updateItemController,
 )
+
+ItemRouter.route("/:itemId").delete(deleteItemController)
 
 export default ItemRouter

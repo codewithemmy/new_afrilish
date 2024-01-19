@@ -44,6 +44,17 @@ class ItemController {
 
     return responseHandler(res, statusCode.CREATED, data!)
   }
+
+  async deleteItemController(req: Request, res: Response, next: NextFunction) {
+    const [error, data] = await manageAsyncOps(
+      ItemService.deleteItemService(req.params.itemId),
+    )
+
+    if (error) return next(error)
+    if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
+
+    return responseHandler(res, statusCode.CREATED, data!)
+  }
 }
 
 export default new ItemController()

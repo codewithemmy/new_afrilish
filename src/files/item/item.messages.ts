@@ -13,4 +13,5 @@ export const itemMessages = {
   EMPTY_ITEM: "item Id cannot be empty",
   ITEM_DELETE: "item data was successfully deleted",
   DELETE_FAILURE: "item data was not deleted, please try again",
+  INVALID_ID: "Invalid item Id",
 }
