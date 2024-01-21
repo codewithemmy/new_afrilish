@@ -1,11 +1,15 @@
 import mongoose, { Date, mongo } from "mongoose"
-import { IResponse } from "../../../constants"
+import { IPagination, IResponse } from "../../../constants"
 import { IRider } from "../rider.interface"
 import RiderRepository from "../rider.repository"
 import { riderMessages } from "../rider.messages"
 import { sendMailNotification } from "../../../utils/email"
 import { generalMessages } from "../../../core/messages"
 import { ICoord } from "../../user/user.interface"
+import { queryConstructor } from "../../../utils"
+import OrderRepository from "../../order/order.repository"
+import { orderMessages } from "../../order/order.messages"
+import { IOrder } from "../../order/order.interface"
 
 export default class RiderService {
   static async riderProfile(locals: any) {
@@ -87,5 +91,40 @@ export default class RiderService {
     if (!rider) return { success: false, msg: riderMessages.UPDATE_ERROR }
 
     return { success: true, msg: `Document upload successful` }
+  }
+
+  static async getOrderByCoordService(query: Partial<IOrder>) {
+    const { error, params, limit, skip, sort } = queryConstructor(
+      query,
+      "createdAt",
+      "Order",
+    )
+
+    if (error) return { success: false, msg: error }
+
+    const { lat, lng } = params
+
+    if (!lat && !lng)
+      return { success: false, msg: `lat and lng is not passed` }
+
+    const order = await OrderRepository.fetchOrderByParams({
+      ...params,
+      limit,
+      skip,
+      sort,
+    })
+
+    if (order.length < 1)
+      return {
+        success: true,
+        msg: `No order currently available in your location. Thank you`,
+        data: [],
+      }
+
+    return {
+      success: true,
+      msg: orderMessages.FETCH_SUCCESS,
+      data: order,
+    }
   }
 }

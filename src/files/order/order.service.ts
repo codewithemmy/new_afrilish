@@ -194,7 +194,7 @@ export default class OrderService {
       vendorId: new mongoose.Types.ObjectId(vendor._id),
       locationCoord: {
         type: "Point",
-        coordinates: [parseFloat(lng), parseFloat(lat)],
+        coordinates: [parseFloat(vendorLat), parseFloat(vendorLng)],
       },
       userEmail: locals.email,
       ridersFee,
@@ -447,7 +447,7 @@ export default class OrderService {
       vendorId: new mongoose.Types.ObjectId(vendor._id),
       locationCoord: {
         type: "Point",
-        coordinates: [parseFloat(lng), parseFloat(lat)],
+        coordinates: [parseFloat(vendorLat), parseFloat(vendorLng)],
       },
       userEmail: locals.email,
       ridersFee,

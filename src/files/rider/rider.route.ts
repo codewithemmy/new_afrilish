@@ -1,7 +1,4 @@
 import express from "express"
-import validate from "../../validations/validate"
-import { checkSchema } from "express-validator"
-import createPartnerValidation from "../../validations/partner/createPartner.validation"
 import riderController from "./riderController/rider.controller"
 import riderProfileController from "./riderController/riderProfile.controller"
 import { isAuthenticated } from "../../utils"
@@ -24,6 +21,7 @@ const {
   riderProfileUPdate,
   deleteRiderProfile,
   riderDocumentUpload,
+  getOrderCoordController,
 } = riderProfileController
 
 //routes
@@ -56,4 +54,7 @@ RiderRouter.patch(
   uploadManager("document").single("image"),
   riderDocumentUpload,
 )
+
+RiderRouter.get("/order", getOrderCoordController)
+
 export default RiderRouter

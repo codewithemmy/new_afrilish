@@ -2,7 +2,7 @@ import { FilterQuery, UpdateQuery } from "mongoose"
 import pagination, { IPagination } from "../../constants"
 import { IOrder } from "./order.interface"
 import Order from "./order.model"
-
+import { ICoord } from "../user/user.interface"
 const { LIMIT, SKIP, SORT } = pagination
 
 export default class OrderRepository {
@@ -34,7 +34,9 @@ export default class OrderRepository {
     return order
   }
 
-  static async fetchOrderByParams(orderPayload: Partial<IOrder & IPagination>) {
+  static async fetchOrderByParams(
+    orderPayload: Partial<IOrder & IPagination & ICoord>,
+  ) {
     const {
       limit = LIMIT,
       skip = SKIP,
@@ -42,42 +44,138 @@ export default class OrderRepository {
       ...restOfPayload
     } = orderPayload
 
-    const order: Awaited<IOrder[] | null> = await Order.find({
-      ...restOfPayload,
-    })
-      .populate({ path: "itemId._id" })
-      .populate({
-        path: "scheduleId",
-        populate: [
-          "monday.breakfast.item",
-          "monday.launch.item",
-          "monday.dinner.item",
-          "tuesday.breakfast.item",
-          "tuesday.launch.item",
-          "tuesday.dinner.item",
-          "wednesday.breakfast.item",
-          "wednesday.launch.item",
-          "wednesday.dinner.item",
-          "thursday.breakfast.item",
-          "thursday.launch.item",
-          "thursday.dinner.item",
-          "friday.breakfast.item",
-          "friday.dinner.item",
-          "saturday.breakfast.item",
-          "saturday.launch.item",
-          "saturday.dinner.item",
-          "sunday.breakfast.item",
-          "sunday.launch.item",
-          "sunday.dinner.item",
-        ],
-        select:
-          "-createdAt -updatedAt -_id -startDate -endDate -isDelete -__v -userId -status",
-      })
-      .sort(sort)
-      .skip(skip)
-      .limit(limit)
+    let { lat, lng, search, ...extraParams } = restOfPayload
+    if (!search) search = ""
 
-    return order
+    if (lat && lng) {
+      let latToString: any = lat?.toString()
+      let lngToString: any = lng?.toString()
+
+      let latString: string = latToString
+      let lngString: string = lngToString
+
+      const floatString = "3000"
+
+      const order = await Order.aggregate([
+        {
+          $geoNear: {
+            near: {
+              type: "Point",
+              coordinates: [parseFloat(latString), parseFloat(lngString)],
+            },
+            key: "locationCoord",
+            maxDistance: parseFloat(floatString) * 800,
+            distanceField: "distance",
+            spherical: true,
+          },
+        },
+        {
+          $lookup: {
+            from: "vendor",
+            localField: "vendorId",
+            foreignField: "_id",
+            pipeline: [
+              {
+                $project: {
+                  name: 1,
+                  locationCoord: 1,
+                  address: 1,
+                  phone: 1,
+                  image: 1,
+                },
+              },
+            ],
+            as: "vendorDetails",
+          },
+        },
+        {
+          $lookup: {
+            from: "User",
+            localField: "orderedBy",
+            foreignField: "_id",
+            as: "userDetails",
+          },
+        },
+        {
+          $lookup: {
+            from: "item",
+            localField: "itemId._id",
+            foreignField: "_id",
+            pipeline: [
+              {
+                $project: {
+                  name: 1,
+                  description: 1,
+                  price: 1,
+                  image: 1,
+                },
+              },
+            ],
+            as: "itemDetails",
+          },
+        },
+        {
+          $sort: {
+            createdAt: 1,
+          },
+        },
+        {
+          $match: {
+            $and: [
+              {
+                $or: [
+                  { name: { $regex: search, $options: "i" } },
+                  { "vendorDetails.name": { $regex: search, $options: "i" } },
+                ],
+                ...extraParams,
+              },
+            ],
+          },
+        },
+      ])
+        .sort(sort)
+        .skip(skip)
+        .limit(limit)
+
+      return order
+    } else {
+      const order: Awaited<IOrder[] | null> = await Order.find({
+        ...restOfPayload,
+      })
+        .populate({ path: "itemId._id" })
+        .populate({
+          path: "scheduleId",
+          populate: [
+            "monday.breakfast.item",
+            "monday.launch.item",
+            "monday.dinner.item",
+            "tuesday.breakfast.item",
+            "tuesday.launch.item",
+            "tuesday.dinner.item",
+            "wednesday.breakfast.item",
+            "wednesday.launch.item",
+            "wednesday.dinner.item",
+            "thursday.breakfast.item",
+            "thursday.launch.item",
+            "thursday.dinner.item",
+            "friday.breakfast.item",
+            "friday.dinner.item",
+            "saturday.breakfast.item",
+            "saturday.launch.item",
+            "saturday.dinner.item",
+            "sunday.breakfast.item",
+            "sunday.launch.item",
+            "sunday.dinner.item",
+          ],
+          select:
+            "-createdAt -updatedAt -_id -startDate -endDate -isDelete -__v -userId -status",
+        })
+        .sort(sort)
+        .skip(skip)
+        .limit(limit)
+
+      return order
+    }
   }
 
   static async updateOrderDetails(

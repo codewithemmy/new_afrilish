@@ -95,6 +95,8 @@ const OrderSchema = new Schema<IOrder>(
   { timestamps: true },
 )
 
+OrderSchema.index({ locationCoord: "2dsphere" })
+
 const order = model<IOrder>("Order", OrderSchema, "order")
 
 export default order
