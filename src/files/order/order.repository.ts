@@ -204,7 +204,7 @@ export default class OrderRepository {
   }
 
   static async riderOrderWithoutLocations(
-    orderPayload: Partial<IOrder & IPagination & ICoord>,
+    orderPayload: Partial<IOrder & IPagination>,
   ) {
     const {
       limit = LIMIT,
