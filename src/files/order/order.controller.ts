@@ -49,7 +49,11 @@ class OrderController {
 
   async updateOrderController(req: Request, res: Response, next: NextFunction) {
     const [error, data] = await manageAsyncOps(
-      OrderService.updateOrderService(req.params.orderId, req.body),
+      OrderService.updateOrderService(
+        req.params.orderId,
+        req.body,
+        res.locals.jwt._id as string,
+      ),
     )
 
     if (error) return next(error)

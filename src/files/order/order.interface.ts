@@ -1,5 +1,6 @@
 export interface IOrder {
   _id?: any
+  assignedRider: any
   pickUpCode: Number
   daysOfEvent: Number
   orderCode: Number
@@ -43,6 +44,7 @@ export interface IOrder {
     | "ready"
     | "in-transit"
     | "arrived"
+    | "delivered"
     | "cancelled"
     | "picked"
     | "completed"

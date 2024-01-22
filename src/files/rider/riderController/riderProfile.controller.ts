@@ -61,7 +61,10 @@ class RiderProfileController {
     next: NextFunction,
   ) {
     const [error, data] = await manageAsyncOps(
-      RiderService.getOrderByCoordService(req.query),
+      RiderService.getOrderByCoordService(
+        req.query,
+        res.locals.jwt._id as string,
+      ),
     )
     console.log("error", error)
     if (error) return next(error)

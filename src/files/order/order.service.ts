@@ -491,8 +491,7 @@ export default class OrderService {
       sort,
     })
 
-    if (order)
-      return { success: false, msg: orderMessages.NOT_FOUND, data: [] }
+    if (order) return { success: false, msg: orderMessages.NOT_FOUND, data: [] }
 
     return {
       success: true,
@@ -501,14 +500,32 @@ export default class OrderService {
     }
   }
 
-  static async updateOrderService(orderId: any, data: Partial<IOrder>) {
-    const { orderStatus } = data
+  static async updateOrderService(
+    orderId: any,
+    data: Partial<IOrder>,
+    locals: string,
+  ) {
+    const { orderStatus, pickUpCode } = data
     const findOrder = await OrderRepository.fetchOrder(
       { _id: new mongoose.Types.ObjectId(orderId) },
       {},
     )
+
     if (!findOrder)
       return { success: false, msg: orderMessages.NOT_FOUND, data: [] }
+
+    if (pickUpCode) {
+      const order = await OrderRepository.updateOrderDetails(
+        { _id: new mongoose.Types.ObjectId(findOrder._id) },
+        {
+          assignedRider: new mongoose.Types.ObjectId(locals),
+          riderStatus: "picked",
+        },
+      )
+      if (!order) return { success: false, msg: `Invalid pick-up code` }
+
+      return { success: true, msg: `order successfully assigned to rider` }
+    }
 
     if (orderStatus === "completed") {
       if (findOrder.isWallet) {

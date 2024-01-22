@@ -93,7 +93,10 @@ export default class RiderService {
     return { success: true, msg: `Document upload successful` }
   }
 
-  static async getOrderByCoordService(query: Partial<IOrder & ICoord>) {
+  static async getOrderByCoordService(
+    query: Partial<IOrder & ICoord>,
+    locals: string,
+  ) {
     const { error, params, limit, skip, sort } = queryConstructor(
       query,
       "createdAt",
@@ -104,6 +107,7 @@ export default class RiderService {
 
     const { lat, lng } = query
     let order
+    let extra = { assignedRider: new mongoose.Types.ObjectId(locals) }
 
     if (lat && lng) {
       order = await OrderRepository.fetchOrderLocations({
@@ -118,6 +122,7 @@ export default class RiderService {
         limit,
         skip,
         sort,
+        ...extra,
       })
     }
 
