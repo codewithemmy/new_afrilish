@@ -93,7 +93,7 @@ export default class RiderService {
     return { success: true, msg: `Document upload successful` }
   }
 
-  static async getOrderByCoordService(query: Partial<IOrder>) {
+  static async getOrderByCoordService(query: Partial<IOrder & ICoord>) {
     const { error, params, limit, skip, sort } = queryConstructor(
       query,
       "createdAt",
@@ -102,12 +102,24 @@ export default class RiderService {
 
     if (error) return { success: false, msg: error }
 
-    const order = await OrderRepository.fetchOrderByParams({
-      ...params,
-      limit,
-      skip,
-      sort,
-    })
+    const { lat, lng } = query
+    let order
+
+    if (lat && lng) {
+      order = await OrderRepository.fetchOrderLocations({
+        ...params,
+        limit,
+        skip,
+        sort,
+      })
+    } else {
+      order = await OrderRepository.riderOrderWithoutLocations({
+        ...params,
+        limit,
+        skip,
+        sort,
+      })
+    }
 
     if (order.length < 1)
       return {
@@ -120,6 +132,7 @@ export default class RiderService {
       success: true,
       msg: orderMessages.FETCH_SUCCESS,
       data: order,
+      length: order.length,
     }
   }
 }

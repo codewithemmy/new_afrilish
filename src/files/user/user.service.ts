@@ -351,14 +351,8 @@ export default class UserService {
   }) {
     const { fullName, email, authType, action } = userPayload
 
-    const confirmUser = await UserRepository.fetchUser({ email }, {})
-
-    if (
-      confirmUser &&
-      authType === confirmUser.authType &&
-      action === "login"
-    ) {
-      const user = await UserRepository.fetchUser({ email }, {})
+    if (action === "login") {
+      const user = await UserRepository.fetchUser({ email, authType }, {})
 
       if (!user) {
         return { success: false, msg: `user not found` }
@@ -381,9 +375,10 @@ export default class UserService {
         },
       }
     }
+    const confirmUser = await UserRepository.fetchUser({ email, authType }, {})
 
-    if (!confirmUser) {
-      return { success: false, msg: `user not found` }
+    if (confirmUser) {
+      return { success: false, msg: `user already exist` }
     }
 
     const user = await UserRepository.createUser({

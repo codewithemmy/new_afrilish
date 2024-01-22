@@ -34,155 +34,6 @@ export default class OrderRepository {
     return order
   }
 
-  static async fetchOrderByParams(
-    orderPayload: Partial<IOrder & IPagination & ICoord>,
-  ) {
-    const {
-      limit = LIMIT,
-      skip = SKIP,
-      sort = SORT,
-      ...restOfPayload
-    } = orderPayload
-
-    let { lat, lng, search, ...extraParams } = restOfPayload
-    if (!search) search = ""
-
-    if (lat && lng) {
-      let latToString: any = lat?.toString()
-      let lngToString: any = lng?.toString()
-
-      let latString: string = latToString
-      let lngString: string = lngToString
-
-      const floatString = "3000"
-
-      const order = await Order.aggregate([
-        {
-          $geoNear: {
-            near: {
-              type: "Point",
-              coordinates: [parseFloat(latString), parseFloat(lngString)],
-            },
-            key: "locationCoord",
-            maxDistance: parseFloat(floatString) * 800,
-            distanceField: "distance",
-            spherical: true,
-          },
-        },
-        {
-          $lookup: {
-            from: "vendor",
-            localField: "vendorId",
-            foreignField: "_id",
-            pipeline: [
-              {
-                $project: {
-                  name: 1,
-                  locationCoord: 1,
-                  address: 1,
-                  phone: 1,
-                  image: 1,
-                },
-              },
-            ],
-            as: "vendorDetails",
-          },
-        },
-        {
-          $lookup: {
-            from: "User",
-            localField: "orderedBy",
-            foreignField: "_id",
-            as: "userDetails",
-          },
-        },
-        {
-          $lookup: {
-            from: "item",
-            localField: "itemId._id",
-            foreignField: "_id",
-            pipeline: [
-              {
-                $project: {
-                  name: 1,
-                  description: 1,
-                  price: 1,
-                  image: 1,
-                },
-              },
-            ],
-            as: "itemDetails",
-          },
-        },
-        {
-          $sort: {
-            createdAt: 1,
-          },
-        },
-        {
-          $match: {
-            $and: [
-              {
-                $or: [
-                  { name: { $regex: search, $options: "i" } },
-                  { "vendorDetails.name": { $regex: search, $options: "i" } },
-                ],
-                riderStatus: "pending",
-                // paymentStatus: "paid",
-                // pickUp: false,
-                // isConfirmed: true,
-                // orderStatus: "completed",
-                ...extraParams,
-              },
-            ],
-          },
-        },
-      ])
-        .sort(sort)
-        .skip(skip)
-        .limit(limit)
-
-      return order
-    } else {
-      const order: Awaited<IOrder[] | null> = await Order.find({
-        ...restOfPayload,
-      })
-        .populate({ path: "itemId._id" })
-        .populate({
-          path: "scheduleId",
-          populate: [
-            "monday.breakfast.item",
-            "monday.launch.item",
-            "monday.dinner.item",
-            "tuesday.breakfast.item",
-            "tuesday.launch.item",
-            "tuesday.dinner.item",
-            "wednesday.breakfast.item",
-            "wednesday.launch.item",
-            "wednesday.dinner.item",
-            "thursday.breakfast.item",
-            "thursday.launch.item",
-            "thursday.dinner.item",
-            "friday.breakfast.item",
-            "friday.dinner.item",
-            "saturday.breakfast.item",
-            "saturday.launch.item",
-            "saturday.dinner.item",
-            "sunday.breakfast.item",
-            "sunday.launch.item",
-            "sunday.dinner.item",
-          ],
-          select:
-            "-createdAt -updatedAt -_id -startDate -endDate -isDelete -__v -userId -status",
-        })
-        .sort(sort)
-        .skip(skip)
-        .limit(limit)
-
-      return order
-    }
-  }
-
   static async updateOrderDetails(
     orderPayload: Partial<IOrder>,
     update: UpdateQuery<Partial<IOrder>>,
@@ -196,5 +47,234 @@ export default class OrderRepository {
     )
 
     return updateOrder
+  }
+
+  static async fetchOrderByParams(orderPayload: Partial<IOrder & IPagination>) {
+    const {
+      limit = LIMIT,
+      skip = SKIP,
+      sort = SORT,
+      ...restOfPayload
+    } = orderPayload
+
+    const order: Awaited<IOrder[] | null> = await Order.find({
+      ...restOfPayload,
+    })
+      .populate({ path: "itemId._id" })
+      .populate({
+        path: "scheduleId",
+        populate: [
+          "monday.breakfast.item",
+          "monday.launch.item",
+          "monday.dinner.item",
+          "tuesday.breakfast.item",
+          "tuesday.launch.item",
+          "tuesday.dinner.item",
+          "wednesday.breakfast.item",
+          "wednesday.launch.item",
+          "wednesday.dinner.item",
+          "thursday.breakfast.item",
+          "thursday.launch.item",
+          "thursday.dinner.item",
+          "friday.breakfast.item",
+          "friday.dinner.item",
+          "saturday.breakfast.item",
+          "saturday.launch.item",
+          "saturday.dinner.item",
+          "sunday.breakfast.item",
+          "sunday.launch.item",
+          "sunday.dinner.item",
+        ],
+        select:
+          "-createdAt -updatedAt -_id -startDate -endDate -isDelete -__v -userId -status",
+      })
+      .sort(sort)
+      .skip(skip)
+      .limit(limit)
+
+    return order
+  }
+
+  static async fetchOrderLocations(
+    orderPayload: Partial<IOrder & IPagination & ICoord>,
+  ) {
+    const {
+      limit = LIMIT,
+      skip = SKIP,
+      sort = SORT,
+      ...restOfPayload
+    } = orderPayload
+
+    let { lat, lng, search, ...extraParams } = restOfPayload
+    if (!search) search = ""
+
+    console.log("lat", lat)
+    console.log("lat", lng)
+
+    let latToString: any = lat?.toString()
+    let lngToString: any = lng?.toString()
+
+    let latString: string = latToString
+    let lngString: string = lngToString
+
+    const floatString = "3000"
+    const order = await Order.aggregate([
+      {
+        $geoNear: {
+          near: {
+            type: "Point",
+            coordinates: [parseFloat(latString), parseFloat(lngString)],
+          },
+          key: "locationCoord",
+          maxDistance: parseFloat(floatString) * 1609,
+          distanceField: "distance",
+          spherical: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "vendor",
+          localField: "vendorId",
+          foreignField: "_id",
+          pipeline: [
+            {
+              $project: {
+                name: 1,
+                locationCoord: 1,
+                address: 1,
+                phone: 1,
+                image: 1,
+              },
+            },
+          ],
+          as: "vendorDetails",
+        },
+      },
+      {
+        $lookup: {
+          from: "User",
+          localField: "orderedBy",
+          foreignField: "_id",
+          as: "userDetails",
+        },
+      },
+      {
+        $lookup: {
+          from: "item",
+          localField: "itemId._id",
+          foreignField: "_id",
+          pipeline: [
+            {
+              $project: {
+                name: 1,
+                description: 1,
+                price: 1,
+                image: 1,
+              },
+            },
+          ],
+          as: "itemDetails",
+        },
+      },
+      {
+        $sort: {
+          createdAt: 1,
+        },
+      },
+      {
+        $match: {
+          $and: [
+            {
+              $or: [
+                { name: { $regex: search, $options: "i" } },
+                { "vendorDetails.name": { $regex: search, $options: "i" } },
+              ],
+              paymentStatus: "paid",
+              ...extraParams,
+            },
+          ],
+        },
+      },
+    ])
+      .sort(sort)
+      .skip(skip)
+      .limit(limit)
+
+    return order
+  }
+
+  static async riderOrderWithoutLocations(
+    orderPayload: Partial<IOrder & IPagination & ICoord>,
+  ) {
+    const {
+      limit = LIMIT,
+      skip = SKIP,
+      sort = SORT,
+      ...restOfPayload
+    } = orderPayload
+
+    const order = await Order.aggregate([
+      {
+        $lookup: {
+          from: "vendor",
+          localField: "vendorId",
+          foreignField: "_id",
+          pipeline: [
+            {
+              $project: {
+                name: 1,
+                locationCoord: 1,
+                address: 1,
+                phone: 1,
+                image: 1,
+              },
+            },
+          ],
+          as: "vendorDetails",
+        },
+      },
+      {
+        $lookup: {
+          from: "User",
+          localField: "orderedBy",
+          foreignField: "_id",
+          as: "userDetails",
+        },
+      },
+      {
+        $lookup: {
+          from: "item",
+          localField: "itemId._id",
+          foreignField: "_id",
+          pipeline: [
+            {
+              $project: {
+                name: 1,
+                description: 1,
+                price: 1,
+                image: 1,
+              },
+            },
+          ],
+          as: "itemDetails",
+        },
+      },
+      {
+        $sort: {
+          createdAt: 1,
+        },
+      },
+      {
+        $match: {
+          paymentStatus: "paid",
+          ...restOfPayload,
+        },
+      },
+    ])
+      .sort(sort)
+      .skip(skip)
+      .limit(limit)
+
+    return order
   }
 }
