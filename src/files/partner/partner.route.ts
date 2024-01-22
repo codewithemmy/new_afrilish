@@ -26,6 +26,7 @@ const {
   partnerAuthLoginController,
   updatePaymentController,
   getVendorPaymentController,
+  deleteVendorPaymentController,
 } = partnerController
 
 //routes
@@ -73,5 +74,6 @@ PartnerRouter.get("/vendor", fetchVendorController)
 
 PartnerRouter.patch("/vendor/payment/:vendorId", updatePaymentController)
 PartnerRouter.get("/vendor/payment/:vendorId", getVendorPaymentController)
+PartnerRouter.delete("/vendor/payment/:vendorId", deleteVendorPaymentController)
 
 export default PartnerRouter

@@ -270,11 +270,29 @@ class PartnerController {
     return responseHandler(res, statusCode.SUCCESS, data!)
   }
 
-  async getVendorPaymentController(req: Request, res: Response, next: NextFunction) {
+  async getVendorPaymentController(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
     const [error, data] = await manageAsyncOps(
       VendorService.getVendorPayment(req.params.vendorId as string),
     )
 
+    if (error) return next(error)
+    if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
+
+    return responseHandler(res, statusCode.SUCCESS, data!)
+  }
+
+  async deleteVendorPaymentController(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    const [error, data] = await manageAsyncOps(
+      VendorService.deleteVendorPaymentDetails(req.params.vendorId as string),
+    )
     if (error) return next(error)
     if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
 

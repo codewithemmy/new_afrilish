@@ -14,11 +14,11 @@ const VendorSchema = new Schema<IVendor>(
     vendorType: { type: String },
     payment: [
       {
+        accountName: { type: String },
         sortCode: { type: String },
-        account: { type: Number },
-        name: { type: String },
-        branchName: { type: String },
+        accountNumber: { type: String },
         bankName: { type: String },
+        branchName: { type: String },
         phone1: { type: String },
         addressLine1: { type: String },
         addressLine2: { type: String },

@@ -143,7 +143,6 @@ export default class VendorService {
     vendorPayload: Partial<IVendor>
   }) {
     const { params, vendorPayload } = data
-    console.log("data", data)
 
     const vendor = await VendorRepository.updateVendorDetails(
       { _id: new mongoose.Types.ObjectId(params.vendorId) },
@@ -171,6 +170,28 @@ export default class VendorService {
       success: true,
       msg: partnerMessages.FETCH_SUCCESS,
       data: vendor.payment,
+    }
+  }
+
+  static async deleteVendorPaymentDetails(params: string) {
+    const confirmVendor = await VendorRepository.fetchVendor(
+      { "payment._id": params },
+      {},
+    )
+
+    if (!confirmVendor)
+      return { success: false, msg: partnerMessages.VENDOR_ERROR }
+
+    const vendor = await VendorRepository.updateVendorDetails(
+      { _id: new mongoose.Types.ObjectId(confirmVendor._id) },
+      { $pull: { payment: { _id: new mongoose.Types.ObjectId(params) } } },
+    )
+
+    if (!vendor) return { success: false, msg: partnerMessages.DELETE }
+
+    return {
+      success: true,
+      msg: partnerMessages.PARTNER_DELETE,
     }
   }
 }

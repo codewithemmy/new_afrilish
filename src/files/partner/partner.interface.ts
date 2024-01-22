@@ -60,9 +60,9 @@ interface IBusiness {
 }
 
 interface IPaymentInfo {
+  accountName: string
   sortCode: string
-  account: number
-  name: string
+  accountNumber: number
   bankName: string
   branchName: string
   phone1: string
