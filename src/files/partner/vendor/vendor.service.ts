@@ -137,4 +137,40 @@ export default class VendorService {
 
     return { success: true, msg: partnerMessages.UPDATE_SUCCESS }
   }
+
+  static async paymentUpdateService(data: {
+    params: { vendorId: string }
+    vendorPayload: Partial<IVendor>
+  }) {
+    const { params, vendorPayload } = data
+    console.log("data", data)
+
+    const vendor = await VendorRepository.updateVendorDetails(
+      { _id: new mongoose.Types.ObjectId(params.vendorId) },
+      {
+        $push: { payment: { ...vendorPayload } },
+      },
+    )
+
+    if (!vendor) return { success: false, msg: partnerMessages.UPDATE_ERROR }
+
+    return { success: true, msg: partnerMessages.UPDATE_SUCCESS }
+  }
+
+  static async getVendorPayment(params: string) {
+    const vendor = await VendorRepository.fetchVendor(
+      {
+        _id: new mongoose.Types.ObjectId(params),
+      },
+      { payment: 1, _id: 0 },
+    )
+
+    if (!vendor) return { success: false, msg: partnerMessages.FETCH_ERROR }
+
+    return {
+      success: true,
+      msg: partnerMessages.FETCH_SUCCESS,
+      data: vendor.payment,
+    }
+  }
 }

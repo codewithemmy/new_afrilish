@@ -7,7 +7,6 @@ import partnerController from "./partner.controller"
 import uploadManager from "../../utils/multer"
 
 import { adminVerifier, isAuthenticated } from "../../utils"
-// import loginPartnerValidation from "../../validations/partner/loginPartner.validation"
 
 const PartnerRouter = express.Router()
 
@@ -24,7 +23,9 @@ const {
   forgotPasswordController,
   resetPasswordController,
   resendVerificationOtpController,
-  partnerAuthLoginController
+  partnerAuthLoginController,
+  updatePaymentController,
+  getVendorPaymentController,
 } = partnerController
 
 //routes
@@ -69,5 +70,8 @@ PartnerRouter.patch(
 )
 
 PartnerRouter.get("/vendor", fetchVendorController)
+
+PartnerRouter.patch("/vendor/payment/:vendorId", updatePaymentController)
+PartnerRouter.get("/vendor/payment/:vendorId", getVendorPaymentController)
 
 export default PartnerRouter

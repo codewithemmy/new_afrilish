@@ -26,7 +26,7 @@ export interface IVendor {
   businessNumber: String
   updated: Boolean
   phone: string
-  payment?: IPaymentInfo
+  payment: [IPaymentInfo]
   price: string
   vendorOperations: IOperations
   location: string
@@ -61,8 +61,14 @@ interface IBusiness {
 
 interface IPaymentInfo {
   sortCode: string
-  account: Number
+  account: number
   name: string
+  branchName: string
+  phone1: string
+  addressLine1: string
+  addressLine2: string
+  postTown: String
+  stateId: number
 }
 
 interface IOperations {
