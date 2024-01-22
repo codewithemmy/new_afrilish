@@ -358,8 +358,14 @@ export default class UserService {
       authType === confirmUser.authType &&
       action === "login"
     ) {
+      const user = await UserRepository.fetchUser({ email }, {})
+
+      if (!user) {
+        return { success: false, msg: `user not found` }
+      }
+
       const token = tokenHandler({
-        ...confirmUser,
+        ...user,
         isPartner: false,
       })
 
@@ -367,13 +373,17 @@ export default class UserService {
         success: true,
         msg: generalMessages.SUCCESSFUL_LOGIN,
         data: {
-          _id: confirmUser._id,
-          fullName: confirmUser.fullName,
-          phone: confirmUser.phone,
-          email: confirmUser.email,
+          _id: user._id,
+          fullName: user.fullName,
+          phone: user.phone,
+          email: user.email,
           token,
         },
       }
+    }
+
+    if (!confirmUser) {
+      return { success: false, msg: `user not found` }
     }
 
     const user = await UserRepository.createUser({

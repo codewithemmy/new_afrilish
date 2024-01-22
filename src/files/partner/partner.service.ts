@@ -380,8 +380,14 @@ export default class PartnerService {
       authType === confirmPartner.authType &&
       action === "login"
     ) {
+      const partner = await PartnerRepository.fetchPartner({ email }, {})
+
+      if (!partner) {
+        return { success: false, msg: `user not found` }
+      }
+
       const token = tokenHandler({
-        ...confirmPartner,
+        ...partner,
         isPartner: true,
       })
 
@@ -389,13 +395,17 @@ export default class PartnerService {
         success: true,
         msg: generalMessages.SUCCESSFUL_LOGIN,
         data: {
-          _id: confirmPartner._id,
-          fullName: confirmPartner.fullName,
-          phone: confirmPartner.phone,
-          email: confirmPartner.email,
+          _id: partner?._id,
+          fullName: partner?.fullName,
+          phone: partner?.phone,
+          email: partner?.email,
           token,
         },
       }
+    }
+
+    if (!confirmPartner) {
+      return { success: false, msg: `user already exist` }
     }
 
     const partner = await PartnerRepository.createPartner({
