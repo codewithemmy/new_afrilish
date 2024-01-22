@@ -14,7 +14,7 @@ const {
   deleteItemController,
 } = itemController
 
-// ItemRouter.use(isAuthenticated)
+ItemRouter.use(isAuthenticated)
 
 //routes
 ItemRouter.post(
