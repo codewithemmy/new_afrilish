@@ -102,11 +102,6 @@ export default class RiderService {
 
     if (error) return { success: false, msg: error }
 
-    const { lat, lng } = params
-
-    if (!lat && !lng)
-      return { success: false, msg: `lat and lng is not passed` }
-
     const order = await OrderRepository.fetchOrderByParams({
       ...params,
       limit,
