@@ -18,6 +18,7 @@ const VendorSchema = new Schema<IVendor>(
         account: { type: Number },
         name: { type: String },
         branchName: { type: String },
+        bankName: { type: String },
         phone1: { type: String },
         addressLine1: { type: String },
         addressLine2: { type: String },

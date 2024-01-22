@@ -63,6 +63,7 @@ interface IPaymentInfo {
   sortCode: string
   account: number
   name: string
+  bankName: string
   branchName: string
   phone1: string
   addressLine1: string
