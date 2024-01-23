@@ -15,7 +15,7 @@ export default class RiderService {
   static async riderProfile(locals: any) {
     const rider = await RiderRepository.fetchRider(
       { _id: new mongoose.Types.ObjectId(locals) },
-      { fullName: 1, email: 1, phone: 1, image: 1, wallet: 1, rating: 1 },
+      { fullName: 1, email: 1, phone: 1, image: 1, wallet: 1 },
     )
 
     if (!rider) return { success: false, msg: riderMessages.FETCH_ERROR }
