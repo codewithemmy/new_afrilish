@@ -6,7 +6,7 @@ import loginPartnerValidation from "../../validations/partner/loginPartner.valid
 import partnerController from "./partner.controller"
 import uploadManager from "../../utils/multer"
 
-import { adminVerifier, isAuthenticated } from "../../utils"
+import { isAuthenticated } from "../../utils"
 
 const PartnerRouter = express.Router()
 
