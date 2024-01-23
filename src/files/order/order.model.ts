@@ -81,7 +81,7 @@ const OrderSchema = new Schema<IOrder>(
     totalAmount: { type: Number },
     marketPlace: { type: Number },
     serviceCharge: { type: Number },
-    confirmDelivery: { type: Boolean },
+    confirmDelivery: { type: Boolean, default: false },
     remarks: { type: String },
     isConfirmed: { type: Boolean, default: false },
     delivery: { type: Boolean },

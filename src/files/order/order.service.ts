@@ -14,6 +14,8 @@ import UserRepository from "../user/user.repository"
 import ItemRepository from "../item/item.repository"
 import SubscriptionRepository from "../subscription/subscription.repository"
 import { DayPayload, IOrder } from "./order.interface"
+import { sendMailNotification } from "../../utils/email"
+import RiderRepository from "../rider/rider.repository"
 
 export default class OrderService {
   static async evaluateOrderService(
@@ -506,7 +508,7 @@ export default class OrderService {
     data: Partial<IOrder>,
     locals: string,
   ) {
-    const { orderStatus, pickUpCode } = data
+    const { orderStatus, pickUpCode, confirmDelivery } = data
     const findOrder = await OrderRepository.fetchOrder(
       { _id: new mongoose.Types.ObjectId(orderId) },
       {},
@@ -514,6 +516,44 @@ export default class OrderService {
 
     if (!findOrder)
       return { success: false, msg: orderMessages.NOT_FOUND, data: [] }
+
+    if (confirmDelivery) {
+      const updateOrder = await OrderRepository.updateOrderDetails(
+        {
+          _id: new mongoose.Types.ObjectId(orderId),
+          confirmDelivery: false,
+          assignedRider: new mongoose.Types.ObjectId(locals),
+          paymentStatus: "paid",
+        },
+        { confirmDelivery: true },
+      )
+
+      if (!updateOrder)
+        return { success: false, msg: `Invalid order or duplicate confirmation` }
+
+      try {
+        let userName = updateOrder?.userName
+        let orderCode = updateOrder?.orderCode
+        const substitutional_parameters = {
+          name: `${userName}`,
+          code: `${orderCode}`,
+        }
+
+        await sendMailNotification(
+          updateOrder?.userEmail,
+          "Order Code",
+          substitutional_parameters,
+          "ORDER_CODE",
+        )
+      } catch (error) {
+        console.log("error", error)
+      }
+
+      await RiderRepository.updateRiderDetails(
+        { _id: new mongoose.Types.ObjectId(updateOrder.assignedRider) },
+        { $inc: { wallet: updateOrder.ridersFee.toFixed(2) } },
+      )
+    }
 
     if (pickUpCode) {
       const order = await OrderRepository.updateOrderDetails(
