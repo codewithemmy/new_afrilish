@@ -14,6 +14,7 @@ import { sendMailNotification } from "../../utils/email"
 import { generalMessages } from "../../core/messages"
 import { IVendor } from "../partner/partner.interface"
 import { partnerMessages } from "../partner/partner.messages"
+import { decode } from "jsonwebtoken"
 
 export default class UserService {
   static async createUser(userPayload: IUser): Promise<IResponse> {
@@ -346,18 +347,32 @@ export default class UserService {
   }
 
   static async userAuthLoginService(userPayload: {
-    fullName: string
-    email: string
+    fullName?: string
+    email?: string
     authType?: string
     action?: string
+    jwtToken?: string
   }) {
-    const { fullName, email, authType, action } = userPayload
-
+    const { fullName, email, authType, action, jwtToken } = userPayload
+    let appleEmail: any
     if (action === "login") {
-      const user = await UserRepository.fetchUser({ email, authType }, {})
+      let user: any
+      if (authType === "apple" && jwtToken) {
+        const decoded: any = decode(jwtToken)
+        appleEmail = decoded?.email
+        user = await UserRepository.fetchUser(
+          { email: appleEmail, authType },
+          {},
+        )
+        if (!user) {
+          return { success: false, msg: `user not found` }
+        }
+      } else {
+        user = await UserRepository.fetchUser({ email, authType }, {})
 
-      if (!user) {
-        return { success: false, msg: `user not found` }
+        if (!user) {
+          return { success: false, msg: `user not found` }
+        }
       }
 
       const token = tokenHandler({
@@ -377,20 +392,43 @@ export default class UserService {
         },
       }
     }
-    const confirmUser = await UserRepository.fetchUser({ email, authType }, {})
 
-    if (confirmUser) {
-      return { success: false, msg: `user already exist` }
+    let user
+    if (jwtToken) {
+      const decoded: any = decode(jwtToken)
+      appleEmail = decoded?.email
+
+      const confirmUser = await UserRepository.fetchUser(
+        { email: appleEmail, authType },
+        {},
+      )
+
+      if (confirmUser) {
+        return { success: false, msg: `user already exist` }
+      }
+      user = await UserRepository.createUser({
+        email: appleEmail,
+        isVerified: true,
+        authType,
+      })
+    } else {
+      const confirmUser = await UserRepository.fetchUser(
+        { email, authType },
+        {},
+      )
+
+      if (confirmUser) {
+        return { success: false, msg: `user already exist` }
+      }
+      user = await UserRepository.createUser({
+        email: email,
+        fullName: fullName,
+        isVerified: true,
+        authType,
+      })
     }
 
-    const user = await UserRepository.createUser({
-      email: email,
-      fullName: fullName,
-      isVerified: true,
-      authType,
-    })
-
-    const userEmail: any = email
+    const userEmail: any = user.email
     const userFullName: any = fullName
     // send mail login details to user
     try {
