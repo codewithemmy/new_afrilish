@@ -41,7 +41,7 @@ export default class RiderService {
 
       locationCoord = {
         type: "Point",
-        coordinates: [parseFloat(latChange), parseFloat(lngChange)],
+        coordinates: [parseFloat(lngChange), parseFloat(latChange)],
       }
     }
 

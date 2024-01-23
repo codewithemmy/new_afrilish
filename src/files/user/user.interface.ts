@@ -28,6 +28,6 @@ interface ILocation {
 }
 
 export interface ICoord {
-  lat: Number
   lng: Number
+  lat: Number
 }

@@ -268,7 +268,7 @@ export default class UserService {
 
       locationCoord = {
         type: "Point",
-        coordinates: [parseFloat(latChange), parseFloat(lngChange)],
+        coordinates: [parseFloat(lngChange), parseFloat(latChange)],
       }
     }
 

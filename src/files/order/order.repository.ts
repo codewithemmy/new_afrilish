@@ -123,7 +123,7 @@ export default class OrderRepository {
         $geoNear: {
           near: {
             type: "Point",
-            coordinates: [parseFloat(latString), parseFloat(lngString)],
+            coordinates: [parseFloat(lngString), parseFloat(latString)],
           },
           key: "locationCoord",
           maxDistance: parseFloat(floatString) * 1609,

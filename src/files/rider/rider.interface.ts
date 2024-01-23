@@ -23,7 +23,7 @@ export interface IRider {
 
 interface ILocation {
   type?: string
-  coordinates?: [lat: Number, lng: Number]
+  coordinates?: [lng: Number, lat: Number]
 }
 
 interface IRegistration {

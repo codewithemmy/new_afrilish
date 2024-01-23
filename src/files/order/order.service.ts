@@ -69,8 +69,8 @@ export default class OrderService {
     if (!pickUp) {
       // Check if vendor.locationCoord is defined before accessing its properties
       if (vendor?.locationCoord && vendor?.locationCoord?.coordinates) {
-        vendorLat = vendor?.locationCoord?.coordinates[0]
-        vendorLng = vendor?.locationCoord?.coordinates[1]
+        vendorLng = vendor?.locationCoord?.coordinates[0]
+        vendorLat = vendor?.locationCoord?.coordinates[1]
       } else {
         // Handle the case where locationCoord or coordinates is undefined
         return {
@@ -194,7 +194,7 @@ export default class OrderService {
       vendorId: new mongoose.Types.ObjectId(vendor._id),
       locationCoord: {
         type: "Point",
-        coordinates: [parseFloat(vendorLat), parseFloat(vendorLng)],
+        coordinates: [parseFloat(vendorLng), parseFloat(vendorLat)],
       },
       userEmail: locals.email,
       ridersFee,
@@ -305,8 +305,8 @@ export default class OrderService {
     if (!pickUp) {
       // Check if vendor.locationCoord is defined before accessing its properties
       if (vendor?.locationCoord && vendor?.locationCoord?.coordinates) {
-        vendorLat = vendor?.locationCoord?.coordinates[0]
-        vendorLng = vendor?.locationCoord?.coordinates[1]
+        vendorLng = vendor?.locationCoord?.coordinates[0]
+        vendorLat = vendor?.locationCoord?.coordinates[1]
       } else {
         // Handle the case where locationCoord or coordinates is undefined
         return {
@@ -447,7 +447,7 @@ export default class OrderService {
       vendorId: new mongoose.Types.ObjectId(vendor._id),
       locationCoord: {
         type: "Point",
-        coordinates: [parseFloat(vendorLat), parseFloat(vendorLng)],
+        coordinates: [parseFloat(vendorLng), parseFloat(vendorLat)],
       },
       userEmail: locals.email,
       ridersFee,
