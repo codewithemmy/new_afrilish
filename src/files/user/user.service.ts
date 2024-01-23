@@ -143,6 +143,8 @@ export default class UserService {
     const user = await UserRepository.fetchUser({ email }, {})
 
     if (!user) return { success: false, msg: userMessages.FETCH_ERROR }
+    if (!user?.password)
+      return { success: false, msg: `User not authenticated with password` }
 
     const validatePassword = await verifyPassword(password!, user.password!)
 

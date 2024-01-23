@@ -491,7 +491,8 @@ export default class OrderService {
       sort,
     })
 
-    if (order) return { success: false, msg: orderMessages.NOT_FOUND, data: [] }
+    if (order.length < 1)
+      return { success: true, msg: orderMessages.NOT_FOUND, data: [] }
 
     return {
       success: true,
