@@ -354,6 +354,9 @@ export default class UserService {
     jwtToken?: string
   }) {
     const { fullName, email, authType, action, jwtToken } = userPayload
+
+    if (!authType) return { success: false, msg: `Auth type cannot be empty` }
+
     let appleEmail: any
     if (action === "login") {
       let user: any

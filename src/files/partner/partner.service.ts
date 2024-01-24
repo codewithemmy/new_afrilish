@@ -12,6 +12,7 @@ import PartnerRepository from "./partner.repository"
 import { partnerMessages } from "./partner.messages"
 import { sendMailNotification } from "../../utils/email"
 import { generalMessages } from "../../core/messages"
+import { decode } from "jsonwebtoken"
 
 export default class PartnerService {
   static async createPartner(partnerPayload: IPartner): Promise<IResponse> {
@@ -366,24 +367,35 @@ export default class PartnerService {
   }
 
   static async partnerAuthLoginService(partnerPayload: {
-    fullName: string
-    email: string
+    fullName?: string
+    email?: string
     authType?: string
     action?: string
+    jwtToken?: string
   }) {
-    const { fullName, email, authType, action } = partnerPayload
+    const { fullName, email, authType, action, jwtToken } = partnerPayload
 
-    const confirmPartner = await PartnerRepository.fetchPartner({ email }, {})
+    if (!authType) return { success: false, msg: `Auth type cannot be empty` }
 
-    if (
-      confirmPartner &&
-      authType === confirmPartner.authType &&
-      action === "login"
-    ) {
-      const partner = await PartnerRepository.fetchPartner({ email }, {})
+    let appleEmail: any
+    if (action === "login") {
+      let partner: any
+      if (authType === "apple" && jwtToken) {
+        const decoded: any = decode(jwtToken)
+        appleEmail = decoded?.email
+        partner = await PartnerRepository.fetchPartner(
+          { email: appleEmail, authType },
+          {},
+        )
+        if (!partner) {
+          return { success: false, msg: `partner not found` }
+        }
+      } else {
+        partner = await PartnerRepository.fetchPartner({ email, authType }, {})
 
-      if (!partner) {
-        return { success: false, msg: `user not found` }
+        if (!partner) {
+          return { success: false, msg: `partner not found` }
+        }
       }
 
       const token = tokenHandler({
@@ -395,36 +407,60 @@ export default class PartnerService {
         success: true,
         msg: generalMessages.SUCCESSFUL_LOGIN,
         data: {
-          _id: partner?._id,
-          fullName: partner?.fullName,
-          phone: partner?.phone,
-          email: partner?.email,
+          _id: partner._id,
+          fullName: partner.fullName,
+          phone: partner.phone,
+          email: partner.email,
           token,
         },
       }
     }
 
-    if (!confirmPartner) {
-      return { success: false, msg: `user already exist` }
+    let partner
+    if (jwtToken) {
+      const decoded: any = decode(jwtToken)
+      appleEmail = decoded?.email
+
+      const confirmPartner = await PartnerRepository.fetchPartner(
+        { email: appleEmail, authType },
+        {},
+      )
+
+      if (confirmPartner) {
+        return { success: false, msg: `partner already exist` }
+      }
+      partner = await PartnerRepository.createPartner({
+        email: appleEmail,
+        isVerified: true,
+        authType,
+      })
+    } else {
+      const confirmPartner = await PartnerRepository.fetchPartner(
+        { email, authType },
+        {},
+      )
+
+      if (confirmPartner) {
+        return { success: false, msg: `partner already exist` }
+      }
+      partner = await PartnerRepository.createPartner({
+        email: email,
+        fullName: fullName,
+        isVerified: true,
+        authType,
+      })
     }
 
-    const partner = await PartnerRepository.createPartner({
-      email: email,
-      fullName: fullName,
-      isVerified: true,
-      authType,
-    })
-
-    const userEmail: any = email
-    const userFullName: any = fullName
+    const partnerEmail: any = partner.email
+    const partnerFullName: any = fullName
     // send mail login details to user
     try {
       await sendMailNotification(
-        userEmail,
-        "Sign Up",
+        partnerEmail,
+        "Partner Registration",
         {
-          name: userFullName,
-          email: userEmail,
+          name: partnerFullName,
+          email: partnerEmail,
         },
         "PARTNER_REG",
       )
