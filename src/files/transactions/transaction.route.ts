@@ -8,6 +8,7 @@ const {
   createPaymentIntentController,
   stripeWebHookController,
   confirmWalletController,
+  fetchTransactionController,
 } = TransactionController
 
 TransactionRouter.route("/stripe-webhook").post(stripeWebHookController)
@@ -17,5 +18,6 @@ TransactionRouter.use(isAuthenticated)
 //routes
 TransactionRouter.route("/").post(createPaymentIntentController)
 TransactionRouter.route("/wallet/confirm").post(confirmWalletController)
+TransactionRouter.route("/").get(fetchTransactionController)
 
 export default TransactionRouter

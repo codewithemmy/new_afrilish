@@ -9,6 +9,8 @@ import UserRepository from "../user/user.repository"
 import { providerMessages } from "../../providers/providers.messages"
 import OrderRepository from "../order/order.repository"
 import { IOrder } from "../order/order.interface"
+import { ITransaction } from "./transaction.interface"
+import { queryConstructor } from "../../utils"
 
 export default class TransactionService {
   private static paymentProvider: IPaymentProvider
@@ -204,6 +206,38 @@ export default class TransactionService {
     return {
       success: true,
       msg: `successful`,
+    }
+  }
+
+  static async fetchTransactionService(
+    transactionPayload: Partial<ITransaction>,
+  ) {
+    const { error, params, limit, skip, sort } = queryConstructor(
+      transactionPayload,
+      "createdAt",
+      "Transaction",
+    )
+
+    if (error) return { success: false, msg: error }
+
+    const transaction = await TransactionRepository.fetchTransactionsByParams({
+      ...params,
+      limit,
+      skip,
+      sort,
+    })
+
+    if (transaction.length < 1)
+      return {
+        success: false,
+        msg: transactionMessages.TRANSACTION_NOT_FOUND,
+        data: [],
+      }
+
+    return {
+      success: true,
+      msg: transactionMessages.TRANSACTION_FETCHED,
+      data: transaction,
     }
   }
 }
