@@ -25,7 +25,7 @@ const TransactionSchema = new mongoose.Schema<ITransaction>(
     channel: {
       type: String,
       required: true,
-      enum: ["stripe"],
+      enum: ["stripe", "afrilish"],
       default: "stripe",
     },
     transactionId: {
@@ -34,7 +34,6 @@ const TransactionSchema = new mongoose.Schema<ITransaction>(
     type: {
       type: String,
       enum: ["wallet", "order"],
-      default: "wallet",
     },
     status: {
       type: String,
@@ -43,7 +42,7 @@ const TransactionSchema = new mongoose.Schema<ITransaction>(
     },
     paymentFor: {
       type: String,
-      enum: ["fund-wallet", "normal-order"],
+      enum: ["fund-wallet", "normal-order", "debit-wallet"],
       default: "fund-wallet",
     },
     metaData: String,

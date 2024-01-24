@@ -16,6 +16,7 @@ import SubscriptionRepository from "../subscription/subscription.repository"
 import { DayPayload, IOrder } from "./order.interface"
 import { sendMailNotification } from "../../utils/email"
 import RiderRepository from "../rider/rider.repository"
+import TransactionRepository from "../transactions/transaction.repository"
 
 export default class OrderService {
   static async evaluateOrderService(
@@ -529,7 +530,10 @@ export default class OrderService {
       )
 
       if (!updateOrder)
-        return { success: false, msg: `Invalid order or duplicate confirmation` }
+        return {
+          success: false,
+          msg: `Invalid order or duplicate confirmation`,
+        }
 
       try {
         let userName = updateOrder?.userName
@@ -584,10 +588,21 @@ export default class OrderService {
           { $inc: { wallet: netAmount } },
         )
 
-        await UserRepository.updateUsersProfile(
-          { _id: new mongoose.Types.ObjectId(user._id) },
-          { $inc: { wallet: -totalAmount } },
-        )
+        Promise.all([
+          await UserRepository.updateUsersProfile(
+            { _id: new mongoose.Types.ObjectId(user._id) },
+            { $inc: { wallet: -totalAmount } },
+          ),
+
+          await TransactionRepository.create({
+            userId: new mongoose.Types.ObjectId(user._id),
+            vendorId: new mongoose.Types.ObjectId(findOrder.vendorId),
+            amount: totalAmount,
+            channel: "afrilish",
+            status: "completed",
+            paymentFor: "debit-wallet",
+          }),
+        ])
       } else {
         const user = await UserRepository.fetchUser(
           { _id: new mongoose.Types.ObjectId(findOrder.orderedBy) },

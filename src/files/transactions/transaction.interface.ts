@@ -14,7 +14,7 @@ export interface ITransaction {
   transactionId: string
   paymentFor: string
   type: "wallet" | "order"
-  channel: "stripe"
+  channel: "stripe" | "afrilish"
   status: transactionStatus
   metaData?: string
   createdAt?: Date
