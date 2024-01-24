@@ -31,7 +31,6 @@ const VendorSchema = new Schema<IVendor>(
       type: { type: String },
       coordinates: [],
     },
-    averageRating: { type: Number, default: 0 },
     vendorOperations: {
       operation: [{ day: String, openingTime: String, closingTime: String }],
       orderAmount: Number,
@@ -47,6 +46,7 @@ const VendorSchema = new Schema<IVendor>(
         ratedBy: { type: mongoose.Types.ObjectId, ref: "Users" },
       },
     ],
+    ratingAverage: { type: Number, default: 0 },
     isAvailable: { type: Boolean, default: false },
     partnerId: { type: mongoose.Types.ObjectId, ref: "Partner" },
     itemId: [{ type: mongoose.Types.ObjectId, ref: "Item" }],
@@ -55,6 +55,33 @@ const VendorSchema = new Schema<IVendor>(
 )
 
 VendorSchema.index({ locationCoord: "2dsphere" })
+
+VendorSchema.pre("findOneAndUpdate", async function (next) {
+  try {
+    const update = this.getUpdate() as any
+    const vendor = await this.model.findOne(this.getQuery())
+
+    // Calculate average rating only if there are ratings
+    if (vendor.rating && vendor.rating.length > 0) {
+      const totalRating = vendor.rating.reduce(
+        (sum: number, current: any) => sum + current.rate,
+        0,
+      )
+      update.$set = update.$set || {}
+      update.$set.ratingAverage = totalRating / vendor.rating.length
+    } else {
+      // Set default ratingAverage if there are no ratings
+      update.$set = update.$set || {}
+      update.$set.ratingAverage = 0
+    }
+
+    // Call next to continue with the findOneAndUpdate operation
+    next()
+  } catch (error: any) {
+    // Handle any errors during the calculation
+    next(error)
+  }
+})
 
 const vendor = model<IVendor>("Vendor", VendorSchema, "vendor")
 

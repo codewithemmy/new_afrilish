@@ -3,7 +3,7 @@ import { hashPassword, queryConstructor } from "../../../utils"
 import { IVendor } from "../partner.interface"
 import VendorRepository from "./vendor.repository"
 import { partnerMessages } from "../partner.messages"
-import mongoose from "mongoose"
+import mongoose, { mongo } from "mongoose"
 import PartnerRepository from "../partner.repository"
 import { ICoord } from "../../user/user.interface"
 
@@ -175,7 +175,7 @@ export default class VendorService {
 
   static async deleteVendorPaymentDetails(params: string) {
     const confirmVendor = await VendorRepository.fetchVendor(
-      { "payment._id": params },
+      { "payment._id": new mongoose.Types.ObjectId(params) },
       {},
     )
 
@@ -192,6 +192,28 @@ export default class VendorService {
     return {
       success: true,
       msg: partnerMessages.PARTNER_DELETE,
+    }
+  }
+
+  static async rateVendorService(params: Partial<IVendor>, id: string) {
+    const confirmVendor = await VendorRepository.fetchVendor(
+      { _id: new mongoose.Types.ObjectId(id) },
+      {},
+    )
+
+    if (!confirmVendor)
+      return { success: false, msg: partnerMessages.VENDOR_ERROR }
+
+    const vendor = await VendorRepository.updateVendorDetails(
+      { _id: new mongoose.Types.ObjectId(confirmVendor._id) },
+      { $push: { rating: { ...params } } },
+    )
+
+    if (!vendor) return { success: false, msg: `Unable to rate vendor` }
+
+    return {
+      success: true,
+      msg: `Vendor rated successfully`,
     }
   }
 }

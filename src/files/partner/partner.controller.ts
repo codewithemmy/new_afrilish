@@ -298,6 +298,17 @@ class PartnerController {
 
     return responseHandler(res, statusCode.SUCCESS, data!)
   }
+
+  async rateVendorController(req: Request, res: Response, next: NextFunction) {
+    const [error, data] = await manageAsyncOps(
+      VendorService.rateVendorService(req.body, req.params.id as string),
+    )
+
+    if (error) return next(error)
+    if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
+
+    return responseHandler(res, statusCode.SUCCESS, data!)
+  }
 }
 
 export default new PartnerController()

@@ -6,6 +6,9 @@ import userController from "./user.controller"
 import itemController from "../item/item.controller"
 import uploadManager from "../../utils/multer"
 import { isAuthenticated } from "../../utils"
+import partnerController from "../partner/partner.controller"
+
+const { rateVendorController } = partnerController
 
 const {
   createUserController,
@@ -18,7 +21,7 @@ const {
   userAuthLoginController,
   userSupportController,
   forgotPasswordController,
-  resetPasswordController
+  resetPasswordController,
 } = userController
 
 const { fetchItemController } = itemController
@@ -53,5 +56,7 @@ UserRouter.get("/vendor", getVendorByCoordController)
 
 //user auth login route
 UserRouter.post("/login/auth", userAuthLoginController)
+
+UserRouter.post("/vendor/rate/:id", rateVendorController)
 
 export default UserRouter

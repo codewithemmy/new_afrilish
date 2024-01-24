@@ -23,6 +23,7 @@ export interface IVendor {
   itemId?: [any]
   email: string
   wallet: Number
+  ratingAverage: number
   businessNumber: String
   updated: Boolean
   phone: string
@@ -33,7 +34,6 @@ export interface IVendor {
   locationCoord?: ILocation
   address: string
   image: string
-  averageRating: Number
   partnerId: any
   isAvailable: Boolean
   vendorType?:
