@@ -85,6 +85,9 @@ export default class PartnerService {
     if (!partner)
       return { success: false, msg: generalMessages.INCORRECT_PARTNER }
 
+        if (!partner?.password)
+          return { success: false, msg: `Password not authenticated with password` }
+
     if (!partner.isVerified)
       return { success: false, msg: generalMessages.NOT_VERIFIED }
 

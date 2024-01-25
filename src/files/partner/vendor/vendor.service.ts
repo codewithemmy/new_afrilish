@@ -195,7 +195,16 @@ export default class VendorService {
     }
   }
 
-  static async rateVendorService(params: Partial<IVendor>, id: string) {
+  static async rateVendorService(
+    params: { rate: number; review: string; ratedBy: any },
+    id: string,
+  ) {
+    const { rate } = params
+    if (rate > 5)
+      return {
+        success: false,
+        msg: `any number above 5 is invalid rating number`,
+      }
     const confirmVendor = await VendorRepository.fetchVendor(
       { _id: new mongoose.Types.ObjectId(id) },
       {},
