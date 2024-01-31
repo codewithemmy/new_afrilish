@@ -108,16 +108,13 @@ export default class OrderRepository {
     let { lat, lng, search, ...extraParams } = restOfPayload
     if (!search) search = ""
 
-    console.log("lat", lat)
-    console.log("lat", lng)
-
     let latToString: any = lat?.toString()
     let lngToString: any = lng?.toString()
 
     let latString: string = latToString
     let lngString: string = lngToString
 
-    const floatString = "3000"
+    const floatString = "10000"
     const order = await Order.aggregate([
       {
         $geoNear: {
@@ -126,7 +123,7 @@ export default class OrderRepository {
             coordinates: [parseFloat(lngString), parseFloat(latString)],
           },
           key: "locationCoord",
-          maxDistance: parseFloat(floatString) * 1609,
+          maxDistance: parseFloat(floatString),
           distanceField: "distance",
           spherical: true,
         },
