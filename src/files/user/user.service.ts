@@ -379,7 +379,10 @@ export default class UserService {
       }
 
       const token = tokenHandler({
-        ...user,
+        _id: user._id,
+        fullName: user.fullName,
+        phone: user.phone,
+        email: user.email,
         isPartner: false,
       })
 
@@ -449,7 +452,10 @@ export default class UserService {
     }
 
     const token = tokenHandler({
-      ...user,
+      _id: user._id,
+      fullName: user.fullName,
+      phone: user.phone,
+      email: user.email,
       isPartner: false,
     })
 
