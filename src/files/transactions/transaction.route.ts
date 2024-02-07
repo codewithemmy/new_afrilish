@@ -13,7 +13,7 @@ const {
 
 TransactionRouter.route("/stripe-webhook").post(stripeWebHookController)
 
-// TransactionRouter.use(isAuthenticated)
+TransactionRouter.use(isAuthenticated)
 
 //routes
 TransactionRouter.route("/").post(createPaymentIntentController)
