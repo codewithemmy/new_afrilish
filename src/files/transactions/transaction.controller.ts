@@ -67,7 +67,7 @@ class TransactionController {
     next: NextFunction,
   ) {
     const [error, data] = await manageAsyncOps(
-      TransactionService.fetchTransactionService(req.params),
+      TransactionService.fetchTransactionService(req.query),
     )
 
     if (error) return next(error)
