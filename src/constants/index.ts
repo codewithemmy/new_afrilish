@@ -9,7 +9,7 @@ export interface IPagination {
   skip: number
   sort: string
   $or?: any
-  search: any
+  search?: any
 }
 
 export interface IResponse {

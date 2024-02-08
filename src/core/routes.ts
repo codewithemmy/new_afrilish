@@ -7,10 +7,12 @@ import SubscriptionRouter from "../files/subscription/subscription.route"
 import OrderRouter from "../files/order/order.route"
 import TransactionRouter from "../files/transactions/transaction.route"
 import RiderRouter from "../files/rider/rider.route"
+import AdminRouter from "../files/admin/admin.route"
 
 export const routes = (app: Application) => {
   const base = "/api/v1"
 
+  app.use(`${base}/admin`, AdminRouter)
   app.use(`${base}/partner`, PartnerRouter)
   app.use(`${base}/menu`, MenuRouter)
   app.use(`${base}/item`, ItemRouter)
