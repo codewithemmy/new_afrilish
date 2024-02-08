@@ -274,4 +274,69 @@ export default class OrderRepository {
 
     return order
   }
+
+  static async adminOrderAnalysis() {
+    const currentDate = new Date()
+    const thirtyDaysAgo = new Date(
+      currentDate.getTime() - 30 * 24 * 60 * 60 * 1000,
+    )
+
+    const result = await Order.aggregate([
+      {
+        $match: {
+          createAt: { $gte: thirtyDaysAgo }, // Filter orders within the last 30 days
+        },
+      },
+      {
+        $group: {
+          _id: "$orderStatus",
+          totalAmount: { $sum: "$totalAmount" }, // Calculate the sum of totalAmount for each orderStatus
+        },
+      },
+    ])
+    // Now, calculate the increase percentage compared to the previous 30 days for each orderStatus
+    const previousThirtyDays = new Date(
+      thirtyDaysAgo.getTime() - 30 * 24 * 60 * 60 * 1000,
+    )
+
+    const response = []
+    for (const statusGroup of result) {
+      const orderStatus = statusGroup._id
+      const totalAmountLastThirtyDays = statusGroup.totalAmount
+
+      const previousResult = await Order.aggregate([
+        {
+          $match: {
+            orderStatus,
+            orderDate: { $gte: previousThirtyDays, $lt: thirtyDaysAgo }, // Filter orders of the previous 30 days for this orderStatus
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            totalAmount: { $sum: "$totalAmount" }, // Calculate the sum of totalAmount for this orderStatus
+          },
+        },
+      ])
+
+      const totalAmountPreviousThirtyDays =
+        previousResult.length > 0 ? previousResult[0].totalAmount : 0
+
+      // Calculate percentage increase
+      const percentageIncrease =
+        ((totalAmountLastThirtyDays - totalAmountPreviousThirtyDays) /
+          totalAmountPreviousThirtyDays) *
+        100
+
+      // Add the result to the response array
+      response.push({
+        [`total${
+          orderStatus.charAt(0).toUpperCase() + orderStatus.slice(1)
+        }OrderAmount`]: totalAmountLastThirtyDays,
+        percentageIncrease,
+      })
+    }
+
+    return response
+  }
 }

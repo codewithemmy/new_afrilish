@@ -5,8 +5,9 @@ import uploadManager from "../../utils/multer"
 
 const AdminRouter = express.Router()
 
-const { createAdmin } = AdminController
+const { createAdmin, adminLogin } = AdminController
 
 AdminRouter.post("/", createAdmin)
+AdminRouter.post("/login", adminLogin)
 
 export default AdminRouter

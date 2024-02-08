@@ -7,5 +7,8 @@ export const adminMessages = {
   CREATE: "Admin created successfully",
   CREATE_ERROR: "Unable to create admin",
   UNAUTHORISED: "Unauthorized, Access Denied",
-  EXIST: "Admin email already exist"
+  EXIST: "Admin email already exist",
+  INVALID: "Invalid admin details",
+  PASSWORD_ERROR: "password is not matched",
+  LOGIN: "Admin Login Successful",
 }

@@ -40,7 +40,7 @@ class OrderController {
     const [error, data] = await manageAsyncOps(
       OrderService.fetchOrderService(req.query),
     )
-    console.log("error", error)
+
     if (error) return next(error)
     if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
 
@@ -71,6 +71,21 @@ class OrderController {
       OrderService.orderAnalysisService(res.locals.jwt._id, req.query),
     )
 
+    if (error) return next(error)
+    if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
+
+    return responseHandler(res, statusCode.SUCCESS, data!)
+  }
+
+  async adminOrderAnalysisController(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    const [error, data] = await manageAsyncOps(
+      OrderService.adminOrderAnalysisService(),
+    )
+    console.log("error", error)
     if (error) return next(error)
     if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
 

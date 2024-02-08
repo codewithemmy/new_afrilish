@@ -694,4 +694,16 @@ export default class OrderService {
       },
     }
   }
+
+  static async adminOrderAnalysisService() {
+    const order = await OrderRepository.adminOrderAnalysis()
+
+    if (!order) return { success: true, msg: orderMessages.FETCH_ERROR }
+
+    return {
+      success: true,
+      msg: orderMessages.FETCH_SUCCESS,
+      data: order,
+    }
+  }
 }

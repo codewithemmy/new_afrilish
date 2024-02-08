@@ -2,7 +2,7 @@ import mongoose from "mongoose"
 import { IPagination, IResponse } from "../../constants"
 import { IAdmin, IAdminLogin } from "./admin.interface"
 import AdminRepository from "./admin.repository"
-import { IToken, hashPassword } from "../../utils"
+import { IToken, hashPassword, tokenHandler, verifyPassword } from "../../utils"
 import { adminMessages } from "./admin.messages"
 
 export default class AdminService {
@@ -22,6 +22,33 @@ export default class AdminService {
     if (!admin) return { success: false, msg: adminMessages.CREATE_ERROR }
 
     return { success: true, msg: adminMessages.CREATE }
+  }
+
+  static async login(
+    adminPayload: Pick<IAdmin, "email" | "password">,
+  ): Promise<IResponse> {
+    const { email, password } = adminPayload
+
+    const validate = await AdminRepository.fetchAdminWithPassword({ email })
+
+    if (!validate) return { success: false, msg: adminMessages.INVALID }
+
+    const checkPassword = await verifyPassword(password, validate.password)
+
+    if (!checkPassword)
+      return { success: false, msg: adminMessages.PASSWORD_ERROR }
+
+    const token = await tokenHandler({
+      _id: validate._id,
+      email: validate.email,
+      isAdmin: true,
+    })
+
+    return {
+      success: true,
+      msg: adminMessages.LOGIN,
+      data: { _id: validate._id, email: validate.email, token },
+    }
   }
 
   // static async fetchAdminWithPassword(

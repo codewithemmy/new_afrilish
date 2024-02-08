@@ -1,16 +1,17 @@
 import express from "express"
-import { isAuthenticated } from "../../utils"
+import { adminVerifier, isAuthenticated } from "../../utils"
 import orderController from "./order.controller"
 const {
   evaluateOrderController,
   fetchOrderController,
   updateOrderController,
   orderAnalysisController,
+  adminOrderAnalysisController,
 } = orderController
 
 const OrderRouter = express.Router()
 
-OrderRouter.use(isAuthenticated)
+// OrderRouter.use(isAuthenticated)
 
 //routes
 OrderRouter.post("/", evaluateOrderController)
@@ -19,5 +20,6 @@ OrderRouter.patch("/:orderId", updateOrderController)
 
 //analysis
 OrderRouter.get("/analysis", orderAnalysisController)
+OrderRouter.get("/admin/analysis", adminOrderAnalysisController)
 
 export default OrderRouter

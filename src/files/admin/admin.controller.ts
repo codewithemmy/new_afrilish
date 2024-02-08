@@ -7,6 +7,16 @@ import AdminService from "./admin.service"
 class AdminController {
   async createAdmin(req: Request, res: Response, next: NextFunction) {
     const [error, data] = await manageAsyncOps(AdminService.create(req.body))
+
+    if (error) return next(error)
+
+    if (!data?.success) return next(new CustomError(data!.msg, 400))
+
+    return responseHandler(res, 200, data!)
+  }
+
+  async adminLogin(req: Request, res: Response, next: NextFunction) {
+    const [error, data] = await manageAsyncOps(AdminService.login(req.body))
     console.log("error ", error)
 
     if (error) return next(error)
