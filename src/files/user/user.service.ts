@@ -236,8 +236,13 @@ export default class UserService {
     )
 
     if (error) return { success: false, msg: error }
+    let id: any
 
-    let id = { _id: new mongoose.Types.ObjectId(locals) }
+    if (locals.isAdmin) {
+      id = {}
+    } else {
+      id = { _id: new mongoose.Types.ObjectId(locals._id) }
+    }
 
     const user = await UserRepository.fetchUserByParams({
       ...params,
@@ -254,6 +259,7 @@ export default class UserService {
       success: true,
       msg: userMessages.FETCH_SUCCESS,
       data: user,
+      totalUsers: user.length,
     }
   }
 
