@@ -22,6 +22,7 @@ const {
   deleteRiderProfile,
   riderDocumentUpload,
   getOrderCoordController,
+  getRiderController,
 } = riderProfileController
 
 //routes
@@ -56,5 +57,6 @@ RiderRouter.patch(
 )
 
 RiderRouter.get("/order", getOrderCoordController)
+RiderRouter.get("/all", getRiderController)
 
 export default RiderRouter

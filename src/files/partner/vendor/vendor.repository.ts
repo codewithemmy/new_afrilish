@@ -24,6 +24,12 @@ export default class VendorRepository {
     return vendor
   }
 
+  static async fetchVendorWithoutParams(payload: Partial<IVendor>) {
+    const vendor = await Vendor.find({ ...payload }).countDocuments()
+
+    return vendor
+  }
+
   static async fetchVendorByParams(
     vendorPayload: Partial<IVendor & IPagination>,
   ) {

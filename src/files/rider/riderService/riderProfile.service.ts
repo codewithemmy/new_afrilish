@@ -140,4 +140,30 @@ export default class RiderService {
       length: order.length,
     }
   }
+
+  static async fetchRiderService(payload: Partial<IRider>) {
+    const { error, params, limit, skip, sort } = queryConstructor(
+      payload,
+      "createdAt",
+      "Rider",
+    )
+
+    if (error) return { success: false, msg: error }
+
+    const rider = await RiderRepository.fetchRiderByParams({
+      ...params,
+      limit,
+      skip,
+      sort,
+    })
+
+    if (rider.length < 1)
+      return { success: false, msg: riderMessages.NOT_FOUND, data: [] }
+
+    return {
+      success: true,
+      msg: riderMessages.FETCH_SUCCESS,
+      data: rider,
+    }
+  }
 }

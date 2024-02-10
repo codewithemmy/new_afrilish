@@ -225,4 +225,37 @@ export default class VendorService {
       msg: `Vendor rated successfully`,
     }
   }
+
+  static async getVendorAnalysis() {
+    const [
+      restaurantVendor,
+      bulkFoodVendor,
+      eventPlannerVendor,
+      privateVendor,
+    ] = await Promise.all([
+      await VendorRepository.fetchVendorWithoutParams({
+        vendorType: "restaurantVendor",
+      }),
+      await VendorRepository.fetchVendorWithoutParams({
+        vendorType: "bulkFoodVendor",
+      }),
+      await VendorRepository.fetchVendorWithoutParams({
+        vendorType: "eventPlannerVendor",
+      }),
+      await VendorRepository.fetchVendorWithoutParams({
+        vendorType: "privateVendor",
+      }),
+    ])
+
+    return {
+      success: true,
+      msg: partnerMessages.FETCH_SUCCESS,
+      data: {
+        restaurantVendor,
+        bulkFoodVendor,
+        eventPlannerVendor,
+        privateVendor,
+      },
+    }
+  }
 }

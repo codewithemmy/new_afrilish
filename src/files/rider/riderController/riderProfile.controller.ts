@@ -66,7 +66,18 @@ class RiderProfileController {
         res.locals.jwt._id as string,
       ),
     )
-    console.log("error", error)
+
+    if (error) return next(error)
+    if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
+
+    return responseHandler(res, statusCode.CREATED, data!)
+  }
+
+  async getRiderController(req: Request, res: Response, next: NextFunction) {
+    const [error, data] = await manageAsyncOps(
+      RiderService.fetchRiderService(req.query),
+    )
+
     if (error) return next(error)
     if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
 

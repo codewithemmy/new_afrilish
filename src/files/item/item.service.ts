@@ -116,7 +116,7 @@ export default class ItemService {
 
     if (!itemExist) return { success: false, msg: itemMessages.INVALID_ID }
 
-    Promise.all([
+    await Promise.all([
       await MenuRepository.updateMenuDetails(
         { item: { $in: [new mongoose.Types.ObjectId(itemId)] } },
         { $pull: { item: new mongoose.Types.ObjectId(itemId) } },
