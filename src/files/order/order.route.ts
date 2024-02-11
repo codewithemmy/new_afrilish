@@ -11,7 +11,7 @@ const {
 
 const OrderRouter = express.Router()
 
-// OrderRouter.use(isAuthenticated)
+OrderRouter.use(isAuthenticated)
 
 //routes
 OrderRouter.post("/", evaluateOrderController)

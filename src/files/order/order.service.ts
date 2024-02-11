@@ -588,7 +588,7 @@ export default class OrderService {
           { $inc: { wallet: netAmount } },
         )
 
-       await Promise.all([
+        await Promise.all([
           await UserRepository.updateUsersProfile(
             { _id: new mongoose.Types.ObjectId(user._id) },
             { $inc: { wallet: -totalAmount } },
