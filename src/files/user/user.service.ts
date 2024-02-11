@@ -318,7 +318,7 @@ export default class UserService {
       "createdAt",
       "Vendor",
     )
-
+    console.log("query for vendor", query)
     if (error) return { success: false, msg: error }
 
     const { vendorType } = query
