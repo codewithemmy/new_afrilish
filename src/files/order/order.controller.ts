@@ -85,7 +85,7 @@ class OrderController {
     const [error, data] = await manageAsyncOps(
       OrderService.adminOrderAnalysisService(),
     )
-    console.log("error", error)
+
     if (error) return next(error)
     if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
 

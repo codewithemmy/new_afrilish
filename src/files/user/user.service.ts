@@ -313,12 +313,12 @@ export default class UserService {
   }
 
   static async getVendorByCoordService(query: Partial<IVendor>) {
-    const { error, params, limit, skip, sort } = queryConstructor(
+    let { error, params, limit, skip, sort } = queryConstructor(
       query,
       "createdAt",
       "Vendor",
     )
-    console.log("query for vendor", query)
+
     if (error) return { success: false, msg: error }
 
     const { vendorType } = query
@@ -326,9 +326,13 @@ export default class UserService {
     let extra = { isAvailable: true }
     let privateVendor = {}
 
-    if (vendorType === "privateVendor") {
-      privateVendor = { vendorType: "privateVendor" }
+    if (vendorType === "restaurantVendor") {
+      delete params.vendorType
+      privateVendor = {
+        vendorType: { $in: ["restaurantVendor", "privateVendor"] },
+      }
     }
+
     const vendors = await UserRepository.getVendorByCoord({
       ...params,
       limit,
