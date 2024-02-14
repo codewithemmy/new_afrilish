@@ -18,7 +18,7 @@ export interface ISubscription {
 
 // interface IMeal {
 //   breakfast: IItemList
-//   launch: IItemList
+//   lunch: IItemList
 //   dinner: IItemList
 // }
 

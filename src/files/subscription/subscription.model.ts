@@ -13,7 +13,7 @@ const SubscriptionSchema = new Schema<ISubscription>(
           { price: Number },
         ],
       },
-      launch: {
+      lunch: {
         item: [
           { type: mongoose.Types.ObjectId, ref: "Item" },
           { type: Number },
@@ -36,7 +36,7 @@ const SubscriptionSchema = new Schema<ISubscription>(
           { price: Number },
         ],
       },
-      launch: {
+      lunch: {
         item: [
           { type: mongoose.Types.ObjectId, ref: "Item" },
           { type: Number },
@@ -59,7 +59,7 @@ const SubscriptionSchema = new Schema<ISubscription>(
           { price: Number },
         ],
       },
-      launch: {
+      lunch: {
         item: [
           { type: mongoose.Types.ObjectId, ref: "Item" },
           { type: Number },
@@ -82,7 +82,7 @@ const SubscriptionSchema = new Schema<ISubscription>(
           { price: Number },
         ],
       },
-      launch: {
+      lunch: {
         item: [
           { type: mongoose.Types.ObjectId, ref: "Item" },
           { type: Number },
@@ -105,7 +105,7 @@ const SubscriptionSchema = new Schema<ISubscription>(
           { price: Number },
         ],
       },
-      launch: {
+      lunch: {
         item: [
           { type: mongoose.Types.ObjectId, ref: "Item" },
           { type: Number },
@@ -128,7 +128,7 @@ const SubscriptionSchema = new Schema<ISubscription>(
           { price: Number },
         ],
       },
-      launch: {
+      lunch: {
         item: [
           { type: mongoose.Types.ObjectId, ref: "Item" },
           { type: Number },
@@ -151,7 +151,7 @@ const SubscriptionSchema = new Schema<ISubscription>(
           { price: Number },
         ],
       },
-      launch: {
+      lunch: {
         item: [
           { type: mongoose.Types.ObjectId, ref: "Item" },
           { type: Number },

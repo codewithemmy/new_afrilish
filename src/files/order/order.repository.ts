@@ -56,38 +56,50 @@ export default class OrderRepository {
       sort = SORT,
       ...restOfPayload
     } = orderPayload
+    const { schedule } = restOfPayload
 
+    if (schedule) {
+      const order: Awaited<IOrder[] | null> = await Order.find({
+        ...restOfPayload,
+      })
+        .populate({ path: "itemId._id" })
+        .populate({
+          path: "scheduleId",
+          populate: [
+            "monday.breakfast.item",
+            "monday.lunch.item",
+            "monday.dinner.item",
+            "tuesday.breakfast.item",
+            "tuesday.lunch.item",
+            "tuesday.dinner.item",
+            "wednesday.breakfast.item",
+            "wednesday.lunch.item",
+            "wednesday.dinner.item",
+            "thursday.breakfast.item",
+            "thursday.lunch.item",
+            "thursday.dinner.item",
+            "friday.breakfast.item",
+            "friday.dinner.item",
+            "saturday.breakfast.item",
+            "saturday.lunch.item",
+            "saturday.dinner.item",
+            "sunday.breakfast.item",
+            "sunday.lunch.item",
+            "sunday.dinner.item",
+          ],
+          select:
+            "-createdAt -updatedAt -_id -startDate -endDate -isDelete -__v -userId -status",
+        })
+        .sort(sort)
+        .skip(skip)
+        .limit(limit)
+
+      return order
+    }
     const order: Awaited<IOrder[] | null> = await Order.find({
       ...restOfPayload,
     })
       .populate({ path: "itemId._id" })
-      .populate({
-        path: "scheduleId",
-        populate: [
-          "monday.breakfast.item",
-          "monday.launch.item",
-          "monday.dinner.item",
-          "tuesday.breakfast.item",
-          "tuesday.launch.item",
-          "tuesday.dinner.item",
-          "wednesday.breakfast.item",
-          "wednesday.launch.item",
-          "wednesday.dinner.item",
-          "thursday.breakfast.item",
-          "thursday.launch.item",
-          "thursday.dinner.item",
-          "friday.breakfast.item",
-          "friday.dinner.item",
-          "saturday.breakfast.item",
-          "saturday.launch.item",
-          "saturday.dinner.item",
-          "sunday.breakfast.item",
-          "sunday.launch.item",
-          "sunday.dinner.item",
-        ],
-        select:
-          "-createdAt -updatedAt -_id -startDate -endDate -isDelete -__v -userId -status",
-      })
       .sort(sort)
       .skip(skip)
       .limit(limit)
