@@ -1,5 +1,6 @@
 export interface IUser {
   _id?: any
+  deviceId?: string
   fullName: string
   password: string
   phone: string

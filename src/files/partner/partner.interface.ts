@@ -19,6 +19,7 @@ export interface IPartner {
 
 export interface IVendor {
   _id?: any
+  deviceId?: string
   name: string
   itemId?: [any]
   email: string

@@ -27,6 +27,7 @@ const UserSchema = new Schema<IUser>(
     loginCode: { type: Number },
     isDelete: { type: Boolean, default: false },
     verificationOtp: { type: String },
+    deviceId: { type: String },
   },
   { timestamps: true },
 )

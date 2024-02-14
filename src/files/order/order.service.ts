@@ -69,7 +69,7 @@ export default class OrderService {
 
     let vendorLng: any
     let vendorLat: any
-    if (!pickUp) {
+    if (deliveryAddress) {
       // Check if vendor.locationCoord is defined before accessing its properties
       if (vendor?.locationCoord && vendor?.locationCoord?.coordinates) {
         vendorLng = vendor?.locationCoord?.coordinates[0]
@@ -186,6 +186,18 @@ export default class OrderService {
 
     const totalSum: Number = serviceCharge + roundTotalPrice
 
+    let location: any = {
+      type: "Point",
+      coordinates: [parseFloat("0"), parseFloat("0")],
+    }
+
+    if (lat && lng) {
+      location = {
+        type: "Point",
+        coordinates: [parseFloat(vendorLng), parseFloat(vendorLat)],
+      }
+    }
+
     const currentOrder = await OrderRepository.createOrder({
       pickUpCode: parsePickUpNumber,
       orderId,
@@ -195,10 +207,7 @@ export default class OrderService {
       itemId: item,
       orderedBy: new mongoose.Types.ObjectId(locals._id),
       vendorId: new mongoose.Types.ObjectId(vendor._id),
-      locationCoord: {
-        type: "Point",
-        coordinates: [parseFloat(vendorLng), parseFloat(vendorLat)],
-      },
+      locationCoord: location,
       userEmail: locals.email,
       ridersFee,
       isEvent,
@@ -305,7 +314,7 @@ export default class OrderService {
     let vendorLng: any
     let vendorLat: any
 
-    if (!pickUp) {
+    if (deliveryAddress) {
       // Check if vendor.locationCoord is defined before accessing its properties
       if (vendor?.locationCoord && vendor?.locationCoord?.coordinates) {
         vendorLng = vendor?.locationCoord?.coordinates[0]
@@ -359,7 +368,8 @@ export default class OrderService {
       "saturday",
       "sunday",
     ]
-    const allItems: any[] = []
+    let allItems: any[] = []
+    let allMealsItems
 
     for (const day of days) {
       // Use type assertion directly on orderPayload[day]
@@ -374,7 +384,7 @@ export default class OrderService {
         dayPayload.dinner
       ) {
         // Concatenate items for each meal
-        const allMealsItems = dayPayload.breakfast.item.concat(
+        allMealsItems = dayPayload.breakfast.item.concat(
           dayPayload.lunch.item,
           dayPayload.dinner.item,
         )
@@ -382,8 +392,14 @@ export default class OrderService {
       }
     }
 
+    let serviceCharge
+    let parsePickUpNumber
+    let parseOrderCode
+    let roundTotalPrice: any
+    let pickUpNumber
+
     // Calculate the total price based on the item array
-    const netAmount = allItems.reduce((total, currentItem: any) => {
+    let netAmount = allItems.reduce((total, currentItem: any) => {
       return total + currentItem.price * currentItem.quantity
     }, 0)
 
@@ -398,12 +414,6 @@ export default class OrderService {
         price: payloadItem.price,
       })
     })
-
-    let serviceCharge
-    let parsePickUpNumber
-    let parseOrderCode
-    let roundTotalPrice: any
-    let pickUpNumber
 
     if (deliveryAddress) {
       ridersFee = kilometers * 2
@@ -439,6 +449,18 @@ export default class OrderService {
     let orderId = `#${AlphaNumeric(3, "number")}`
     const totalSum: Number = serviceCharge + roundTotalPrice
 
+    let location: any = {
+      type: "Point",
+      coordinates: [parseFloat("0"), parseFloat("0")],
+    }
+
+    if (lat && lng) {
+      location = {
+        type: "Point",
+        coordinates: [parseFloat(vendorLng), parseFloat(vendorLat)],
+      }
+    }
+
     const currentOrder = await OrderRepository.createOrder({
       pickUpCode: parsePickUpNumber,
       orderId,
@@ -448,10 +470,7 @@ export default class OrderService {
       itemId: orderItems,
       orderedBy: new mongoose.Types.ObjectId(locals),
       vendorId: new mongoose.Types.ObjectId(vendor._id),
-      locationCoord: {
-        type: "Point",
-        coordinates: [parseFloat(vendorLng), parseFloat(vendorLat)],
-      },
+      locationCoord: location,
       userEmail: locals.email,
       ridersFee,
       userName: locals.fullName,
@@ -478,7 +497,7 @@ export default class OrderService {
     }
   }
 
-  static async fetchOrderService(payload: Partial<IOrder>) {
+  static async fetchOrderService(payload: Partial<IOrder>, locals: any) {
     const { error, params, limit, skip, sort } = queryConstructor(
       payload,
       "createdAt",
@@ -487,8 +506,14 @@ export default class OrderService {
 
     if (error) return { success: false, msg: error }
 
+    let extra = {}
+    if (locals?.userType === "user") {
+      extra = { orderedBy: new mongoose.Types.ObjectId(locals._id) }
+    }
+
     const order = await OrderRepository.fetchOrderByParams({
       ...params,
+      ...extra,
       limit,
       skip,
       sort,

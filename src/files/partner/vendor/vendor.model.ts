@@ -12,6 +12,7 @@ const VendorSchema = new Schema<IVendor>(
     location: { type: String },
     wallet: { type: Number, default: 0 },
     vendorType: { type: String },
+    deviceId: { type: String },
     payment: [
       {
         accountName: { type: String },
