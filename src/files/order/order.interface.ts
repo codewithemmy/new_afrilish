@@ -19,6 +19,10 @@ export interface IOrder {
       _id: any
       quantity: Number
       price: Number
+      day?: Date
+      date?: Date
+      period?: "breakfast" | "lunch" | "dinner"
+      preferredTime?: string
     },
   ]
   orderedBy: any

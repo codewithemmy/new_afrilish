@@ -27,7 +27,16 @@ export default class OrderService {
       daysOfEvent?: Number
       lng?: any
       lat?: any
-      item: [{ _id: any; quantity: Number; price: Number }]
+      item: [
+        {
+          _id: any
+          quantity: Number
+          price: Number
+          day?: Date
+          period?: "breakfast" | "lunch" | "dinner"
+          preferredTime?: string
+        },
+      ]
       note?: string
       pickUp?: Boolean
       deliveryAddress: string
@@ -37,6 +46,7 @@ export default class OrderService {
       endTime?: string
       eventDescription?: string
       eventLocation?: string
+      schedule?: boolean
     },
     locals: any,
   ): Promise<IResponse> {
@@ -57,6 +67,7 @@ export default class OrderService {
       eventDescription,
       daysOfEvent,
       eventLocation,
+      schedule,
     } = orderPayload
     let kilometers: any
     const vendor = await VendorRepository.fetchVendor(
@@ -213,7 +224,6 @@ export default class OrderService {
       isEvent,
       userName: locals.fullName,
       note,
-      schedule: false,
       serviceCharge,
       orderDate: new Date(),
       totalAmount: totalSum,
@@ -226,6 +236,7 @@ export default class OrderService {
       daysOfEvent,
       eventLocation,
       isBulk,
+      schedule,
     })
 
     if (!currentOrder)

@@ -14,7 +14,7 @@ class OrderController {
     const [error, data] = await manageAsyncOps(
       OrderService.evaluateOrderService(req.body, res.locals.jwt),
     )
-
+    console.log("error", error)
     if (error) return next(error)
     if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
 
@@ -29,7 +29,7 @@ class OrderController {
     const [error, data] = await manageAsyncOps(
       OrderService.evaluateScheduleOrderService(req.body, res.locals.jwt._id),
     )
-    
+
     if (error) return next(error)
     if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
 
