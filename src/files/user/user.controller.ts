@@ -72,6 +72,7 @@ class UserController {
         userPayload: { ...body, image },
       }),
     )
+
     if (error) return next(error)
     if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
 

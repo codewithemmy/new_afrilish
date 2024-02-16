@@ -329,7 +329,7 @@ export default class UserService {
     if (vendorType === "restaurantVendor") {
       delete params.vendorType
       privateVendor = {
-        "vendorType": { $in: ["restaurantVendor", "privateVendor"] },
+        vendorType: { $in: ["restaurantVendor", "privateVendor"] },
       }
     }
 
