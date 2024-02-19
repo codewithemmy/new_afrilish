@@ -1,4 +1,5 @@
 import mongoose, { Schema, model } from "mongoose"
+import cron from "node-cron"
 import { IOrder } from "./order.interface"
 
 const OrderSchema = new Schema<IOrder>(
@@ -105,5 +106,26 @@ const OrderSchema = new Schema<IOrder>(
 OrderSchema.index({ locationCoord: "2dsphere" })
 
 const order = model<IOrder>("Order", OrderSchema, "order")
+
+
+// Define a cron job to run every day at a specific time (e.g., midnight)
+cron.schedule('0 0 * * *', async () => {
+  try {
+    // Calculate the date 7 days ago
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    // Delete orders where isConfirmed is false and createdAt is before sevenDaysAgo
+    const result = await order.deleteMany({
+      isConfirmed: false,
+      createdAt: { $lt: sevenDaysAgo },
+    });
+
+    console.log(`Deleted ${result.deletedCount} orders older than 7 days.`);
+  } catch (error) {
+    console.error('Error deleting orders:', error);
+  }
+});
+
 
 export default order
