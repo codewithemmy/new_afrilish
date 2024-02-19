@@ -17,6 +17,8 @@ import { DayPayload, IOrder } from "./order.interface"
 import { sendMailNotification } from "../../utils/email"
 import RiderRepository from "../rider/rider.repository"
 import TransactionRepository from "../transactions/transaction.repository"
+import { Expo } from "expo-server-sdk"
+const expo = new Expo()
 
 export default class OrderService {
   static async evaluateOrderService(
@@ -241,6 +243,15 @@ export default class OrderService {
 
     if (!currentOrder)
       return { success: false, msg: orderMessages.ORDER_FAILURE }
+
+    let message: any = {
+      to: `${customer?.deviceId}`,
+      sound: "default",
+      title: "Order Notification",
+      body: "Order Successfully Created",
+    }
+
+    await expo.sendPushNotificationsAsync([message])
 
     return {
       success: true,
