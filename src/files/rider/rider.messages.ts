@@ -10,7 +10,7 @@ export const riderMessages = {
   INCORRECT_PASSWORD: "Incorrect password",
   PASSWORD_RESET_ERROR: "Unable to reset password",
   PASSWORD_RESET_SUCCESS: "Password reset successful",
-  NOT_FOUND: "No customer found",
+  NOT_FOUND: "No rider found",
   RIDER_DELETE: "Rider data was successfully deleted",
   DELETE_FAILURE: "Rider data was not deleted, please try again",
   VERIFIED: "Rider verification successful",
