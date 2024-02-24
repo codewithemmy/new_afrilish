@@ -743,14 +743,45 @@ export default class OrderService {
   }
 
   static async adminOrderAnalysisService() {
-    const order = await OrderRepository.adminOrderAnalysis()
+    const allOrders = await OrderRepository.fetchAllOrders({})
+    const pendingOrders = await OrderRepository.fetchAllOrders({
+      orderStatus: "pending",
+    })
+    const completedOrder = await OrderRepository.fetchAllOrders({
+      orderStatus: "completed",
+    })
+    const cancelledOrder = await OrderRepository.fetchAllOrders({
+      orderStatus: "cancelled",
+    })
 
-    if (!order) return { success: true, msg: orderMessages.FETCH_ERROR }
+    const allPayment = allOrders.reduce((accumulator, currentExpense) => {
+      return accumulator + (currentExpense.totalAmount.valueOf() || 0)
+    }, 0)
+
+    const pendingPayment = pendingOrders.reduce(
+      (accumulator, currentExpense) => {
+        return accumulator + (currentExpense.totalAmount.valueOf() || 0)
+      },
+      0,
+    )
+
+    const completedPayment = completedOrder.reduce(
+      (accumulator, currentExpense) => {
+        return accumulator + (currentExpense.totalAmount.valueOf() || 0)
+      },
+      0,
+    )
+    const cancelledPayment = cancelledOrder.reduce(
+      (accumulator, currentExpense) => {
+        return accumulator + (currentExpense.totalAmount.valueOf() || 0)
+      },
+      0,
+    )
 
     return {
       success: true,
       msg: orderMessages.FETCH_SUCCESS,
-      data: order,
+      data: { allPayment, pendingPayment, completedPayment, cancelledPayment },
     }
   }
 }

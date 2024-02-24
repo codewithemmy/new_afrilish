@@ -6,7 +6,6 @@ const {
   fetchOrderController,
   updateOrderController,
   orderAnalysisController,
-  adminOrderAnalysisController,
 } = orderController
 
 const OrderRouter = express.Router()
@@ -20,6 +19,5 @@ OrderRouter.patch("/:orderId", updateOrderController)
 
 //analysis
 OrderRouter.get("/analysis", orderAnalysisController)
-OrderRouter.get("/admin/analysis", adminOrderAnalysisController)
 
 export default OrderRouter
