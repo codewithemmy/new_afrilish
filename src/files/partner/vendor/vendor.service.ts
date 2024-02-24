@@ -56,7 +56,10 @@ export default class VendorService {
     }
   }
 
-  static async fetchVendorService(vendorPayload: Partial<IVendor>, jwtId: any) {
+  static async fetchVendorService(
+    vendorPayload: Partial<IVendor>,
+    locals: any,
+  ) {
     let { error, params, limit, skip, sort } = queryConstructor(
       vendorPayload,
       "createdAt",
@@ -65,7 +68,8 @@ export default class VendorService {
 
     if (error) return { success: false, msg: error }
 
-    params.partnerId = new mongoose.Types.ObjectId(jwtId)
+    params.partnerId = new mongoose.Types.ObjectId(locals._id)
+    if (locals.isAdmin) delete params.partnerId
 
     const vendor = await VendorRepository.fetchVendorByParams({
       ...params,
