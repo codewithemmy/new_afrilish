@@ -506,4 +506,31 @@ export default class UserService {
       msg: `support sent successfully`,
     }
   }
+
+  static async adminUserAnalysis() {
+    let thirtyDays = new Date()
+    thirtyDays.setDate(thirtyDays.getDate() - 30)
+
+    let sevenDays = new Date()
+    sevenDays.setDate(sevenDays.getDate() - 7)
+
+    const users = (await UserRepository.fetchUserByParams({})).length
+    const lastThirtyDays = (
+      await UserRepository.fetchUserByParams({
+        createdAt: { $gte: thirtyDays },
+      })
+    ).length
+
+    const lastSevenDays = (
+      await UserRepository.fetchUserByParams({
+        createdAt: { $gte: sevenDays },
+      })
+    ).length
+
+    return {
+      success: true,
+      msg: userMessages.FETCH_SUCCESS,
+      data: { users, lastThirtyDays, lastSevenDays },
+    }
+  }
 }

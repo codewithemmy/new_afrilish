@@ -26,7 +26,9 @@ export default class UserRepository {
     return user
   }
 
-  static async fetchUserByParams(userPayload: Partial<IUser & IPagination>) {
+  static async fetchUserByParams(
+    userPayload: FilterQuery<Partial<IUser & IPagination>>,
+  ) {
     const {
       limit = LIMIT,
       skip = SKIP,
