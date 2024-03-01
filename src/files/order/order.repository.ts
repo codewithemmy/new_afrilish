@@ -90,7 +90,7 @@ export default class OrderRepository {
           select:
             "-createdAt -updatedAt -_id -startDate -endDate -isDelete -__v -userId -status",
         })
-        .sort(sort)
+        .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
 

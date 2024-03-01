@@ -158,7 +158,7 @@ export default class RiderService {
     })
 
     if (rider.length < 1)
-      return { success: false, msg: riderMessages.NOT_FOUND, data: [] }
+      return { success: true, msg: riderMessages.NOT_FOUND, data: [] }
 
     return {
       success: true,
