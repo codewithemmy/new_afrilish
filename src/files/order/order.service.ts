@@ -29,6 +29,7 @@ export default class OrderService {
       daysOfEvent?: Number
       lng?: any
       lat?: any
+      dateRange?: [string]
       item: [
         {
           _id: any
@@ -70,6 +71,7 @@ export default class OrderService {
       daysOfEvent,
       eventLocation,
       schedule,
+      dateRange,
     } = orderPayload
     let kilometers: any
     const vendor = await VendorRepository.fetchVendor(
@@ -214,6 +216,7 @@ export default class OrderService {
     const currentOrder = await OrderRepository.createOrder({
       pickUpCode: parsePickUpNumber,
       orderId,
+      dateRange,
       pickUp,
       deliveryAddress,
       orderCode: parseOrderCode,

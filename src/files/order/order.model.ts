@@ -15,6 +15,7 @@ const OrderSchema = new Schema<IOrder>(
     isBulk: { type: Boolean, default: false },
     rating: { type: Boolean, default: false },
     deliveryAddress: { type: String },
+    dateRange: [{ type: String }],
     note: { type: String },
     itemId: [
       {
@@ -107,25 +108,23 @@ OrderSchema.index({ locationCoord: "2dsphere" })
 
 const order = model<IOrder>("Order", OrderSchema, "order")
 
-
 // Define a cron job to run every day at a specific time (e.g., midnight)
-cron.schedule('0 0 * * *', async () => {
+cron.schedule("0 0 * * *", async () => {
   try {
     // Calculate the date 7 days ago
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    const sevenDaysAgo = new Date()
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
 
     // Delete orders where isConfirmed is false and createdAt is before sevenDaysAgo
     const result = await order.deleteMany({
       isConfirmed: false,
       createdAt: { $lt: sevenDaysAgo },
-    });
+    })
 
-    console.log(`Deleted ${result.deletedCount} orders older than 7 days.`);
+    console.log(`Deleted ${result.deletedCount} orders older than 7 days.`)
   } catch (error) {
-    console.error('Error deleting orders:', error);
+    console.error("Error deleting orders:", error)
   }
-});
-
+})
 
 export default order
