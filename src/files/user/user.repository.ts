@@ -36,9 +36,12 @@ export default class UserRepository {
       ...restOfPayload
     } = userPayload
 
-    const user: Awaited<IUser[] | null> = await User.find({
-      ...restOfPayload,
-    })
+    const user: Awaited<IUser[] | null> = await User.find(
+      {
+        ...restOfPayload,
+      },
+      { password: 0, verificationOtp: 0 },
+    )
       .sort(sort)
       .skip(skip)
       .limit(limit)

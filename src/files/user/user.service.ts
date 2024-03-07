@@ -280,7 +280,6 @@ export default class UserService {
         coordinates: [parseFloat(lngChange), parseFloat(latChange)],
       }
     }
-    console.log("restOfPayload", restOfPayload)
     const user = await UserRepository.updateUsersProfile(
       { _id: new mongoose.Types.ObjectId(params) },
       {
