@@ -24,7 +24,9 @@ export default class ClassRepository {
     return payout
   }
 
-  static async fetchPayoutByParams(payload: Partial<IPayout & IPagination>) {
+  static async fetchPayoutByParams(
+    payload: FilterQuery<Partial<IPayout & IPagination>>,
+  ) {
     const {
       limit = LIMIT,
       skip = SKIP,
@@ -35,7 +37,6 @@ export default class ClassRepository {
     const payout: Awaited<IPayout[] | null> = await Payout.find({
       ...restOfPayload,
     })
-      .populate({ path: "item" })
       .sort(sort)
       .skip(skip)
       .limit(limit)

@@ -31,7 +31,11 @@ class PayoutController {
     return responseHandler(res, statusCode.CREATED, data!)
   }
 
-  async updatePayoutController(req: Request, res: Response, next: NextFunction) {
+  async updatePayoutController(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
     const { image, body } = fileModifier(req)
     const [error, data] = await manageAsyncOps(
       PayoutService.updatePayoutService(req.params.payoutId, {

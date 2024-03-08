@@ -7,8 +7,13 @@ const PayoutSchema = new Schema<IPayout>(
     image: { type: String },
     frequency: { type: String },
     remark: { type: String },
+    status: {
+      type: String,
+      enum: ["pending", "confirmed"],
+      default: "pending",
+    },
     amount: { type: Number },
-    userType: { type: String, enum: ["Rider", "Partner"] },
+    userType: { type: String, enum: ["Rider", "Vendor"] },
     recipient: {
       type: mongoose.Types.ObjectId,
       refPath: "userType",

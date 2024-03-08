@@ -2,8 +2,9 @@ export interface IPayout {
   _id?: any
   image?: string
   title: string
-  userType: "Partner" | "Rider"
+  userType: "Vendor" | "Rider"
   frequency: string
+  status: "pending" | "confirmed"
   remark: string
   amount: Number
   recipient: any
