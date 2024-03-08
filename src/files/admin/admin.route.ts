@@ -7,7 +7,12 @@ import userController from "../user/user.controller"
 
 const AdminRouter = express.Router()
 
-const { createAdmin, adminLogin, suspendUserController } = AdminController
+const {
+  createAdmin,
+  adminLogin,
+  suspendUserController,
+  suspendPartnerController,
+} = AdminController
 const { adminOrderAnalysisController } = orderController
 const { adminUserAnalysisController } = userController
 
@@ -18,7 +23,8 @@ AdminRouter.post("/login", adminLogin)
 AdminRouter.get("/order/analysis", adminOrderAnalysisController)
 AdminRouter.get("/user/analysis", adminUserAnalysisController)
 
-//user
+//user and partner
 AdminRouter.patch("/user/suspend/:id", suspendUserController)
+AdminRouter.patch("/partner/suspend/:vendorId", suspendPartnerController)
 
 export default AdminRouter

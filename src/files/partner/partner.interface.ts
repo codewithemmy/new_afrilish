@@ -4,6 +4,7 @@ export interface IPartner {
   phone: string
   email: string
   authType: string
+  isSuspend: Boolean
   business?: IBusiness
   vendorId?: [any]
   location?: string

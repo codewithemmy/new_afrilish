@@ -4,6 +4,8 @@ import { IAdmin, IAdminLogin } from "./admin.interface"
 import AdminRepository from "./admin.repository"
 import { IToken, hashPassword, tokenHandler, verifyPassword } from "../../utils"
 import { adminMessages } from "./admin.messages"
+import { IPartner } from "../partner/partner.interface"
+import PartnerRepository from "../partner/partner.repository"
 
 export default class AdminService {
   static async create(adminPayload: Partial<IAdmin>): Promise<IResponse> {
@@ -52,71 +54,35 @@ export default class AdminService {
     }
   }
 
-  // static async fetchAdminWithPassword(
-  //   adminPayload: Partial<IAdmin>,
-  // ): Promise<IAdminLogin | null> {
-  //   return AdminRepository.fetchAdminWithPassword(adminPayload)
-  // }
+  //to suspend partner or vendor
+  static async suspendPartner(
+    vendorId: any,
+    payload: Partial<IPartner>,
+  ): Promise<IResponse> {
+    const { isSuspend } = payload
 
-  // static async validateAdmin(
-  //   adminPayload: Partial<IAdmin>,
-  // ): Promise<Pick<IAdmin, "_id"> | null> {
-  //   return AdminRepository.validateAdmin(adminPayload)
-  // }
+    const validateVendor = await PartnerRepository.fetchPartner(
+      { vendorId: { $in: [vendorId] } },
+      {},
+    )
 
-  // static async updateAdminDetails(
-  //   adminPayload: Partial<IAdmin>,
-  //   update: Partial<IAdmin>,
-  // ): Promise<{ updatedExisting?: boolean | undefined }> {
-  //   return AdminRepository.updateAdminDetails(adminPayload, update)
-  // }
+    if (!validateVendor) return { success: false, msg: `Invalid vendor Id` }
 
-  // static async updateAdminProfile(
-  //   admin: IToken,
-  //   adminPayload: Partial<IAdmin>,
-  // ): Promise<IResponse> {
-  //   const { _id } = admin
+    const updatePartner = await PartnerRepository.updatePartnerDetails(
+      {
+        _id: new mongoose.Types.ObjectId(validateVendor._id),
+      },
+      { isSuspend },
+    )
 
-  //   const update = await AdminRepository.updateAdminDetails(
-  //     {
-  //       _id: new mongoose.Types.ObjectId(_id),
-  //     },
-  //     { ...adminPayload },
-  //   )
-  //   if (!update)
-  //     return {
-  //       success: false,
-  //       msg: adminMessages.UPDATE_PROFILE_FAILURE,
-  //     }
-
-  //   return { success: true, msg: adminMessages.UPDATE_PROFILE_SUCCESS }
-  // }
-
-  // static async getAdminDetails(
-  //   adminPayload: Partial<IAdmin & IPagination>,
-  // ): Promise<IResponse | null> {
-  //   const { _id, email } = adminPayload
-
-  //   const admin = await AdminRepository.fetchAdminsByParams(
-  //     { _id, email, isDeleted: false },
-  //     { limit: 0, skip: 0, sort: "asc" },
-  //   )
-
-  //   if (!admin) return { success: false, msg: adminMessages.NOT_FOUND }
-
-  //   return { success: true, msg: adminMessages.FETCH, data: admin }
-  // }
-
-  // static async deleteAdminProfile(admin: IToken): Promise<IResponse> {
-  //   const { _id } = admin
-
-  //   await AdminRepository.updateAdminDetails(
-  //     { _id: new mongoose.Types.ObjectId(_id) },
-  //     {
-  //       $set: { isDeleted: true },
-  //     },
-  //   )
-
-  //   return { success: true, msg: adminMessages.DELETE }
-  // }
+    if (!updatePartner)
+      return {
+        success: false,
+        msg: "Unable to suspend partner",
+      }
+    return {
+      success: true,
+      msg: "Partner successfully suspend",
+    }
+  }
 }

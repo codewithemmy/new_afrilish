@@ -16,6 +16,7 @@ const PartnerSchema = new Schema<IPartner>(
     isDelete: { type: Boolean, default: false },
     isVerified: { type: Boolean, default: false },
     verificationOtp: { type: String },
+    isSuspend: { type: Boolean, default: false },
   },
   { timestamps: true },
 )
