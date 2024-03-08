@@ -40,9 +40,12 @@ export default class VendorRepository {
       ...restOfPayload
     } = vendorPayload
 
-    const vendor: Awaited<IVendor[] | null> = await Vendor.find({
-      ...restOfPayload,
-    })
+    const vendor: Awaited<IVendor[] | null> = await Vendor.find(
+      {
+        ...restOfPayload,
+      },
+      { deviceId: 0 },
+    )
       .sort(sort)
       .skip(skip)
       .limit(limit)
