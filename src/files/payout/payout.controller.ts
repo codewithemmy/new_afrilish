@@ -36,12 +36,8 @@ class PayoutController {
     res: Response,
     next: NextFunction,
   ) {
-    const { image, body } = fileModifier(req)
     const [error, data] = await manageAsyncOps(
-      PayoutService.updatePayoutService(req.params.payoutId, {
-        image,
-        ...body,
-      }),
+      PayoutService.updatePayoutService(req.params.payoutId, req.body),
     )
 
     if (error) return next(error)

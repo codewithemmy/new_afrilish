@@ -4,7 +4,6 @@ import { IPayout } from "./payout.interface"
 const PayoutSchema = new Schema<IPayout>(
   {
     title: { type: String },
-    image: { type: String },
     remark: { type: String },
     refNumber: { type: String },
     status: {

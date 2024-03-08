@@ -17,10 +17,6 @@ PayoutRouter.get("/", fetchPayoutController)
 //routes
 PayoutRouter.post("/", createPayoutController)
 
-PayoutRouter.patch(
-  "/:payoutId",
-  uploadManager("image").single("image"),
-  updatePayoutController,
-)
+PayoutRouter.patch("/:payoutId", updatePayoutController)
 
 export default PayoutRouter
