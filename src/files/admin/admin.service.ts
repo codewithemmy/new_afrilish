@@ -41,6 +41,7 @@ export default class AdminService {
     const token = await tokenHandler({
       _id: validate._id,
       email: validate.email,
+      userType: "admin",
       isAdmin: true,
     })
 

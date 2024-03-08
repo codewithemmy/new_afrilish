@@ -5,8 +5,8 @@ const PayoutSchema = new Schema<IPayout>(
   {
     title: { type: String },
     image: { type: String },
-    frequency: { type: String },
     remark: { type: String },
+    refNumber: { type: String },
     status: {
       type: String,
       enum: ["pending", "confirmed"],
@@ -14,6 +14,11 @@ const PayoutSchema = new Schema<IPayout>(
     },
     amount: { type: Number },
     userType: { type: String, enum: ["Rider", "Vendor"] },
+    initiator: { type: String, enum: ["Rider", "Vendor", "Admin"] },
+    initiatorId: {
+      type: mongoose.Types.ObjectId,
+      refPath: "initiator",
+    },
     recipient: {
       type: mongoose.Types.ObjectId,
       refPath: "userType",

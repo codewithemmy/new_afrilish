@@ -37,6 +37,14 @@ export default class ClassRepository {
     const payout: Awaited<IPayout[] | null> = await Payout.find({
       ...restOfPayload,
     })
+      .populate({
+        path: "recipient",
+        select: "email name fullName firstName lastName",
+      })
+      .populate({
+        path: "initiatorId",
+        select: "email name fullName firstName lastName",
+      })
       .sort(sort)
       .skip(skip)
       .limit(limit)
