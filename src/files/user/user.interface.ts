@@ -11,6 +11,7 @@ export interface IUser {
   loginCode: Number
   home: string
   address: string
+  isSuspend: Boolean
   office: string
   locationCoord: ILocation
   referralCode?: string
