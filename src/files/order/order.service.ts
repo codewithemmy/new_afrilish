@@ -560,6 +560,7 @@ export default class OrderService {
     locals: string,
   ) {
     const { orderStatus, pickUpCode, confirmDelivery } = data
+
     const findOrder = await OrderRepository.fetchOrder(
       { _id: new mongoose.Types.ObjectId(orderId) },
       {},

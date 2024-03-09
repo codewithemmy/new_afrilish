@@ -63,7 +63,7 @@ VendorSchema.pre("findOneAndUpdate", async function (next) {
     const vendor = await this.model.findOne(this.getQuery())
 
     // Calculate average rating only if there are ratings
-    if (vendor.rating && vendor.rating.length > 0) {
+    if (vendor?.rating && vendor?.rating?.length > 0) {
       const totalRating = vendor.rating.reduce(
         (sum: number, current: any) => sum + current.rate,
         0,
