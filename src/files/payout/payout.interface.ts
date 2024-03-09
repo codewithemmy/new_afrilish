@@ -9,6 +9,8 @@ export interface IPayout {
   refNumber: string
   remark: string
   amount: Number
+  accountNumber: string
+  bank: string
   recipient: any
   isDelete: boolean
   createdAt?: Date

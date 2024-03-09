@@ -12,6 +12,8 @@ const PayoutSchema = new Schema<IPayout>(
       default: "pending",
     },
     amount: { type: Number },
+    accountNumber: { type: String },
+    bank: { type: String },
     userType: { type: String, enum: ["Rider", "Vendor"] },
     initiator: { type: String, enum: ["Rider", "Vendor", "Admin"] },
     initiatorId: {
