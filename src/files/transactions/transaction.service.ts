@@ -3,7 +3,7 @@ import { IResponse } from "../../constants"
 import StripePaymentService from "../../providers/stripe/stripe"
 import { transactionMessages } from "./transaction.messages"
 import { IPaymentProvider } from "./transaction.provider"
-
+import { Expo } from "expo-server-sdk"
 import TransactionRepository from "./transaction.repository"
 import UserRepository from "../user/user.repository"
 import { providerMessages } from "../../providers/providers.messages"
@@ -11,6 +11,7 @@ import OrderRepository from "../order/order.repository"
 import { IOrder } from "../order/order.interface"
 import { ITransaction } from "./transaction.interface"
 import { queryConstructor } from "../../utils"
+const expo = new Expo()
 
 export default class TransactionService {
   private static paymentProvider: IPaymentProvider
@@ -146,6 +147,20 @@ export default class TransactionService {
         },
         { paymentStatus: "paid", isConfirmed: true },
       )
+
+      const customer = await UserRepository.fetchUser(
+        { _id: new mongoose.Types.ObjectId(getTransaction.userId) },
+        {},
+      )
+
+      let message: any = {
+        to: `${customer?.deviceId}`,
+        sound: "default",
+        title: "Order Notification",
+        body: "Order Successfully Created",
+      }
+
+      await expo.sendPushNotificationsAsync([message])
     }
   }
 
