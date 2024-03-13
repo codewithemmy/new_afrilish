@@ -24,6 +24,7 @@ export interface IOrder {
       date?: Date
       period?: "breakfast" | "lunch" | "dinner"
       preferredTime?: string
+      delivered?: Boolean
     },
   ]
   orderedBy: any

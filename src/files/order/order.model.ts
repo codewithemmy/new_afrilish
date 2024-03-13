@@ -26,6 +26,7 @@ const OrderSchema = new Schema<IOrder>(
         date: { type: Date },
         period: { type: String },
         preferredTime: { type: String },
+        delivered: { type: Boolean, default: false },
       },
     ],
     transactionId: [{ type: mongoose.Types.ObjectId, ref: "Transaction" }],
