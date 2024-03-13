@@ -77,7 +77,7 @@ class PartnerController {
   ) {
     const [error, data] = await manageAsyncOps(
       VendorService.operationUpdateService({
-        params: req.params as { vendorId: string },
+        params: res.locals.jwt.vendorId as { vendorId: string },
         vendorPayload: req.body,
       }),
     )
@@ -153,7 +153,7 @@ class PartnerController {
     const [error, data] = await manageAsyncOps(
       VendorService.fetchVendorService(req.query, res.locals.jwt),
     )
-    
+
     if (error) return next(error)
     if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
 
@@ -168,7 +168,7 @@ class PartnerController {
     const { image, body } = fileModifier(req)
     const [error, data] = await manageAsyncOps(
       VendorService.updateVendor({
-        params: { vendorId: req.params.vendorId },
+        params: { vendorId: res.locals.jwt.vendorId },
         vendorPayload: { ...body, image },
       }),
     )
@@ -259,7 +259,7 @@ class PartnerController {
   ) {
     const [error, data] = await manageAsyncOps(
       VendorService.paymentUpdateService({
-        params: req.params as { vendorId: string },
+        params: res.locals.jwt.vendorId as { vendorId: string },
         vendorPayload: req.body,
       }),
     )
@@ -276,7 +276,7 @@ class PartnerController {
     next: NextFunction,
   ) {
     const [error, data] = await manageAsyncOps(
-      VendorService.getVendorPayment(req.params.vendorId as string),
+      VendorService.getVendorPayment(res.locals.jwt.vendorId as string),
     )
 
     if (error) return next(error)
@@ -291,7 +291,9 @@ class PartnerController {
     next: NextFunction,
   ) {
     const [error, data] = await manageAsyncOps(
-      VendorService.deleteVendorPaymentDetails(req.params.vendorId as string),
+      VendorService.deleteVendorPaymentDetails(
+        res.locals.jwt.vendorId as string,
+      ),
     )
     if (error) return next(error)
     if (!data?.success) return next(new CustomError(data!.msg, 400, data!))

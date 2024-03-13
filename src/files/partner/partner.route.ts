@@ -54,7 +54,7 @@ PartnerRouter.post("/login/auth", partnerAuthLoginController)
 PartnerRouter.use(isAuthenticated)
 
 PartnerRouter.get("/", fetchSinglePartnerController)
-PartnerRouter.patch("/vendor/operation/:vendorId", operationUpdateController)
+PartnerRouter.patch("/vendor/operation", operationUpdateController)
 
 PartnerRouter.patch("/:partnerId", updatePartnerController)
 
@@ -66,16 +66,16 @@ PartnerRouter.post(
 )
 
 PartnerRouter.patch(
-  "/vendor/:vendorId",
+  "/vendor",
   uploadManager("vendorImage").single("image"),
   updateVendorController,
 )
 
 PartnerRouter.get("/vendor", fetchVendorController)
 
-PartnerRouter.patch("/vendor/payment/:vendorId", updatePaymentController)
-PartnerRouter.get("/vendor/payment/:vendorId", getVendorPaymentController)
-PartnerRouter.delete("/vendor/payment/:vendorId", deleteVendorPaymentController)
+PartnerRouter.patch("/vendor/payment", updatePaymentController)
+PartnerRouter.get("/vendor/payment", getVendorPaymentController)
+PartnerRouter.delete("/vendor/payment", deleteVendorPaymentController)
 
 //vendor analysis
 PartnerRouter.get("/vendor/admin/analysis", getVendorAnalysisController)

@@ -1,5 +1,5 @@
 import { IResponse } from "../../../constants"
-import { hashPassword, queryConstructor } from "../../../utils"
+import { hashPassword, queryConstructor, tokenHandler } from "../../../utils"
 import { IVendor } from "../partner.interface"
 import VendorRepository from "./vendor.repository"
 import { partnerMessages } from "../partner.messages"
@@ -49,10 +49,15 @@ export default class VendorService {
       },
     )
 
+    let token = await tokenHandler({
+      _id: vendor.partnerId,
+      vendorId: vendor._id,
+    })
+
     return {
       success: true,
       msg: partnerMessages.VENDOR_SUCCESS,
-      data: vendor,
+      data: { vendor, partnerToken: token },
     }
   }
 
