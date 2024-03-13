@@ -326,6 +326,21 @@ class PartnerController {
 
     return responseHandler(res, statusCode.SUCCESS, data!)
   }
+
+  async switchVendorController(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    const [error, data] = await manageAsyncOps(
+      VendorService.switchVendor(req.params.vendorId),
+    )
+
+    if (error) return next(error)
+    if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
+
+    return responseHandler(res, statusCode.SUCCESS, data!)
+  }
 }
 
 export default new PartnerController()

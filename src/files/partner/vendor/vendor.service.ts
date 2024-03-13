@@ -52,12 +52,42 @@ export default class VendorService {
     let token = await tokenHandler({
       _id: vendor.partnerId,
       vendorId: vendor._id,
+      userType: "partner",
+      isPartner: true,
     })
 
     return {
       success: true,
       msg: partnerMessages.VENDOR_SUCCESS,
       data: { vendor, partnerToken: token },
+    }
+  }
+
+  static async switchVendor(vendorPayload: string): Promise<IResponse> {
+    const validateVendor = await VendorRepository.fetchVendor(
+      {
+        _id: new mongoose.Types.ObjectId(vendorPayload),
+      },
+      {
+        _id: 1,
+        partnerId: 1,
+      },
+    )
+    console.log("validateVendor", validateVendor)
+    if (!validateVendor)
+      return { success: false, msg: `Unable to validate vendor Id` }
+
+    let token = await tokenHandler({
+      _id: validateVendor._id,
+      vendorId: validateVendor.partnerId,
+      userType: "partner",
+      isPartner: true,
+    })
+
+    return {
+      success: true,
+      msg: partnerMessages.VENDOR_SUCCESS,
+      data: { partnerToken: token },
     }
   }
 
