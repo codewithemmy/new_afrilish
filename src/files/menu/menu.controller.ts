@@ -23,7 +23,7 @@ class MenuController {
 
   async fetchMenuController(req: Request, res: Response, next: NextFunction) {
     const [error, data] = await manageAsyncOps(
-      MenuService.fetchMenuService(req.query),
+      MenuService.fetchMenuService(req.query, res.locals.jwt),
     )
     if (error) return next(error)
     if (!data?.success) return next(new CustomError(data!.msg, 400, data!))

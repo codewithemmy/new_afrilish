@@ -6,6 +6,7 @@ import { menuMessages } from "./menu.messages"
 import { IMenu } from "./menu.interface"
 import PartnerRepository from "../partner/partner.repository"
 import ItemRepository from "../item/item.repository"
+import vendor from "../partner/vendor/vendor.model"
 
 export default class MenuService {
   static async createMenu(menuPayload: Partial<IMenu>): Promise<IResponse> {
@@ -31,7 +32,10 @@ export default class MenuService {
     }
   }
 
-  static async fetchMenuService(menuPayload: Partial<IMenu>) {
+  static async fetchMenuService(
+    menuPayload: Partial<IMenu>,
+    vendorParams?: any,
+  ) {
     const { error, params, limit, skip, sort } = queryConstructor(
       menuPayload,
       "createdAt",
@@ -40,8 +44,13 @@ export default class MenuService {
 
     if (error) return { success: false, msg: error }
 
+    let extra = {}
+    if (vendorParams.userType === "partner") {
+      extra = { vendorId: new mongoose.Types.ObjectId(vendorParams.vendorId) }
+    }
     const menu = await MenuRepository.fetchMenuByParams({
       ...params,
+      ...extra,
       limit,
       skip,
       sort,

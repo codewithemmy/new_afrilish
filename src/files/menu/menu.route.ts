@@ -14,7 +14,7 @@ const {
 } = menuController
 
 MenuRouter.get("/", fetchMenuController)
-
+MenuRouter.get("/vendor-menu", isAuthenticated, fetchMenuController)
 // MenuRouter.use(isAuthenticated)
 
 //routes
