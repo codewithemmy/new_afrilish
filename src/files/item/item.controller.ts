@@ -10,9 +10,10 @@ class ItemController {
     const { image, body } = fileModifier(req)
     const [error, data] = await manageAsyncOps(
       ItemService.createItem({
+        ...body,
         image,
         partnerId: res.locals.jwt._id,
-        ...body,
+        vendorId: res.locals.jwt.vendorId,
       }),
     )
 
