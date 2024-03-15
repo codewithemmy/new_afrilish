@@ -7,7 +7,7 @@ import NotificationService from "./notification.service"
 class NotificationController {
   async createNotification(req: Request, res: Response, next: NextFunction) {
     const [error, data] = await manageAsyncOps(
-      NotificationService.create(req.body),
+      NotificationService.create(req.body, res.locals.jwt),
     )
 
     if (error) return next(error)
@@ -16,6 +16,7 @@ class NotificationController {
 
     return responseHandler(res, 200, data!)
   }
+
   async fetchNotifications(req: Request, res: Response, next: NextFunction) {
     const [error, data] = await manageAsyncOps(
       NotificationService.fetchUserNotifications(req.query),

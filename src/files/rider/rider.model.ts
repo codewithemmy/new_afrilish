@@ -14,6 +14,7 @@ const RiderSchema = new Schema<IRider>(
       coordinates: [],
     },
     location: { type: String },
+    deviceId: { type: String },
     isDelete: { type: Boolean },
     wallet: { type: Number, default: 0 },
     registration: {

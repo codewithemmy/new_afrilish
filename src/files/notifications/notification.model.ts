@@ -11,6 +11,7 @@ const NotificationSchema = new Schema<INotification>(
       type: mongoose.Types.ObjectId,
       refPath: "recipient",
     },
+    general: { type: Boolean, default: false },
     createdBy: { type: String },
     subject: {
       type: String,

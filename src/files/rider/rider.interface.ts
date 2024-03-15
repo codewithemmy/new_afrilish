@@ -16,6 +16,7 @@ export interface IRider {
   bank: IBank
   rating?: Number
   verificationToken: string
+  deviceId: string
   passwordToken: string
   createdAt?: Date
   updatedAt?: Date
