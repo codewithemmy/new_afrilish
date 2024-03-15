@@ -169,7 +169,7 @@ class PartnerController {
     const [error, data] = await manageAsyncOps(
       VendorService.updateVendor(res.locals.jwt, { ...body, image }),
     )
-    console.log(res.locals.jwt)
+
     if (error) return next(error)
     if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
 

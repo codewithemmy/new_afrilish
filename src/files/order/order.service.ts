@@ -524,6 +524,9 @@ export default class OrderService {
     if (locals?.userType === "user") {
       extra = { orderedBy: new mongoose.Types.ObjectId(locals._id) }
     }
+    if (locals?.userType === "partner") {
+      extra = { vendorId: new mongoose.Types.ObjectId(locals.vendorId) }
+    }
 
     const order = await OrderRepository.fetchOrderByParams({
       ...params,
