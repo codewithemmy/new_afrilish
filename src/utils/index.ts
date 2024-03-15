@@ -1,14 +1,7 @@
 import { NextFunction, Response, Request } from "express"
 import config from "../core/config"
 
-import {
-  Secret,
-  decode,
-  verify,
-  sign,
-  VerifyOptions,
-  VerifyErrors,
-} from "jsonwebtoken"
+import { verify, sign } from "jsonwebtoken"
 import constants, { IResponse } from "../constants"
 import mongoose from "mongoose"
 import bcrypt from "bcrypt"

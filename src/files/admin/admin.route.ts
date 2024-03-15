@@ -12,9 +12,12 @@ const {
   adminLogin,
   suspendUserController,
   suspendPartnerController,
+  adminPasswordReset,
 } = AdminController
 const { adminOrderAnalysisController } = orderController
 const { adminUserAnalysisController } = userController
+
+AdminRouter.use(isAuthenticated)
 
 AdminRouter.post("/", createAdmin)
 AdminRouter.post("/login", adminLogin)
@@ -26,5 +29,8 @@ AdminRouter.get("/user/analysis", adminUserAnalysisController)
 //user and partner
 AdminRouter.patch("/user/suspend/:id", suspendUserController)
 AdminRouter.patch("/partner/suspend/:vendorId", suspendPartnerController)
+
+//reset admin password
+AdminRouter.post("/reset-password", adminPasswordReset)
 
 export default AdminRouter

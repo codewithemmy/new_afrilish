@@ -37,7 +37,7 @@ export default class AdminRepository {
         ...userPayload,
       },
       { ...update },
-      { rawResult: true },
+      { includeResultMetadata: true },
     )
 
     return response!

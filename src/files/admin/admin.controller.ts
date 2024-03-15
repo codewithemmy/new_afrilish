@@ -25,6 +25,22 @@ class AdminController {
     return responseHandler(res, 200, data!)
   }
 
+  async adminPasswordReset(req: Request, res: Response, next: NextFunction) {
+    const [error, data] = await manageAsyncOps(
+      AdminService.resetPasswordService({
+        email: res.locals.jwt.email,
+        oldPassword: req.body.oldPassword,
+        newPassword: req.body.newPassword,
+      }),
+    )
+
+    if (error) return next(error)
+
+    if (!data?.success) return next(new CustomError(data!.msg, 400))
+
+    return responseHandler(res, 200, data!)
+  }
+
   async suspendUserController(req: Request, res: Response, next: NextFunction) {
     const [error, data] = await manageAsyncOps(
       UserService.updateUserProfile({

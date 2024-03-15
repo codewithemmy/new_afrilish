@@ -1,12 +1,6 @@
 import mongoose, { mongo } from "mongoose"
 import { IResponse } from "../../constants"
-import {
-  AlphaNumeric,
-  hashPassword,
-  queryConstructor,
-  tokenHandler,
-  verifyPassword,
-} from "../../utils"
+import { queryConstructor } from "../../utils"
 import ItemRepository from "./item.repository"
 import { itemMessages } from "./item.messages"
 import { IItem } from "./item.interface"
