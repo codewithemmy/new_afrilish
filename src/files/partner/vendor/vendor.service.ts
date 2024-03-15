@@ -156,7 +156,7 @@ export default class VendorService {
   }
 
   static async operationUpdateService(data: {
-    params: { vendorId: string }
+    params: any
     vendorPayload: Partial<IVendor>
   }) {
     const { params, vendorPayload } = data

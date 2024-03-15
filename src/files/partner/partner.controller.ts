@@ -77,7 +77,7 @@ class PartnerController {
   ) {
     const [error, data] = await manageAsyncOps(
       VendorService.operationUpdateService({
-        params: res.locals.jwt.vendorId as { vendorId: string },
+        params: res.locals.jwt,
         vendorPayload: req.body,
       }),
     )
