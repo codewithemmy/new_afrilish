@@ -54,6 +54,11 @@ PartnerRouter.post("/login/auth", partnerAuthLoginController)
 
 PartnerRouter.use(isAuthenticated)
 
+PartnerRouter.patch(
+  "/vendor",
+  uploadManager("vendorImage").single("image"),
+  updateVendorController,
+)
 PartnerRouter.get("/", fetchSinglePartnerController)
 PartnerRouter.patch("/vendor/operation", operationUpdateController)
 
@@ -64,12 +69,6 @@ PartnerRouter.post(
   "/vendor",
   uploadManager("vendorImage").single("image"),
   vendorController,
-)
-
-PartnerRouter.patch(
-  "/vendor",
-  uploadManager("vendorImage").single("image"),
-  updateVendorController,
 )
 
 PartnerRouter.get("/vendor", fetchVendorController)

@@ -167,12 +167,9 @@ class PartnerController {
   ) {
     const { image, body } = fileModifier(req)
     const [error, data] = await manageAsyncOps(
-      VendorService.updateVendor({
-        params: { vendorId: res.locals.jwt.vendorId },
-        vendorPayload: { ...body, image },
-      }),
+      VendorService.updateVendor(res.locals.jwt, { ...body, image }),
     )
-
+    console.log(res.locals.jwt)
     if (error) return next(error)
     if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
 
@@ -263,6 +260,7 @@ class PartnerController {
         vendorPayload: req.body,
       }),
     )
+    console.log("error", res.locals.jwt)
 
     if (error) return next(error)
     if (!data?.success) return next(new CustomError(data!.msg, 400, data!))

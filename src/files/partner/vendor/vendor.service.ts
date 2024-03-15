@@ -73,17 +73,17 @@ export default class VendorService {
         partnerId: 1,
       },
     )
-    console.log("validateVendor", validateVendor)
+
     if (!validateVendor)
       return { success: false, msg: `Unable to validate vendor Id` }
 
     let token = await tokenHandler({
-      _id: validateVendor._id,
-      vendorId: validateVendor.partnerId,
+      _id: validateVendor.partnerId,
+      vendorId: validateVendor._id,
       userType: "partner",
       isPartner: true,
     })
-
+    console.log("vendor", validateVendor._id)
     return {
       success: true,
       msg: partnerMessages.VENDOR_SUCCESS,
@@ -123,12 +123,10 @@ export default class VendorService {
     }
   }
 
-  static async updateVendor(data: {
-    params: { vendorId: string }
-    vendorPayload: Partial<IVendor & ICoord>
-  }) {
-    const { params, vendorPayload } = data
-
+  static async updateVendor(
+    vendorParams: any,
+    vendorPayload: Partial<IVendor & ICoord>,
+  ) {
     const { lng, lat, ...restOfPayload } = vendorPayload
     let locationCoord
 
@@ -143,7 +141,7 @@ export default class VendorService {
     }
 
     const vendor = await VendorRepository.updateVendorDetails(
-      { _id: new mongoose.Types.ObjectId(params.vendorId) },
+      { _id: new mongoose.Types.ObjectId(vendorParams.vendorId) },
       {
         $set: {
           ...restOfPayload,
