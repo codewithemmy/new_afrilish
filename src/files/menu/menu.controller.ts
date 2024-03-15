@@ -9,10 +9,13 @@ class MenuController {
   async createMenuController(req: Request, res: Response, next: NextFunction) {
     const { image, body } = fileModifier(req)
     const [error, data] = await manageAsyncOps(
-      MenuService.createMenu({
-        image,
-        ...body,
-      }),
+      MenuService.createMenu(
+        {
+          image,
+          ...body,
+        },
+        res.locals.jwt,
+      ),
     )
 
     if (error) return next(error)

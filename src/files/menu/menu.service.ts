@@ -9,19 +9,26 @@ import ItemRepository from "../item/item.repository"
 import vendor from "../partner/vendor/vendor.model"
 
 export default class MenuService {
-  static async createMenu(menuPayload: Partial<IMenu>): Promise<IResponse> {
-    const { title, vendorId } = menuPayload
+  static async createMenu(
+    menuPayload: Partial<IMenu>,
+    vendorParams: any,
+  ): Promise<IResponse> {
+    const { title } = menuPayload
 
-    if (!vendorId) return { success: false, msg: menuMessages.EMPTY_VENDOR }
+    if (!vendorParams.vendorId)
+      return { success: false, msg: menuMessages.EMPTY_VENDOR }
 
     const menuExist = await MenuRepository.fetchMenu(
-      { title, vendorId: new mongoose.Types.ObjectId(vendorId) },
+      { title, vendorId: new mongoose.Types.ObjectId(vendorParams.vendorId) },
       {},
     )
 
     if (menuExist) return { success: false, msg: menuMessages.EXISTING_MENU }
 
-    const menu = await MenuRepository.createMenu(menuPayload)
+    const menu = await MenuRepository.createMenu({
+      ...menuPayload,
+      vendorId: new mongoose.Types.ObjectId(vendorParams.vendorId),
+    })
 
     if (!menu) return { success: false, msg: menuMessages.MENU_FAILURE }
 

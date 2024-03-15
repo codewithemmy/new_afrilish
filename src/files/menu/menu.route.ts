@@ -21,6 +21,7 @@ MenuRouter.get("/vendor-menu", isAuthenticated, fetchMenuController)
 MenuRouter.post(
   "/",
   uploadManager("menuImage").single("image"),
+  isAuthenticated,
   createMenuController,
 )
 
