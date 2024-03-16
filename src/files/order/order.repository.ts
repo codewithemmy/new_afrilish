@@ -100,7 +100,7 @@ export default class OrderRepository {
       ...restOfPayload,
     })
       .populate({ path: "itemId._id" })
-      .sort(sort)
+      .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
 
@@ -187,7 +187,7 @@ export default class OrderRepository {
       },
       {
         $sort: {
-          createdAt: 1,
+          createdAt: -1,
         },
       },
       {
@@ -205,7 +205,7 @@ export default class OrderRepository {
         },
       },
     ])
-      .sort(sort)
+      .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
 
@@ -270,7 +270,7 @@ export default class OrderRepository {
       },
       {
         $sort: {
-          createdAt: 1,
+          createdAt: -1,
         },
       },
       {
@@ -280,11 +280,12 @@ export default class OrderRepository {
         },
       },
     ])
-      .sort(sort)
+      .sort({
+        createdAt: -1,
+      })
       .skip(skip)
       .limit(limit)
 
     return order
   }
-  // }
 }
