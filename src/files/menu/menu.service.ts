@@ -52,7 +52,7 @@ export default class MenuService {
     if (error) return { success: false, msg: error }
 
     let extra = {}
-    if (vendorParams.userType === "partner") {
+    if (vendorParams?.userType === "partner") {
       extra = { vendorId: new mongoose.Types.ObjectId(vendorParams.vendorId) }
     }
     const menu = await MenuRepository.fetchMenuByParams({
