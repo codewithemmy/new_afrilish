@@ -615,7 +615,7 @@ export default class OrderService {
       return { success: true, msg: `order successfully assigned to rider` }
     }
 
-    if (orderStatus === "accepted") {
+    if (orderStatus === "completed") {
       if (findOrder.isWallet) {
         const user = await UserRepository.fetchUser(
           { _id: new mongoose.Types.ObjectId(findOrder.orderedBy) },
