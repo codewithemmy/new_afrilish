@@ -62,34 +62,13 @@ export default class OrderRepository {
       const order: Awaited<IOrder[] | null> = await Order.find({
         ...restOfPayload,
       })
-        .populate({ path: "itemId._id" })
         .populate({
-          path: "scheduleId",
-          populate: [
-            "monday.breakfast.item",
-            "monday.lunch.item",
-            "monday.dinner.item",
-            "tuesday.breakfast.item",
-            "tuesday.lunch.item",
-            "tuesday.dinner.item",
-            "wednesday.breakfast.item",
-            "wednesday.lunch.item",
-            "wednesday.dinner.item",
-            "thursday.breakfast.item",
-            "thursday.lunch.item",
-            "thursday.dinner.item",
-            "friday.breakfast.item",
-            "friday.dinner.item",
-            "saturday.breakfast.item",
-            "saturday.lunch.item",
-            "saturday.dinner.item",
-            "sunday.breakfast.item",
-            "sunday.lunch.item",
-            "sunday.dinner.item",
-          ],
+          path: "vendorId",
           select:
-            "-createdAt -updatedAt -_id -startDate -endDate -isDelete -__v -userId -status",
+            "email address businessNumber vendorType ratingAverage isAvailable",
         })
+        .populate({ path: "assignedRider" })
+        .populate({ path: "itemId._id" })
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
@@ -99,6 +78,12 @@ export default class OrderRepository {
     const order: Awaited<IOrder[] | null> = await Order.find({
       ...restOfPayload,
     })
+      .populate({
+        path: "vendorId",
+        select:
+          "email address businessNumber vendorType ratingAverage isAvailable",
+      })
+      .populate({ path: "assignedRider" })
       .populate({ path: "itemId._id" })
       .sort({ createdAt: -1 })
       .skip(skip)
