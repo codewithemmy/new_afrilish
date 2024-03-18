@@ -83,7 +83,7 @@ export default class VendorService {
       userType: "partner",
       isPartner: true,
     })
-    console.log("vendor", validateVendor._id)
+
     return {
       success: true,
       msg: partnerMessages.VENDOR_SUCCESS,
