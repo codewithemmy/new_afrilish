@@ -65,7 +65,7 @@ export default class OrderRepository {
         .populate({
           path: "vendorId",
           select:
-            "email address businessNumber vendorType ratingAverage isAvailable",
+            "email address businessNumber vendorType ratingAverage isAvailable image",
         })
         .populate({ path: "assignedRider" })
         .populate({ path: "itemId._id" })
@@ -81,7 +81,7 @@ export default class OrderRepository {
       .populate({
         path: "vendorId",
         select:
-          "email address businessNumber vendorType ratingAverage isAvailable",
+          "email address businessNumber vendorType ratingAverage isAvailable image",
       })
       .populate({ path: "assignedRider" })
       .populate({ path: "itemId._id" })
