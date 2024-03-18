@@ -134,6 +134,20 @@ export default class TransactionService {
         { _id: new mongoose.Types.ObjectId(transaction?.userId) },
         { $inc: { wallet: transaction?.amount } },
       )
+
+      const customer = await UserRepository.fetchUser(
+        { _id: new mongoose.Types.ObjectId(getTransaction.userId) },
+        {},
+      )
+
+      let message: any = {
+        to: `${customer?.deviceId}`,
+        sound: "default",
+        title: "Wallet Funded",
+        body: "Wallet successfully funded",
+      }
+
+      await expo.sendPushNotificationsAsync([message])
     }
     if (getTransaction?.paymentFor === "normal-order") {
       const transaction = await TransactionRepository.updateTransactionDetails(
@@ -217,6 +231,20 @@ export default class TransactionService {
       },
       { paymentStatus: "paid", isConfirmed: true, isWallet },
     )
+
+    const customer = await UserRepository.fetchUser(
+      { _id: new mongoose.Types.ObjectId(order.orderedBy) },
+      {},
+    )
+
+    let message: any = {
+      to: `${customer?.deviceId}`,
+      sound: "default",
+      title: "Order Notification",
+      body: "Order Successfully Created",
+    }
+
+    await expo.sendPushNotificationsAsync([message])
 
     return {
       success: true,
