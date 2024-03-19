@@ -301,7 +301,10 @@ class PartnerController {
 
   async rateVendorController(req: Request, res: Response, next: NextFunction) {
     const [error, data] = await manageAsyncOps(
-      VendorService.rateVendorService(req.body, req.params.id as string),
+      VendorService.rateVendorService(
+        { ...req.body, ratedBy: res.locals.jwt._id },
+        req.params.id as string,
+      ),
     )
 
     if (error) return next(error)
