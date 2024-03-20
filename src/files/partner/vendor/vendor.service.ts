@@ -45,7 +45,7 @@ export default class VendorService {
     await PartnerRepository.updatePartnerDetails(
       { _id: new mongoose.Types.ObjectId(verifyPartner._id) },
       {
-        $push: { vendorId: vendor._id },
+        vendorId: vendor._id,
       },
     )
 

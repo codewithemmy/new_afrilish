@@ -6,7 +6,7 @@ export interface IPartner {
   authType: string
   isSuspend: Boolean
   business?: IBusiness
-  vendorId?: [any]
+  vendorId?: any
   location?: string
   password: string
   referralCode?: string

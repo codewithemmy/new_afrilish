@@ -9,7 +9,7 @@ const PartnerSchema = new Schema<IPartner>(
     authType: { type: String },
     password: { type: String },
     business: { name: String, phone: String, email: String, address: String },
-    vendorId: [{ type: mongoose.Types.ObjectId, ref: "Vendor" }],
+    vendorId: { type: mongoose.Types.ObjectId, ref: "Vendor" },
     location: { type: String },
     partnerType: { type: String },
     referralCode: { type: String },
