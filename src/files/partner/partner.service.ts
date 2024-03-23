@@ -1,4 +1,4 @@
-import mongoose from "mongoose"
+import mongoose, { mongo } from "mongoose"
 import { IResponse } from "../../constants"
 import {
   AlphaNumeric,
@@ -13,6 +13,7 @@ import { partnerMessages } from "./partner.messages"
 import { sendMailNotification } from "../../utils/email"
 import { generalMessages } from "../../core/messages"
 import { decode } from "jsonwebtoken"
+import VendorRepository from "./vendor/vendor.repository"
 
 export default class PartnerService {
   static async createPartner(partnerPayload: IPartner): Promise<IResponse> {
@@ -81,6 +82,19 @@ export default class PartnerService {
     const { email, password } = partnerPayload
 
     const partner = await PartnerRepository.fetchPartner({ email }, {})
+
+    const vendor = await VendorRepository.fetchVendor(
+      {
+        _id: new mongoose.Types.ObjectId(partner?.vendorId),
+      },
+      {},
+    )
+
+    if (vendor && !vendor.isVerified)
+      return {
+        success: false,
+        msg: `Current vendor not verified. Please, contact the admin`,
+      }
 
     if (!partner)
       return { success: false, msg: generalMessages.INCORRECT_PARTNER }

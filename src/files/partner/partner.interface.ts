@@ -29,6 +29,7 @@ export interface IVendor {
   businessNumber: String
   updated: Boolean
   phone: string
+  isVerified: Boolean
   payment: [IPaymentInfo]
   price: string
   vendorOperations: IOperations
