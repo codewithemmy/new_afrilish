@@ -14,6 +14,14 @@ const VendorSchema = new Schema<IVendor>(
     vendorType: { type: String },
     deviceId: { type: String },
     isVerified: { type: Boolean, default: false },
+    kyc: {
+      businessRegNumber: { type: String },
+      FSARating: { type: String },
+      proofOfAddress: { type: String },
+      document: { type: String },
+      frontPhotoId: { type: String },
+      backPhotoId: { type: String },
+    },
     payment: [
       {
         accountName: { type: String },

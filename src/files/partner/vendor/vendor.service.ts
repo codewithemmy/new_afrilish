@@ -127,7 +127,7 @@ export default class VendorService {
     vendorParams: any,
     vendorPayload: Partial<IVendor & ICoord>,
   ) {
-    const { lng, lat, ...restOfPayload } = vendorPayload
+    const { lng, lat, image, ...restOfPayload } = vendorPayload
     let locationCoord
 
     if (lng && lat) {
@@ -173,6 +173,42 @@ export default class VendorService {
     if (!vendor) return { success: false, msg: partnerMessages.UPDATE_ERROR }
 
     return { success: true, msg: partnerMessages.UPDATE_SUCCESS }
+  }
+
+  static async updateVendorKyc(
+    vendorParams: any,
+    vendorPayload: Partial<IVendor & ICoord>,
+  ) {
+    const { kyc, image, ...restOfKyc } = vendorPayload
+    if (kyc) {
+      const proofOfAddress: any = image![0]
+      const document: any = image![1]
+      const frontPhotoId: any = image![2]
+      const backPhotoId: any = image![3]
+
+      const vendor = await VendorRepository.updateVendorDetails(
+        { _id: new mongoose.Types.ObjectId(vendorParams.vendorId) },
+        {
+          $set: {
+            isVerified: false,
+            kyc: {
+              ...restOfKyc,
+              proofOfAddress,
+              document,
+              frontPhotoId,
+              backPhotoId,
+            },
+          },
+        },
+      )
+
+      if (!vendor) return { success: false, msg: partnerMessages.UPDATE_ERROR }
+      return { success: true, msg: partnerMessages.UPDATE_SUCCESS }
+    }
+    return {
+      success: true,
+      msg: `KYC information not found or Invalid KYC details`,
+    }
   }
 
   static async paymentUpdateService(data: {

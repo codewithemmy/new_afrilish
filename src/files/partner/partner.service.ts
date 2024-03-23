@@ -81,7 +81,18 @@ export default class PartnerService {
   ) {
     const { email, password } = partnerPayload
 
-    const partner = await PartnerRepository.fetchPartner({ email }, {})
+    const partner = await PartnerRepository.fetchPartner(
+      { email },
+      {
+        email: 1,
+        fullName: 1,
+        phone: 1,
+        isVerified: 1,
+        isSuspend: 1,
+        vendorId: 1,
+        password: 1,
+      },
+    )
 
     const vendor = await VendorRepository.fetchVendor(
       {

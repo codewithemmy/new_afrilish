@@ -56,7 +56,7 @@ PartnerRouter.use(isAuthenticated)
 
 PartnerRouter.patch(
   "/vendor",
-  uploadManager("vendorImage").single("image"),
+  uploadManager("vendorImage").array("image"),
   updateVendorController,
 )
 PartnerRouter.get("/", fetchSinglePartnerController)

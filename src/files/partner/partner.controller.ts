@@ -166,10 +166,20 @@ class PartnerController {
     next: NextFunction,
   ) {
     const { image, body } = fileModifier(req)
+    if (body.kyc) {
+      const [error, data] = await manageAsyncOps(
+        VendorService.updateVendorKyc(res.locals.jwt, { ...body, image }),
+      )
+
+      if (error) return next(error)
+      if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
+
+      return responseHandler(res, statusCode.SUCCESS, data!)
+    }
+
     const [error, data] = await manageAsyncOps(
       VendorService.updateVendor(res.locals.jwt, { ...body, image }),
     )
-
     if (error) return next(error)
     if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
 

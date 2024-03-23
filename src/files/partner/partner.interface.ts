@@ -24,6 +24,7 @@ export interface IVendor {
   name: string
   itemId?: [any]
   email: string
+  kyc?: vendorKyc
   wallet: Number
   ratingAverage: number
   businessNumber: String
@@ -60,6 +61,15 @@ interface IBusiness {
   phone: string
   email: string
   address: string
+}
+
+interface vendorKyc {
+  businessRegNumber: string
+  FSARating: string
+  proofOfAddress: string
+  document: string
+  frontPhotoId: string
+  backPhotoId: string
 }
 
 interface IPaymentInfo {
