@@ -17,10 +17,12 @@ const {
 const { adminOrderAnalysisController } = orderController
 const { adminUserAnalysisController } = userController
 
-AdminRouter.use(isAuthenticated)
 
 AdminRouter.post("/", createAdmin)
 AdminRouter.post("/login", adminLogin)
+
+AdminRouter.use(isAuthenticated)
+
 
 //analysis
 AdminRouter.get("/order/analysis", adminOrderAnalysisController)
