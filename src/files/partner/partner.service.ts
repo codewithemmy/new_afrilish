@@ -93,20 +93,7 @@ export default class PartnerService {
         password: 1,
       },
     )
-
-    const vendor = await VendorRepository.fetchVendor(
-      {
-        _id: new mongoose.Types.ObjectId(partner?.vendorId),
-      },
-      {},
-    )
-
-    if (vendor && !vendor.isVerified)
-      return {
-        success: false,
-        msg: `Current vendor not verified. Please, contact the admin`,
-      }
-
+    
     if (!partner)
       return { success: false, msg: generalMessages.INCORRECT_PARTNER }
 
