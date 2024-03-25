@@ -128,6 +128,20 @@ export default class VendorService {
     vendorPayload: Partial<IVendor & ICoord>,
   ) {
     const { lng, lat, image, ...restOfPayload } = vendorPayload
+
+    if (restOfPayload.isAvailable) {
+      const verifiedVendor = await VendorRepository.fetchVendor(
+        { _id: new mongoose.Types.ObjectId(vendorParams.vendorController) },
+        { isVerified: 1 },
+      )
+
+      if (!verifiedVendor?.isVerified) {
+        return {
+          success: false,
+          msg: `Current vendor not verified. KYC pending upon verification`,
+        }
+      }
+    }
     let locationCoord
 
     if (lng && lat) {
