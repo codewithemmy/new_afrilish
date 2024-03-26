@@ -111,7 +111,7 @@ export default class OrderRepository {
     let latString: string = latToString
     let lngString: string = lngToString
 
-    const floatString = "1000"
+    const floatString = "16000"
     const order = await Order.aggregate([
       {
         $geoNear: {
