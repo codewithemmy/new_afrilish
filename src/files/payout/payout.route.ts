@@ -1,8 +1,9 @@
 import express from "express"
-import uploadManager from "../../utils/multer"
-import { adminVerifier, isAuthenticated } from "../../utils"
+import { isAuthenticated } from "../../utils"
 import payoutController from "./payout.controller"
-
+import validate from "../../validations/validate"
+import { checkSchema } from "express-validator"
+import createPayout from "../../validations/payout/payout.validation"
 const PayoutRouter = express.Router()
 
 const {
@@ -15,7 +16,11 @@ PayoutRouter.use(isAuthenticated)
 PayoutRouter.get("/", fetchPayoutController)
 
 //routes
-PayoutRouter.post("/", createPayoutController)
+PayoutRouter.post(
+  "/",
+  validate(checkSchema(createPayout)),
+  createPayoutController,
+)
 
 PayoutRouter.patch("/:payoutId", updatePayoutController)
 

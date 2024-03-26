@@ -14,7 +14,6 @@ class PayoutController {
     const [error, data] = await manageAsyncOps(
       PayoutService.createPayout(req.body, res.locals.jwt),
     )
-
     if (error) return next(error)
     if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
 

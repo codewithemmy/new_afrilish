@@ -12,16 +12,26 @@ export default class PayoutService {
     payload: Partial<IPayout>,
     locals: any,
   ): Promise<IResponse> {
-    const { recipient, userType, status } = payload
+    let { recipient, userType, status } = payload
+    if (!locals.isAdmin) {
+      payload = {
+        title: "Payout Request",
+        userType: payload.userType,
+        initiator: payload.userType,
+        initiatorId: locals._id,
+        recipient: locals.vendorId,
+        amount: payload.amount,
+      }
+    }
 
     let user =
       userType === "Rider"
         ? await RiderRepository.fetchRider(
-            { _id: new mongoose.Types.ObjectId(recipient) },
+            { _id: new mongoose.Types.ObjectId(payload.recipient) },
             {},
           )
         : await VendorRepository.fetchVendor(
-            { _id: new mongoose.Types.ObjectId(recipient) },
+            { _id: new mongoose.Types.ObjectId(payload.recipient) },
             {},
           )
 
@@ -36,7 +46,7 @@ export default class PayoutService {
 
     let currentDate = new Date()
     currentDate.setDate(currentDate.getDate() - 6)
-
+    console.log("here 2")
     const payout = await PayoutRepository.createPayout({
       ...payload,
       initiatorId: locals._id,

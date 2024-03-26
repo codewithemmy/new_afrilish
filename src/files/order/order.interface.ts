@@ -66,7 +66,6 @@ export interface IOrder {
     | "cancelled"
     | "picked"
     | "completed"
-
   isDelete: boolean
   transactionId: any
   scheduleId: any
