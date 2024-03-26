@@ -12,7 +12,7 @@ export default class PayoutService {
     payload: Partial<IPayout>,
     locals: any,
   ): Promise<IResponse> {
-    const { recipient, userType } = payload
+    const { recipient, userType, status } = payload
 
     let user =
       userType === "Rider"
@@ -43,6 +43,20 @@ export default class PayoutService {
     })
 
     if (!payout) return { success: false, msg: payoutMessages.PAYOUT_FAILURE }
+
+    if (userType === "Rider" && status === "confirmed") {
+      await RiderRepository.updateRiderDetails(
+        { _id: new mongoose.Types.ObjectId(recipient) },
+        { $inc: { wallet: -amount } },
+      )
+    }
+
+    if (userType === "Vendor" && status === "confirmed") {
+      await VendorRepository.updateVendorDetails(
+        { _id: new mongoose.Types.ObjectId(recipient) },
+        { $inc: { wallet: -amount } },
+      )
+    }
 
     return {
       success: true,
@@ -77,16 +91,37 @@ export default class PayoutService {
   }
 
   static async updatePayoutService(payoutId: any, data: Partial<IPayout>) {
-    const partner = await PayoutRepository.updatePayoutDetails(
-      { _id: new mongoose.Types.ObjectId(payoutId) },
+    const { userType, ...restOfData } = data
+    if (!userType) {
+      return {
+        success: false,
+        msg: `userType cannot be empty. Must be either "Rider" or "Vendor"`,
+      }
+    }
+    const payout = await PayoutRepository.updatePayoutDetails(
+      { _id: new mongoose.Types.ObjectId(payoutId), status: "pending" },
       {
         $set: {
-          ...data,
+          ...restOfData,
         },
       },
     )
 
-    if (!partner) return { success: false, msg: payoutMessages.UPDATE_ERROR }
+    if (!payout) return { success: false, msg: payoutMessages.UPDATE_ERROR }
+
+    if (userType === "Rider" && data?.status === "confirmed") {
+      await RiderRepository.updateRiderDetails(
+        { _id: new mongoose.Types.ObjectId(payout.recipient) },
+        { $inc: { wallet: -data.amount! } },
+      )
+    }
+
+    if (userType === "Vendor" && data?.status === "confirmed") {
+      await VendorRepository.updateVendorDetails(
+        { _id: new mongoose.Types.ObjectId(payout.recipient) },
+        { $inc: { wallet: -data.amount! } },
+      )
+    }
 
     return { success: true, msg: payoutMessages.UPDATE_SUCCESS }
   }
