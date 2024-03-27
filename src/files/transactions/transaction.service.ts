@@ -170,8 +170,8 @@ export default class TransactionService {
       let message: any = {
         to: `${customer?.deviceId}`,
         sound: "default",
-        title: "Order Notification",
-        body: "Order Successfully Created",
+        title: "Order Placed",
+        body: "You have successfully place an order",
       }
 
       await expo.sendPushNotificationsAsync([message])
@@ -196,6 +196,9 @@ export default class TransactionService {
       },
       {},
     )
+
+    if (order?.paymentStatus === "paid" || order?.isConfirmed)
+      return { success: false, msg: `Order already confirmed as paid` }
 
     if (!order)
       return {
@@ -254,6 +257,7 @@ export default class TransactionService {
 
   static async fetchTransactionService(
     transactionPayload: Partial<ITransaction>,
+    locals: any,
   ) {
     const { error, params, limit, skip, sort } = queryConstructor(
       transactionPayload,
@@ -262,9 +266,14 @@ export default class TransactionService {
     )
 
     if (error) return { success: false, msg: error }
+    let extra = {}
+    if (!locals.isAdmin) {
+      extra = { userId: new mongoose.Types.ObjectId(locals._id) }
+    }
 
     const transaction = await TransactionRepository.fetchTransactionsByParams({
       ...params,
+      ...extra,
       limit,
       skip,
       sort,

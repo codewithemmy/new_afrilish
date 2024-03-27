@@ -270,7 +270,6 @@ class PartnerController {
         vendorPayload: req.body,
       }),
     )
-    console.log("error", res.locals.jwt)
 
     if (error) return next(error)
     if (!data?.success) return next(new CustomError(data!.msg, 400, data!))

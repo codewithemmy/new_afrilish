@@ -46,7 +46,7 @@ export default class PayoutService {
 
     let currentDate = new Date()
     currentDate.setDate(currentDate.getDate() - 6)
-    console.log("here 2")
+
     const payout = await PayoutRepository.createPayout({
       ...payload,
       initiatorId: locals._id,
