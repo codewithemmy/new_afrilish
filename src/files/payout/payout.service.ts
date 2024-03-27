@@ -74,7 +74,7 @@ export default class PayoutService {
     }
   }
 
-  static async fetchPayoutService(payload: Partial<IPayout>) {
+  static async fetchPayoutService(payload: Partial<IPayout>, locals: any) {
     const { error, params, limit, skip, sort } = queryConstructor(
       payload,
       "createdAt",
@@ -83,8 +83,17 @@ export default class PayoutService {
 
     if (error) return { success: false, msg: error }
 
+    let extra = {}
+    if (locals.userType === "partner") {
+      extra = {
+        recipient: new mongoose.Types.ObjectId(locals.vendorId),
+        userType: "Vendor",
+      }
+    }
+
     const payout = await PayoutRepository.fetchPayoutByParams({
       ...params,
+      ...extra,
       limit,
       skip,
       sort,

@@ -22,7 +22,7 @@ class PayoutController {
 
   async fetchPayoutController(req: Request, res: Response, next: NextFunction) {
     const [error, data] = await manageAsyncOps(
-      PayoutService.fetchPayoutService(req.query),
+      PayoutService.fetchPayoutService(req.query, res.locals.jwt),
     )
     if (error) return next(error)
     if (!data?.success) return next(new CustomError(data!.msg, 400, data!))
