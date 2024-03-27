@@ -512,7 +512,7 @@ export default class OrderService {
   }
 
   static async fetchOrderService(payload: Partial<IOrder>, locals: any) {
-    const { error, params, limit, skip, sort } = queryConstructor(
+    let { error, params, limit, skip, sort } = queryConstructor(
       payload,
       "createdAt",
       "Order",
@@ -526,6 +526,23 @@ export default class OrderService {
     }
     if (locals?.userType === "partner") {
       extra = { vendorId: new mongoose.Types.ObjectId(locals.vendorId) }
+    }
+    if (locals?.userType === "partner" && params.orderStatus === "pending") {
+      delete params?.orderStatus
+      extra = {
+        vendorId: new mongoose.Types.ObjectId(locals.vendorId),
+        orderStatus: {
+          $in: [
+            "pending",
+            "on-going",
+            "ready",
+            "accepted",
+            "in-transit",
+            "arrived",
+            "picked",
+          ],
+        },
+      }
     }
 
     const order = await OrderRepository.fetchOrderByParams({
