@@ -84,7 +84,7 @@ export default class UserRepository {
       let latString: string = latToString
       let lngString: string = lngToString
 
-      const floatString = "20000"
+      const floatString = "16"
 
       const vendor = await Vendor.aggregate([
         {
@@ -94,7 +94,7 @@ export default class UserRepository {
               coordinates: [parseFloat(lngString), parseFloat(latString)],
             },
             key: "locationCoord",
-            maxDistance: parseFloat(floatString) * 1609,
+            maxDistance: parseFloat(floatString) * 1000,
             distanceField: "distance",
             spherical: true,
           },
