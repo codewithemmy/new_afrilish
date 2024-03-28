@@ -302,18 +302,22 @@ export default class VendorService {
     if (!confirmVendor)
       return { success: false, msg: partnerMessages.VENDOR_ERROR }
 
+    const order = await OrderRepository.updateOrderDetails(
+      {
+        _id: new mongoose.Types.ObjectId(orderId),
+        orderStatus: "completed",
+      },
+      { rating: rate },
+    )
+
+    if (!order) return { success: false, msg: `Unable to rate vendor` }
+
     const vendor = await VendorRepository.updateVendorDetails(
       { _id: new mongoose.Types.ObjectId(confirmVendor._id) },
       { $push: { rating: { ...params } } },
     )
 
-    const order = await OrderRepository.updateOrderDetails(
-      { _id: new mongoose.Types.ObjectId(orderId) },
-      { rating: rate },
-    )
-
-    if (!vendor || !order)
-      return { success: false, msg: `Unable to rate vendor` }
+    if (!vendor) return { success: false, msg: `Unable to rate vendor` }
 
     return {
       success: true,
