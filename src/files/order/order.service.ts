@@ -527,7 +527,7 @@ export default class OrderService {
     if (locals?.userType === "partner") {
       extra = { vendorId: new mongoose.Types.ObjectId(locals.vendorId) }
     }
-    if (locals?.userType === "partner" && params.orderStatus === "pending") {
+    if (locals?.userType === "partner" && params.orderStatus === "pending" && params.isConfirmed) {
       delete params?.orderStatus
       extra = {
         vendorId: new mongoose.Types.ObjectId(locals.vendorId),
