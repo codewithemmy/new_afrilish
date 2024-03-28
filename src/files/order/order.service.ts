@@ -521,28 +521,27 @@ export default class OrderService {
     if (locals?.userType === "user") {
       extra = { orderedBy: new mongoose.Types.ObjectId(locals._id) }
     }
+
     if (locals?.userType === "partner") {
       extra = { vendorId: new mongoose.Types.ObjectId(locals.vendorId) }
     }
-    if (
-      locals?.userType === "partner" &&
-      params.orderStatus === "pending" &&
-      params.isConfirmed
-    ) {
-      delete params?.orderStatus
+    if (locals?.userType === "partner") {
+      extra = { vendorId: new mongoose.Types.ObjectId(locals.vendorId) }
+    }
+    if (locals?.userType === "partner" && params.payment === "pending") {
+      delete params.payment
       extra = {
+        ordersStatus: { $ne: "completed" },
+        isConfirmed: true,
         vendorId: new mongoose.Types.ObjectId(locals.vendorId),
-        orderStatus: {
-          $in: [
-            "pending",
-            "on-going",
-            "ready",
-            "accepted",
-            "in-transit",
-            "arrived",
-            "picked",
-          ],
-        },
+      }
+    }
+    if (locals?.userType === "partner" && params.payment === "paid") {
+      delete params.payment
+      extra = {
+        ordersStatus: { $eq: "completed" },
+        isConfirmed: true,
+        vendorId: new mongoose.Types.ObjectId(locals.vendorId),
       }
     }
 

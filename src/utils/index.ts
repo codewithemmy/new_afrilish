@@ -32,7 +32,7 @@ const tokenHandler = (data: { [key: string]: any }) => {
       ...restOfPayload,
     },
     config.SECRET_KEY!,
-    { expiresIn: process.env.TOKEN_EXPIRE_IN },
+    { expiresIn: "20m" },
   )
   return token
 }

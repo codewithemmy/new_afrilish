@@ -77,7 +77,6 @@ export default class OrderRepository {
     }
     const order: Awaited<IOrder[] | null> = await Order.find({
       ...restOfPayload,
-      orderStatus: { $ne: "cancelled" },
     })
       .populate({
         path: "vendorId",
