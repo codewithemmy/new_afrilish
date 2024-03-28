@@ -19,7 +19,7 @@ class NotificationController {
 
   async fetchNotifications(req: Request, res: Response, next: NextFunction) {
     const [error, data] = await manageAsyncOps(
-      NotificationService.fetchUserNotifications(req.query),
+      NotificationService.fetchUserNotifications(req.query, res.locals.jwt),
     )
 
     if (error) return next(error)

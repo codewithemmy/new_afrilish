@@ -1,4 +1,4 @@
-import mongoose from "mongoose"
+import mongoose, { mongo } from "mongoose"
 import { IResponse } from "../../constants"
 import { IToken, queryConstructor } from "../../utils"
 import { INotification } from "./notification.interface"
@@ -68,6 +68,7 @@ export default class NotificationService {
 
   static async fetchUserNotifications(
     query: Partial<INotification>,
+    locals: any,
   ): Promise<IResponse> {
     const { error, params, limit, skip, sort } = queryConstructor(
       query,
@@ -77,9 +78,28 @@ export default class NotificationService {
 
     if (error) return { success: false, msg: error }
 
+    let extra
+    if (locals.userType === "user") {
+      extra = {
+        $and: [
+          { recipientId: new mongoose.Types.ObjectId(locals._id) },
+          { recipient: "User" },
+        ],
+      }
+    }
+    if (locals.userType === "partner") {
+      extra = {
+        $and: [
+          { recipientId: new mongoose.Types.ObjectId(locals._id) },
+          { recipient: "Vendor" },
+        ],
+      }
+    }
+
     const notifications =
       await NotificationRepository.fetchNotificationsByParams({
         ...params,
+        ...extra,
         limit,
         skip,
         sort,
