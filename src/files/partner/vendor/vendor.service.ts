@@ -1,4 +1,4 @@
-import { IResponse } from "../../../constants"
+import constants, { IResponse } from "../../../constants"
 import { hashPassword, queryConstructor, tokenHandler } from "../../../utils"
 import { IVendor } from "../partner.interface"
 import VendorRepository from "./vendor.repository"
@@ -6,6 +6,7 @@ import { partnerMessages } from "../partner.messages"
 import mongoose, { mongo } from "mongoose"
 import PartnerRepository from "../partner.repository"
 import { ICoord } from "../../user/user.interface"
+import OrderRepository from "../../order/order.repository"
 
 export default class VendorService {
   static async createVendor(
@@ -284,7 +285,8 @@ export default class VendorService {
 
   static async rateVendorService(
     params: { rate: number; review: string; ratedBy: any },
-    id: string,
+    vendorId: string,
+    orderId: string,
   ) {
     const { rate } = params
     if (rate > 5)
@@ -293,7 +295,7 @@ export default class VendorService {
         msg: `any number above 5 is invalid rating number`,
       }
     const confirmVendor = await VendorRepository.fetchVendor(
-      { _id: new mongoose.Types.ObjectId(id) },
+      { _id: new mongoose.Types.ObjectId(vendorId) },
       {},
     )
 
@@ -305,7 +307,13 @@ export default class VendorService {
       { $push: { rating: { ...params } } },
     )
 
-    if (!vendor) return { success: false, msg: `Unable to rate vendor` }
+    const order = await OrderRepository.updateOrderDetails(
+      { _id: new mongoose.Types.ObjectId(orderId) },
+      { rating: rate },
+    )
+
+    if (!vendor || !order)
+      return { success: false, msg: `Unable to rate vendor` }
 
     return {
       success: true,

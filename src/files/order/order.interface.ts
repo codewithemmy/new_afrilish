@@ -71,7 +71,7 @@ export interface IOrder {
   readyTime: string
   eventDescription: string
   eventLocation: string
-  rating: Boolean
+  rating: Number
   paymentIntentId: string
   status: "accepted" | "rejected" | "pending"
   locationCoord?: ILocation

@@ -312,7 +312,8 @@ class PartnerController {
     const [error, data] = await manageAsyncOps(
       VendorService.rateVendorService(
         { ...req.body, ratedBy: res.locals.jwt._id },
-        req.params.id as string,
+        req.params.vendorId as string,
+        req.params.orderId as string,
       ),
     )
 
