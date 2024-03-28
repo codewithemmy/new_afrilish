@@ -57,6 +57,6 @@ UserRouter.get("/vendor", getVendorByCoordController)
 //user auth login route
 UserRouter.post("/login/auth", userAuthLoginController)
 
-UserRouter.post("/vendor/rate/:id", rateVendorController)
+UserRouter.post("/vendor/rate/:id", isAuthenticated, rateVendorController)
 
 export default UserRouter

@@ -12,7 +12,6 @@ export interface IOrder {
   isConfirmed: Boolean
   delivery: Boolean
   schedule: Boolean
-  dateRange: [string]
   note: string
   deliveryAddress: string
   itemId: [

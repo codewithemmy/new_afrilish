@@ -15,7 +15,6 @@ const OrderSchema = new Schema<IOrder>(
     isBulk: { type: Boolean, default: false },
     rating: { type: Boolean, default: false },
     deliveryAddress: { type: String },
-    dateRange: [{ type: String }],
     note: { type: String },
     itemId: [
       {
