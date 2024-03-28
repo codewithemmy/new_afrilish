@@ -235,19 +235,18 @@ export default class TransactionService {
       { paymentStatus: "paid", isConfirmed: true, isWallet },
     )
 
-    const customer = await UserRepository.fetchUser(
-      { _id: new mongoose.Types.ObjectId(order.orderedBy) },
-      {},
-    )
+    try {
+      let message: any = {
+        to: `${user?.deviceId}`,
+        sound: "default",
+        title: "Order Notification",
+        body: "Order Successfully Created",
+      }
 
-    let message: any = {
-      to: `${customer?.deviceId}`,
-      sound: "default",
-      title: "Order Notification",
-      body: "Order Successfully Created",
+      await expo.sendPushNotificationsAsync([message])
+    } catch (error) {
+      console.log("push error", error)
     }
-
-    await expo.sendPushNotificationsAsync([message])
 
     return {
       success: true,
@@ -267,7 +266,7 @@ export default class TransactionService {
 
     if (error) return { success: false, msg: error }
     let extra = {}
-    if (locals.userType === "user" ) {
+    if (locals.userType === "user") {
       extra = { userId: new mongoose.Types.ObjectId(locals._id) }
     }
 
